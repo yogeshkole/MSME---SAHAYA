@@ -1,0 +1,2454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MSME Sahay – AI-Powered MSME Growth Ecosystem</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+  :root {
+    --navy: #0F172A;
+    --royal-blue: #2563EB;
+    --electric-blue: #3B82F6;
+    --sky-blue: #60A5FA;
+    --orange: #F59E0B;
+    --gold: #FBBF24;
+    --emerald: #10B981;
+    --success: #22C55E;
+    --red: #EF4444;
+    --purple: #8B5CF6;
+    --pink: #EC4899;
+    --gray-50: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-300: #CBD5E1;
+    --gray-400: #94A3B8;
+    --gray-500: #64748B;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-800: #1E293B;
+    --gray-900: #0F172A;
+    --sidebar-w: 260px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
+    background: var(--gray-50);
+    color: var(--gray-800);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ============================================================
+     SCROLLBAR
+  ============================================================ */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: var(--gray-100); }
+  ::-webkit-scrollbar-thumb { background: var(--gray-300); border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: var(--gray-400); }
+
+  /* ============================================================
+     PAGE SYSTEM
+  ============================================================ */
+  .page { display: none; }
+  .page.active { display: flex; flex-direction: column; min-height: 100vh; }
+  #page-login { display: none; }
+  #page-login.active { display: grid; }
+
+  /* ============================================================
+     LOGIN PAGE
+  ============================================================ */
+  #page-login {
+    grid-template-columns: 1fr 1fr;
+    min-height: 100vh;
+  }
+  .login-hero {
+    background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 40%, #2563EB 100%);
+    padding: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    overflow: hidden;
+  }
+  .login-hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    background: rgba(96,165,250,0.1);
+    pointer-events: none;
+  }
+  .login-hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; left: -80px;
+    width: 300px; height: 300px;
+    border-radius: 50%;
+    background: rgba(245,158,11,0.08);
+    pointer-events: none;
+  }
+  .hero-brand { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; }
+  .hero-logo {
+    width: 48px; height: 48px;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; color: white;
+    box-shadow: 0 8px 24px rgba(245,158,11,0.4);
+  }
+  .hero-brand-text { color: white; }
+  .hero-brand-text h2 { font-size: 20px; font-weight: 700; }
+  .hero-brand-text span { font-size: 12px; opacity: 0.7; }
+  .hero-content { position: relative; z-index: 1; }
+  .hero-content h1 {
+    font-size: 42px; font-weight: 800; color: white; line-height: 1.2;
+    margin-bottom: 16px;
+  }
+  .hero-content h1 span { color: var(--gold); }
+  .hero-content p { color: rgba(255,255,255,0.7); font-size: 16px; line-height: 1.6; margin-bottom: 40px; }
+  .hero-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .hero-stat {
+    background: rgba(255,255,255,0.08);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+  }
+  .hero-stat .value { font-size: 24px; font-weight: 800; color: var(--gold); }
+  .hero-stat .label { font-size: 11px; color: rgba(255,255,255,0.6); margin-top: 4px; }
+  .hero-trust { display: flex; gap: 16px; flex-wrap: wrap; position: relative; z-index: 1; }
+  .trust-badge {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 11px; color: rgba(255,255,255,0.8);
+  }
+  .trust-badge i { color: var(--emerald); }
+  .login-panel {
+    background: white;
+    display: flex; align-items: center; justify-content: center;
+    padding: 48px;
+  }
+  .login-card { width: 100%; max-width: 420px; }
+  .login-card h2 { font-size: 28px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
+  .login-card p { color: var(--gray-500); font-size: 14px; margin-bottom: 32px; }
+  .form-group { margin-bottom: 20px; }
+  .form-group label {
+    display: block; font-size: 13px; font-weight: 600;
+    color: var(--gray-700); margin-bottom: 8px;
+  }
+  .input-wrap { position: relative; }
+  .input-wrap i {
+    position: absolute; left: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400); font-size: 14px;
+    pointer-events: none;
+  }
+  .input-wrap .toggle-pw {
+    position: absolute; right: 14px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400); font-size: 14px;
+    cursor: pointer; pointer-events: all;
+  }
+  .form-input {
+    width: 100%; padding: 12px 14px 12px 40px;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 10px; font-size: 14px;
+    font-family: inherit; outline: none;
+    transition: all 0.2s; background: var(--gray-50);
+    color: var(--gray-800);
+  }
+  .form-input:focus {
+    border-color: var(--royal-blue);
+    background: white;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+  .form-input::placeholder { color: var(--gray-400); }
+  .form-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+  .checkbox-wrap { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+  .checkbox-wrap input { width: 16px; height: 16px; accent-color: var(--royal-blue); }
+  .checkbox-wrap span { font-size: 13px; color: var(--gray-600); }
+  .forgot-link { font-size: 13px; color: var(--royal-blue); font-weight: 500; cursor: pointer; text-decoration: none; }
+  .btn-primary {
+    width: 100%; padding: 13px;
+    background: linear-gradient(135deg, var(--royal-blue), #1D4ED8);
+    color: white; font-size: 15px; font-weight: 600;
+    border: none; border-radius: 10px; cursor: pointer;
+    transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.35);
+    font-family: inherit;
+  }
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(37,99,235,0.45);
+  }
+  .btn-primary:active { transform: translateY(0); }
+  .divider { text-align: center; margin: 20px 0; position: relative; }
+  .divider::before {
+    content: ''; position: absolute;
+    left: 0; top: 50%; width: 100%; height: 1px;
+    background: var(--gray-200);
+  }
+  .divider span {
+    background: white; padding: 0 12px;
+    font-size: 12px; color: var(--gray-400);
+    position: relative;
+  }
+  .social-btns { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .btn-social {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    padding: 11px; border: 1.5px solid var(--gray-200);
+    border-radius: 10px; cursor: pointer; font-size: 13px;
+    font-weight: 500; font-family: inherit; background: white;
+    transition: all 0.2s; color: var(--gray-700);
+  }
+  .btn-social:hover { background: var(--gray-50); border-color: var(--gray-300); }
+  .login-footer { text-align: center; margin-top: 24px; font-size: 13px; color: var(--gray-500); }
+  .login-footer a { color: var(--royal-blue); font-weight: 500; cursor: pointer; }
+  .otp-tab { display: flex; gap: 8px; margin-bottom: 24px; }
+  .tab-btn {
+    flex: 1; padding: 9px; border: 1.5px solid var(--gray-200);
+    border-radius: 8px; font-size: 13px; font-weight: 500;
+    font-family: inherit; cursor: pointer; background: white;
+    color: var(--gray-500); transition: all 0.2s;
+  }
+  .tab-btn.active {
+    background: var(--royal-blue); color: white;
+    border-color: var(--royal-blue);
+  }
+
+  /* ============================================================
+     APP SHELL (Sidebar + Main)
+  ============================================================ */
+  .app-shell {
+    display: flex; min-height: 100vh;
+  }
+
+  /* ============================================================
+     SIDEBAR
+  ============================================================ */
+  .sidebar {
+    width: var(--sidebar-w);
+    min-height: 100vh;
+    background: var(--navy);
+    display: flex; flex-direction: column;
+    position: fixed; left: 0; top: 0; bottom: 0;
+    z-index: 100;
+    transition: transform 0.3s ease;
+  }
+  .sidebar-header {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .sidebar-brand {
+    display: flex; align-items: center; gap: 10px;
+    text-decoration: none;
+  }
+  .sidebar-logo {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: white;
+    box-shadow: 0 4px 12px rgba(245,158,11,0.3);
+    flex-shrink: 0;
+  }
+  .sidebar-brand-text h3 { font-size: 15px; font-weight: 700; color: white; }
+  .sidebar-brand-text span { font-size: 10px; color: rgba(255,255,255,0.4); }
+  .sidebar-user {
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .user-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--royal-blue), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700; color: white; flex-shrink: 0;
+  }
+  .user-info { flex: 1; overflow: hidden; }
+  .user-info h4 { font-size: 13px; font-weight: 600; color: white; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .user-info span { font-size: 11px; color: rgba(255,255,255,0.4); }
+  .user-badge {
+    background: rgba(16,185,129,0.15);
+    border: 1px solid rgba(16,185,129,0.3);
+    color: var(--emerald);
+    font-size: 9px; font-weight: 600;
+    padding: 2px 6px; border-radius: 20px;
+  }
+  .sidebar-nav { flex: 1; padding: 16px 12px; overflow-y: auto; }
+  .nav-section { margin-bottom: 8px; }
+  .nav-section-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.08em;
+    color: rgba(255,255,255,0.3); text-transform: uppercase;
+    padding: 8px 8px 4px;
+  }
+  .nav-item {
+    display: flex; align-items: center; gap: 10px;
+    padding: 9px 10px; border-radius: 8px;
+    cursor: pointer; transition: all 0.15s;
+    text-decoration: none; margin-bottom: 2px;
+  }
+  .nav-item i { width: 18px; text-align: center; font-size: 14px; color: rgba(255,255,255,0.4); flex-shrink: 0; }
+  .nav-item span { font-size: 13px; font-weight: 500; color: rgba(255,255,255,0.55); flex: 1; }
+  .nav-item .nav-badge {
+    font-size: 10px; font-weight: 700;
+    background: var(--orange); color: white;
+    padding: 2px 6px; border-radius: 10px; min-width: 18px; text-align: center;
+  }
+  .nav-item:hover { background: rgba(255,255,255,0.06); }
+  .nav-item:hover i, .nav-item:hover span { color: rgba(255,255,255,0.85); }
+  .nav-item.active { background: linear-gradient(135deg, rgba(37,99,235,0.25), rgba(37,99,235,0.1)); border: 1px solid rgba(37,99,235,0.25); }
+  .nav-item.active i, .nav-item.active span { color: var(--sky-blue); }
+  .nav-item.active { font-weight: 600; }
+  .sidebar-footer { padding: 16px 12px; border-top: 1px solid rgba(255,255,255,0.06); }
+  .sidebar-upgrade {
+    background: linear-gradient(135deg, rgba(245,158,11,0.15), rgba(251,191,36,0.1));
+    border: 1px solid rgba(245,158,11,0.25);
+    border-radius: 12px; padding: 14px;
+    margin-bottom: 12px;
+  }
+  .sidebar-upgrade h4 { font-size: 12px; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+  .sidebar-upgrade p { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 10px; }
+  .btn-upgrade {
+    width: 100%; padding: 7px;
+    background: linear-gradient(135deg, var(--orange), var(--gold));
+    color: white; font-size: 11px; font-weight: 600;
+    border: none; border-radius: 6px; cursor: pointer;
+    font-family: inherit;
+  }
+  .sidebar-logout {
+    display: flex; align-items: center; gap: 8px;
+    padding: 9px 10px; border-radius: 8px;
+    cursor: pointer; transition: all 0.15s;
+    color: rgba(255,255,255,0.4); font-size: 13px;
+  }
+  .sidebar-logout:hover { color: var(--red); background: rgba(239,68,68,0.08); }
+
+  /* ============================================================
+     MAIN CONTENT
+  ============================================================ */
+  .main-content {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    display: flex; flex-direction: column;
+  }
+
+  /* ============================================================
+     TOP BAR
+  ============================================================ */
+  .topbar {
+    height: 64px; background: white;
+    border-bottom: 1px solid var(--gray-100);
+    display: flex; align-items: center;
+    padding: 0 24px; gap: 16px;
+    position: sticky; top: 0; z-index: 50;
+  }
+  .topbar-search {
+    flex: 1; max-width: 400px;
+    position: relative;
+  }
+  .topbar-search i {
+    position: absolute; left: 12px; top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray-400); font-size: 13px;
+    pointer-events: none;
+  }
+  .topbar-search input {
+    width: 100%; padding: 9px 12px 9px 36px;
+    border: 1.5px solid var(--gray-200); border-radius: 9px;
+    font-size: 13px; font-family: inherit; outline: none;
+    background: var(--gray-50); color: var(--gray-700);
+    transition: all 0.2s;
+  }
+  .topbar-search input:focus {
+    border-color: var(--royal-blue); background: white;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.08);
+  }
+  .topbar-search input::placeholder { color: var(--gray-400); }
+  .topbar-actions { display: flex; align-items: center; gap: 8px; margin-left: auto; }
+  .topbar-btn {
+    width: 36px; height: 36px; border-radius: 9px;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--gray-50); border: 1.5px solid var(--gray-200);
+    cursor: pointer; transition: all 0.2s;
+    color: var(--gray-500); font-size: 14px;
+    position: relative;
+  }
+  .topbar-btn:hover { background: white; border-color: var(--gray-300); color: var(--gray-700); }
+  .notif-dot {
+    position: absolute; top: 6px; right: 6px;
+    width: 7px; height: 7px; background: var(--red);
+    border-radius: 50%; border: 2px solid white;
+  }
+  .topbar-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--royal-blue), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 13px; font-weight: 700; color: white;
+    cursor: pointer; flex-shrink: 0;
+  }
+  .topbar-page-title { font-size: 16px; font-weight: 700; color: var(--navy); }
+
+  /* ============================================================
+     INNER PAGE CONTENT
+  ============================================================ */
+  .page-content { padding: 24px; flex: 1; }
+  .page-header { margin-bottom: 24px; }
+  .page-header h1 { font-size: 22px; font-weight: 800; color: var(--navy); margin-bottom: 4px; }
+  .page-header p { font-size: 14px; color: var(--gray-500); }
+  .breadcrumb { display: flex; align-items: center; gap: 6px; margin-bottom: 8px; }
+  .breadcrumb span { font-size: 12px; color: var(--gray-400); }
+  .breadcrumb span.active { color: var(--royal-blue); font-weight: 500; }
+  .breadcrumb i { font-size: 10px; color: var(--gray-300); }
+
+  /* ============================================================
+     CARDS
+  ============================================================ */
+  .card {
+    background: white; border-radius: 16px;
+    border: 1px solid var(--gray-100);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+    overflow: hidden;
+  }
+  .card-header {
+    padding: 18px 20px 0;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-title { font-size: 15px; font-weight: 700; color: var(--navy); }
+  .card-subtitle { font-size: 12px; color: var(--gray-400); margin-top: 2px; }
+  .card-body { padding: 20px; }
+  .card-action { font-size: 12px; font-weight: 600; color: var(--royal-blue); cursor: pointer; }
+  .card-action:hover { text-decoration: underline; }
+
+  /* ============================================================
+     KPI CARDS
+  ============================================================ */
+  .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi-card {
+    background: white; border-radius: 16px;
+    border: 1px solid var(--gray-100);
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: all 0.2s; cursor: pointer;
+    position: relative; overflow: hidden;
+  }
+  .kpi-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+  }
+  .kpi-card.blue::before { background: linear-gradient(90deg, var(--royal-blue), var(--sky-blue)); }
+  .kpi-card.orange::before { background: linear-gradient(90deg, var(--orange), var(--gold)); }
+  .kpi-card.green::before { background: linear-gradient(90deg, var(--emerald), var(--success)); }
+  .kpi-card.purple::before { background: linear-gradient(90deg, var(--purple), #A78BFA); }
+  .kpi-card.red::before { background: linear-gradient(90deg, var(--red), #F87171); }
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .kpi-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
+  .kpi-icon {
+    width: 42px; height: 42px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .kpi-icon.blue { background: rgba(37,99,235,0.1); color: var(--royal-blue); }
+  .kpi-icon.orange { background: rgba(245,158,11,0.1); color: var(--orange); }
+  .kpi-icon.green { background: rgba(16,185,129,0.1); color: var(--emerald); }
+  .kpi-icon.purple { background: rgba(139,92,246,0.1); color: var(--purple); }
+  .kpi-icon.red { background: rgba(239,68,68,0.1); color: var(--red); }
+  .kpi-trend {
+    display: flex; align-items: center; gap: 3px;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 7px; border-radius: 20px;
+  }
+  .kpi-trend.up { background: rgba(34,197,94,0.1); color: var(--success); }
+  .kpi-trend.down { background: rgba(239,68,68,0.1); color: var(--red); }
+  .kpi-value { font-size: 28px; font-weight: 800; color: var(--navy); margin-bottom: 4px; line-height: 1; }
+  .kpi-label { font-size: 12px; color: var(--gray-500); font-weight: 500; }
+
+  /* ============================================================
+     DASHBOARD GRID
+  ============================================================ */
+  .dashboard-grid { display: grid; grid-template-columns: 1fr 320px; gap: 20px; }
+  .dashboard-main { display: flex; flex-direction: column; gap: 20px; }
+  .dashboard-sidebar-panel { display: flex; flex-direction: column; gap: 20px; }
+
+  /* ============================================================
+     WELCOME BANNER
+  ============================================================ */
+  .welcome-banner {
+    background: linear-gradient(135deg, var(--navy) 0%, #1E3A8A 50%, var(--royal-blue) 100%);
+    border-radius: 20px; padding: 28px 32px;
+    position: relative; overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .welcome-banner::before {
+    content: ''; position: absolute;
+    right: -40px; top: -60px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    background: rgba(96,165,250,0.12);
+  }
+  .welcome-banner::after {
+    content: ''; position: absolute;
+    right: 80px; bottom: -40px;
+    width: 150px; height: 150px;
+    border-radius: 50%;
+    background: rgba(245,158,11,0.1);
+  }
+  .welcome-content { position: relative; z-index: 1; }
+  .welcome-content h2 { font-size: 24px; font-weight: 800; color: white; margin-bottom: 8px; }
+  .welcome-content h2 span { color: var(--gold); }
+  .welcome-content p { color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 20px; }
+  .welcome-chips { display: flex; gap: 10px; flex-wrap: wrap; }
+  .chip {
+    display: flex; align-items: center; gap: 6px;
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 20px; padding: 6px 14px;
+    font-size: 12px; color: rgba(255,255,255,0.85);
+  }
+  .chip i { font-size: 10px; }
+  .chip.gold { background: rgba(245,158,11,0.2); border-color: rgba(245,158,11,0.3); color: var(--gold); }
+  .health-score {
+    position: absolute; right: 32px; top: 50%;
+    transform: translateY(-50%); z-index: 1;
+    text-align: center;
+  }
+  .score-ring {
+    width: 90px; height: 90px;
+    background: rgba(255,255,255,0.08);
+    border: 3px solid rgba(255,255,255,0.15);
+    border-radius: 50%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    margin: 0 auto 6px;
+    position: relative;
+  }
+  .score-ring::before {
+    content: '';
+    position: absolute; inset: -3px;
+    border-radius: 50%;
+    background: conic-gradient(var(--success) 0% 78%, rgba(255,255,255,0.1) 78% 100%);
+    -webkit-mask: radial-gradient(circle at center, transparent 36px, black 37px);
+    mask: radial-gradient(circle at center, transparent 36px, black 37px);
+  }
+  .score-ring .score-num { font-size: 22px; font-weight: 800; color: white; line-height: 1; }
+  .score-ring .score-label { font-size: 8px; color: rgba(255,255,255,0.5); }
+  .health-score p { font-size: 11px; color: rgba(255,255,255,0.5); }
+
+  /* ============================================================
+     AI INSIGHT CARDS
+  ============================================================ */
+  .ai-insights { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 20px; }
+  .ai-card {
+    background: white; border-radius: 14px;
+    border: 1px solid var(--gray-100);
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    position: relative; overflow: hidden;
+  }
+  .ai-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; right: 0; height: 2px;
+  }
+  .ai-card.ai-blue::before { background: linear-gradient(90deg, var(--royal-blue), var(--sky-blue)); }
+  .ai-card.ai-orange::before { background: linear-gradient(90deg, var(--orange), var(--gold)); }
+  .ai-card.ai-green::before { background: linear-gradient(90deg, var(--emerald), var(--success)); }
+  .ai-card-icon {
+    width: 32px; height: 32px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; margin-bottom: 10px;
+  }
+  .ai-card-icon.blue { background: rgba(37,99,235,0.1); color: var(--royal-blue); }
+  .ai-card-icon.orange { background: rgba(245,158,11,0.1); color: var(--orange); }
+  .ai-card-icon.green { background: rgba(16,185,129,0.1); color: var(--emerald); }
+  .ai-card h4 { font-size: 13px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .ai-card p { font-size: 11px; color: var(--gray-500); line-height: 1.4; }
+  .ai-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    background: rgba(37,99,235,0.08);
+    color: var(--royal-blue); font-size: 10px; font-weight: 600;
+    padding: 2px 7px; border-radius: 10px; margin-top: 8px;
+  }
+
+  /* ============================================================
+     TABLES
+  ============================================================ */
+  .table-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; }
+  thead th {
+    padding: 10px 16px; text-align: left;
+    font-size: 11px; font-weight: 600; letter-spacing: 0.05em;
+    text-transform: uppercase; color: var(--gray-400);
+    background: var(--gray-50); border-bottom: 1px solid var(--gray-100);
+  }
+  thead th:first-child { border-radius: 8px 0 0 0; }
+  thead th:last-child { border-radius: 0 8px 0 0; }
+  tbody td {
+    padding: 13px 16px; font-size: 13px;
+    color: var(--gray-700); border-bottom: 1px solid var(--gray-50);
+  }
+  tbody tr:hover td { background: var(--gray-50); }
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* STATUS BADGES */
+  .badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 9px; border-radius: 20px;
+  }
+  .badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
+  .badge.draft { background: var(--gray-100); color: var(--gray-600); }
+  .badge.draft::before { background: var(--gray-400); }
+  .badge.submitted { background: rgba(37,99,235,0.1); color: var(--royal-blue); }
+  .badge.submitted::before { background: var(--royal-blue); }
+  .badge.review { background: rgba(245,158,11,0.1); color: var(--orange); }
+  .badge.review::before { background: var(--orange); }
+  .badge.approved { background: rgba(16,185,129,0.1); color: var(--emerald); }
+  .badge.approved::before { background: var(--emerald); }
+  .badge.rejected { background: rgba(239,68,68,0.1); color: var(--red); }
+  .badge.rejected::before { background: var(--red); }
+  .badge.verified { background: rgba(34,197,94,0.1); color: var(--success); }
+  .badge.verified::before { background: var(--success); }
+  .badge.pending { background: rgba(245,158,11,0.1); color: var(--orange); }
+  .badge.pending::before { background: var(--orange); }
+  .badge.missing { background: rgba(239,68,68,0.1); color: var(--red); }
+  .badge.missing::before { background: var(--red); }
+
+  /* ============================================================
+     SCHEME ELIGIBILITY WIZARD
+  ============================================================ */
+  .wizard-container { max-width: 780px; margin: 0 auto; }
+  .wizard-steps { display: flex; align-items: center; margin-bottom: 36px; }
+  .wizard-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
+  .wizard-step:not(:last-child)::after {
+    content: ''; position: absolute;
+    top: 20px; left: 50%; width: 100%;
+    height: 2px; background: var(--gray-200);
+    z-index: 0;
+  }
+  .wizard-step.completed:not(:last-child)::after { background: var(--royal-blue); }
+  .step-circle {
+    width: 40px; height: 40px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; font-weight: 700;
+    background: var(--gray-100); color: var(--gray-400);
+    border: 2px solid var(--gray-200);
+    position: relative; z-index: 1;
+    transition: all 0.3s;
+  }
+  .wizard-step.active .step-circle {
+    background: var(--royal-blue); color: white;
+    border-color: var(--royal-blue);
+    box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
+  }
+  .wizard-step.completed .step-circle {
+    background: var(--success); color: white;
+    border-color: var(--success);
+  }
+  .step-label { font-size: 11px; font-weight: 600; color: var(--gray-400); margin-top: 8px; text-align: center; }
+  .wizard-step.active .step-label { color: var(--royal-blue); }
+  .wizard-step.completed .step-label { color: var(--success); }
+
+  .wizard-form-section { display: none; }
+  .wizard-form-section.active { display: block; }
+  .wizard-card {
+    background: white; border-radius: 20px;
+    border: 1px solid var(--gray-100);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    padding: 32px;
+    margin-bottom: 20px;
+  }
+  .wizard-card h3 { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
+  .wizard-card p { font-size: 13px; color: var(--gray-500); margin-bottom: 24px; }
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .field-group { margin-bottom: 0; }
+  .field-group label {
+    display: flex; align-items: center; gap: 6px;
+    font-size: 13px; font-weight: 600; color: var(--gray-700); margin-bottom: 8px;
+  }
+  .field-group label i { color: var(--gray-400); font-size: 11px; cursor: help; }
+  .field-select, .field-input {
+    width: 100%; padding: 11px 14px;
+    border: 1.5px solid var(--gray-200); border-radius: 10px;
+    font-size: 13px; font-family: inherit; outline: none;
+    background: var(--gray-50); color: var(--gray-800);
+    transition: all 0.2s; appearance: none;
+  }
+  .field-select:focus, .field-input:focus {
+    border-color: var(--royal-blue); background: white;
+    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+  }
+  .field-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394A3B8' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
+  .field-hint { font-size: 11px; color: var(--gray-400); margin-top: 5px; }
+  .toggle-group { display: flex; gap: 0; }
+  .toggle-btn {
+    flex: 1; padding: 10px;
+    border: 1.5px solid var(--gray-200);
+    font-size: 13px; font-weight: 500; font-family: inherit;
+    cursor: pointer; background: var(--gray-50); color: var(--gray-500);
+    transition: all 0.2s;
+  }
+  .toggle-btn:first-child { border-radius: 10px 0 0 10px; }
+  .toggle-btn:last-child { border-radius: 0 10px 10px 0; border-left: none; }
+  .toggle-btn.active { background: var(--royal-blue); color: white; border-color: var(--royal-blue); z-index: 1; }
+  .wizard-nav { display: flex; gap: 12px; justify-content: space-between; }
+  .btn-back {
+    padding: 11px 24px; border: 1.5px solid var(--gray-200);
+    border-radius: 10px; background: white; font-size: 14px;
+    font-weight: 600; font-family: inherit; cursor: pointer;
+    color: var(--gray-600); transition: all 0.2s;
+  }
+  .btn-back:hover { background: var(--gray-50); }
+  .btn-next {
+    padding: 11px 28px;
+    background: linear-gradient(135deg, var(--royal-blue), #1D4ED8);
+    color: white; font-size: 14px; font-weight: 600;
+    border: none; border-radius: 10px; cursor: pointer;
+    font-family: inherit; transition: all 0.2s;
+    box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .btn-next:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+  .eligibility-result {
+    background: linear-gradient(135deg, #0F172A, #1E3A8A);
+    border-radius: 20px; padding: 36px; text-align: center; color: white;
+  }
+  .result-score { font-size: 72px; font-weight: 900; color: var(--gold); line-height: 1; }
+  .result-label { font-size: 18px; font-weight: 700; margin: 8px 0 4px; }
+  .result-sub { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 28px; }
+  .scheme-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
+  .scheme-card {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px; padding: 16px; text-align: left;
+  }
+  .scheme-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+  .scheme-card p { font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 10px; }
+  .scheme-match { font-size: 11px; font-weight: 700; color: var(--success); }
+
+  /* ============================================================
+     DOCUMENTS / KYC
+  ============================================================ */
+  .docs-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .doc-card {
+    background: white; border-radius: 16px;
+    border: 1px solid var(--gray-100);
+    padding: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+    transition: all 0.2s;
+  }
+  .doc-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); }
+  .doc-icon {
+    width: 48px; height: 48px; border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px; margin-bottom: 14px;
+  }
+  .doc-icon.blue { background: rgba(37,99,235,0.1); color: var(--royal-blue); }
+  .doc-icon.orange { background: rgba(245,158,11,0.1); color: var(--orange); }
+  .doc-icon.green { background: rgba(16,185,129,0.1); color: var(--emerald); }
+  .doc-icon.purple { background: rgba(139,92,246,0.1); color: var(--purple); }
+  .doc-icon.red { background: rgba(239,68,68,0.1); color: var(--red); }
+  .doc-card h4 { font-size: 14px; font-weight: 700; color: var(--navy); margin-bottom: 4px; }
+  .doc-card p { font-size: 12px; color: var(--gray-400); margin-bottom: 14px; }
+  .doc-upload {
+    border: 2px dashed var(--gray-200); border-radius: 10px;
+    padding: 16px; text-align: center; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .doc-upload:hover { border-color: var(--royal-blue); background: rgba(37,99,235,0.03); }
+  .doc-upload i { font-size: 20px; color: var(--gray-300); margin-bottom: 6px; }
+  .doc-upload p { font-size: 11px; color: var(--gray-400); margin: 0; }
+  .doc-progress { margin-top: 12px; }
+  .progress-bar { height: 5px; background: var(--gray-100); border-radius: 3px; overflow: hidden; }
+  .progress-fill { height: 100%; border-radius: 3px; transition: width 0.5s ease; }
+  .progress-fill.blue { background: linear-gradient(90deg, var(--royal-blue), var(--sky-blue)); }
+  .progress-fill.green { background: linear-gradient(90deg, var(--emerald), var(--success)); }
+  .progress-fill.orange { background: linear-gradient(90deg, var(--orange), var(--gold)); }
+  .progress-text { display: flex; justify-content: space-between; margin-bottom: 5px; }
+  .progress-text span { font-size: 11px; font-weight: 600; color: var(--gray-500); }
+
+  /* ============================================================
+     FINANCE
+  ============================================================ */
+  .finance-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+  .chart-card { background: white; border-radius: 16px; border: 1px solid var(--gray-100); overflow: hidden; }
+  .chart-header { padding: 18px 20px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--gray-50); }
+  .chart-header h4 { font-size: 14px; font-weight: 700; color: var(--navy); }
+  .chart-body { padding: 20px; }
+  .chart-tabs { display: flex; gap: 4px; }
+  .chart-tab {
+    padding: 5px 12px; border-radius: 6px;
+    font-size: 11px; font-weight: 600; cursor: pointer;
+    color: var(--gray-400); transition: all 0.2s; border: none;
+    background: transparent; font-family: inherit;
+  }
+  .chart-tab.active { background: var(--royal-blue); color: white; }
+  .finance-summary {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-bottom: 20px;
+  }
+  .finance-stat {
+    background: white; border-radius: 14px;
+    border: 1px solid var(--gray-100);
+    padding: 16px;
+  }
+  .finance-stat .label { font-size: 11px; color: var(--gray-400); font-weight: 500; margin-bottom: 6px; }
+  .finance-stat .value { font-size: 20px; font-weight: 800; color: var(--navy); }
+  .finance-stat .sub { font-size: 11px; margin-top: 3px; }
+  .finance-stat .sub.up { color: var(--success); }
+  .finance-stat .sub.down { color: var(--red); }
+
+  /* ============================================================
+     NOTIFICATIONS PANEL
+  ============================================================ */
+  .notif-list { list-style: none; }
+  .notif-item {
+    display: flex; gap: 12px; align-items: flex-start;
+    padding: 14px 20px; border-bottom: 1px solid var(--gray-50);
+    cursor: pointer; transition: background 0.15s;
+  }
+  .notif-item:hover { background: var(--gray-50); }
+  .notif-item.unread { background: rgba(37,99,235,0.03); }
+  .notif-dot-mark {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--royal-blue); flex-shrink: 0; margin-top: 6px;
+  }
+  .notif-icon {
+    width: 36px; height: 36px; border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; flex-shrink: 0;
+  }
+  .notif-content { flex: 1; }
+  .notif-content h4 { font-size: 13px; font-weight: 600; color: var(--navy); margin-bottom: 3px; }
+  .notif-content p { font-size: 12px; color: var(--gray-500); line-height: 1.4; }
+  .notif-time { font-size: 11px; color: var(--gray-400); flex-shrink: 0; }
+
+  /* ============================================================
+     PROFILE
+  ============================================================ */
+  .profile-header {
+    background: linear-gradient(135deg, var(--navy), #1E3A8A);
+    border-radius: 20px; padding: 32px;
+    display: flex; align-items: center; gap: 24px;
+    margin-bottom: 24px; position: relative; overflow: hidden;
+  }
+  .profile-header::after {
+    content: ''; position: absolute; right: -40px; top: -60px;
+    width: 200px; height: 200px; border-radius: 50%;
+    background: rgba(96,165,250,0.1);
+  }
+  .profile-avatar {
+    width: 80px; height: 80px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--royal-blue), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 800; color: white;
+    border: 4px solid rgba(255,255,255,0.2); flex-shrink: 0;
+    position: relative; z-index: 1;
+  }
+  .profile-info { position: relative; z-index: 1; }
+  .profile-info h2 { font-size: 22px; font-weight: 800; color: white; margin-bottom: 4px; }
+  .profile-info p { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 12px; }
+  .profile-badges { display: flex; gap: 8px; }
+  .profile-badge {
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  }
+  .profile-badge.verified { background: rgba(16,185,129,0.2); color: var(--emerald); }
+  .profile-badge.premium { background: rgba(245,158,11,0.2); color: var(--gold); }
+  .profile-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+  /* ============================================================
+     HELP CENTER
+  ============================================================ */
+  .help-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 24px; }
+  .help-card {
+    background: white; border-radius: 16px;
+    border: 1px solid var(--gray-100);
+    padding: 24px; text-align: center;
+    transition: all 0.2s; cursor: pointer;
+  }
+  .help-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.08); border-color: var(--royal-blue); }
+  .help-card-icon {
+    width: 56px; height: 56px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px; margin: 0 auto 14px;
+  }
+  .help-card h4 { font-size: 15px; font-weight: 700; color: var(--navy); margin-bottom: 6px; }
+  .help-card p { font-size: 12px; color: var(--gray-400); line-height: 1.5; }
+  .chat-container {
+    background: white; border-radius: 20px;
+    border: 1px solid var(--gray-100);
+    overflow: hidden;
+  }
+  .chat-header {
+    background: linear-gradient(135deg, var(--navy), #1E3A8A);
+    padding: 16px 20px;
+    display: flex; align-items: center; gap: 12px;
+  }
+  .chat-ai-avatar {
+    width: 36px; height: 36px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--royal-blue), var(--purple));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px; color: white;
+  }
+  .chat-header-info h4 { font-size: 14px; font-weight: 700; color: white; }
+  .chat-header-info span { font-size: 11px; color: rgba(255,255,255,0.5); }
+  .chat-status { display: flex; align-items: center; gap: 5px; margin-left: auto; }
+  .status-dot { width: 7px; height: 7px; background: var(--success); border-radius: 50%; animation: pulse 2s infinite; }
+  .chat-messages { height: 320px; overflow-y: auto; padding: 20px; background: var(--gray-50); }
+  .msg { margin-bottom: 14px; display: flex; gap: 10px; }
+  .msg.user { flex-direction: row-reverse; }
+  .msg-avatar {
+    width: 30px; height: 30px; border-radius: 50%;
+    flex-shrink: 0; display: flex; align-items: center;
+    justify-content: center; font-size: 12px; font-weight: 700;
+  }
+  .msg-avatar.ai { background: linear-gradient(135deg, var(--royal-blue), var(--purple)); color: white; }
+  .msg-avatar.user-av { background: linear-gradient(135deg, var(--orange), var(--gold)); color: white; }
+  .msg-bubble {
+    max-width: 70%; padding: 10px 14px;
+    border-radius: 14px; font-size: 13px; line-height: 1.5;
+  }
+  .msg.ai .msg-bubble { background: white; color: var(--gray-700); border: 1px solid var(--gray-200); border-radius: 2px 14px 14px 14px; }
+  .msg.user .msg-bubble { background: var(--royal-blue); color: white; border-radius: 14px 2px 14px 14px; }
+  .chat-input-area { padding: 16px 20px; background: white; border-top: 1px solid var(--gray-100); display: flex; gap: 10px; }
+  .chat-input {
+    flex: 1; padding: 10px 14px;
+    border: 1.5px solid var(--gray-200); border-radius: 10px;
+    font-size: 13px; font-family: inherit; outline: none;
+  }
+  .chat-input:focus { border-color: var(--royal-blue); }
+  .btn-send {
+    width: 40px; height: 40px; border-radius: 10px;
+    background: var(--royal-blue); color: white;
+    border: none; cursor: pointer; font-size: 14px;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+  }
+  .btn-send:hover { background: #1D4ED8; }
+
+  /* ============================================================
+     MISC UTILITIES
+  ============================================================ */
+  .flex { display: flex; }
+  .items-center { align-items: center; }
+  .justify-between { justify-content: space-between; }
+  .gap-2 { gap: 8px; }
+  .gap-3 { gap: 12px; }
+  .gap-4 { gap: 16px; }
+  .mb-4 { margin-bottom: 16px; }
+  .mb-6 { margin-bottom: 24px; }
+  .text-sm { font-size: 13px; }
+  .text-xs { font-size: 11px; }
+  .font-bold { font-weight: 700; }
+  .font-semibold { font-weight: 600; }
+  .text-navy { color: var(--navy); }
+  .text-gray { color: var(--gray-500); }
+  .text-success { color: var(--success); }
+  .text-orange { color: var(--orange); }
+  .text-blue { color: var(--royal-blue); }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 6px;
+    padding: 8px 16px; border-radius: 8px; font-size: 13px;
+    font-weight: 600; font-family: inherit; cursor: pointer;
+    transition: all 0.2s; border: none;
+  }
+  .btn-blue { background: var(--royal-blue); color: white; }
+  .btn-blue:hover { background: #1D4ED8; }
+  .btn-orange { background: var(--orange); color: white; }
+  .btn-orange:hover { background: #D97706; }
+  .btn-ghost { background: transparent; color: var(--gray-600); border: 1.5px solid var(--gray-200); }
+  .btn-ghost:hover { background: var(--gray-50); }
+  .btn-danger { background: rgba(239,68,68,0.1); color: var(--red); border: 1.5px solid rgba(239,68,68,0.2); }
+
+  .empty-state { text-align: center; padding: 48px 24px; }
+  .empty-state i { font-size: 40px; color: var(--gray-200); margin-bottom: 14px; }
+  .empty-state h4 { font-size: 16px; font-weight: 700; color: var(--gray-500); margin-bottom: 6px; }
+  .empty-state p { font-size: 13px; color: var(--gray-400); }
+
+  .tag {
+    display: inline-flex; align-items: center; gap: 4px;
+    font-size: 11px; font-weight: 600;
+    padding: 3px 8px; border-radius: 6px;
+    background: var(--gray-100); color: var(--gray-600);
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fadeup { animation: fadeInUp 0.35s ease forwards; }
+
+  .skeleton {
+    background: linear-gradient(90deg, var(--gray-100) 25%, var(--gray-50) 50%, var(--gray-100) 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    border-radius: 6px;
+  }
+  @keyframes shimmer {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }
+
+  /* Mobile Menu Toggle */
+  .mobile-menu-btn { display: none; }
+
+  /* ============================================================
+     RESPONSIVE
+  ============================================================ */
+  @media (max-width: 1200px) {
+    .kpi-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+  @media (max-width: 1024px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .dashboard-sidebar-panel { display: grid; grid-template-columns: 1fr 1fr; }
+    .ai-insights { grid-template-columns: 1fr 1fr; }
+    .scheme-cards { grid-template-columns: 1fr 1fr; }
+    .finance-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 768px) {
+    :root { --sidebar-w: 0px; }
+    .sidebar { transform: translateX(-100%); width: 260px; }
+    .sidebar.open { transform: translateX(0); width: 260px; }
+    .main-content { margin-left: 0; }
+    .mobile-menu-btn { display: flex; }
+    .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+    .field-grid { grid-template-columns: 1fr; }
+    .docs-grid { grid-template-columns: 1fr 1fr; }
+    .help-grid { grid-template-columns: 1fr; }
+    .finance-summary { grid-template-columns: 1fr 1fr; }
+    .profile-grid { grid-template-columns: 1fr; }
+    #page-login { grid-template-columns: 1fr; }
+    .login-hero { display: none; }
+    .login-panel { padding: 32px 24px; }
+    .ai-insights { grid-template-columns: 1fr; }
+    .welcome-banner { padding: 20px; }
+    .health-score { display: none; }
+    .welcome-banner h2 { font-size: 18px; }
+  }
+  @media (max-width: 480px) {
+    .kpi-grid { grid-template-columns: 1fr 1fr; }
+    .docs-grid { grid-template-columns: 1fr; }
+    .scheme-cards { grid-template-columns: 1fr; }
+    .page-content { padding: 16px; }
+    .finance-summary { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* Sidebar overlay for mobile */
+  .sidebar-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.5); z-index: 99;
+  }
+  .sidebar-overlay.open { display: block; }
+</style>
+</head>
+<body>
+
+<!-- ================================================================
+     LOGIN PAGE
+================================================================ -->
+<div id="page-login" class="page active">
+  <div class="login-hero">
+    <div class="hero-brand">
+      <div class="hero-logo"><i class="fas fa-building"></i></div>
+      <div class="hero-brand-text">
+        <h2>MSME Sahay</h2>
+        <span>Your Digital Concierge</span>
+      </div>
+    </div>
+    <div class="hero-content">
+      <h1>Powering <span>India's</span><br>Business Growth</h1>
+      <p>Discover government schemes, manage finances, and accelerate your MSME growth with AI-powered insights.</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><div class="value">₹5000Cr+</div><div class="label">Funding Facilitated</div></div>
+        <div class="hero-stat"><div class="value">50+</div><div class="label">Govt Schemes</div></div>
+        <div class="hero-stat"><div class="value">10,000+</div><div class="label">MSMEs Supported</div></div>
+        <div class="hero-stat"><div class="value">95%</div><div class="label">Satisfaction Rate</div></div>
+      </div>
+    </div>
+    <div class="hero-trust">
+      <div class="trust-badge"><i class="fas fa-shield-alt"></i> Government Verified</div>
+      <div class="trust-badge"><i class="fas fa-certificate"></i> ISO Certified</div>
+      <div class="trust-badge"><i class="fas fa-lock"></i> SSL Secured</div>
+      <div class="trust-badge"><i class="fas fa-infinity"></i> 24/7 AI Support</div>
+    </div>
+  </div>
+  <div class="login-panel">
+    <div class="login-card animate-fadeup">
+      <h2>Welcome Back 👋</h2>
+      <p>Sign in to access your MSME dashboard</p>
+      <div class="otp-tab">
+        <button class="tab-btn active" onclick="switchTab(this,'email')">Email / Password</button>
+        <button class="tab-btn" onclick="switchTab(this,'otp')">OTP Login</button>
+      </div>
+      <div id="tab-email">
+        <div class="form-group">
+          <label>Email Address</label>
+          <div class="input-wrap">
+            <i class="fas fa-at"></i>
+            <input type="email" class="form-input" id="login-email" placeholder="your.email@company.com" value="yogesh@sharma.in">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Password</label>
+          <div class="input-wrap">
+            <i class="fas fa-lock"></i>
+            <input type="password" class="form-input" id="pw-field" placeholder="Enter your password" value="Demo@123">
+            <i class="fas fa-eye toggle-pw" onclick="togglePw()"></i>
+          </div>
+        </div>
+        <div class="form-row">
+          <label class="checkbox-wrap">
+            <input type="checkbox"> <span>Remember me</span>
+          </label>
+          <a class="forgot-link">Forgot password?</a>
+        </div>
+        <button class="btn-primary" onclick="doLogin()">Sign In <i class="fas fa-arrow-right" style="margin-left:8px"></i></button>
+        <div id="login-error" style="color:#EF4444;font-size:13px;margin-top:10px;display:none"></div>
+      </div>
+      <div id="tab-otp" style="display:none">
+        <div class="form-group">
+          <label>Mobile Number</label>
+          <div class="input-wrap">
+            <i class="fas fa-mobile-alt"></i>
+            <input type="tel" class="form-input" id="otp-mobile" placeholder="email or +91 98765 43210" value="yogesh@sharma.in">
+          </div>
+        </div>
+        <div class="form-group" id="otp-code-group" style="display:none">
+          <label>Enter OTP</label>
+          <div class="input-wrap">
+            <i class="fas fa-key"></i>
+            <input type="text" class="form-input" id="otp-code" placeholder="6-digit code">
+          </div>
+        </div>
+        <button class="btn-primary" id="otp-btn" onclick="doOtp()">Send OTP <i class="fas fa-paper-plane" style="margin-left:8px"></i></button>
+      </div>
+      <div class="divider"><span>Or continue with</span></div>
+      <div class="social-btns">
+        <button class="btn-social" onclick="doOauth('google')">
+          <img src="https://www.google.com/favicon.ico" width="14" alt="G"> Google
+        </button>
+        <button class="btn-social" onclick="doOauth('facebook')">
+          <i class="fab fa-facebook-f" style="color:#1877F2"></i> Facebook
+        </button>
+      </div>
+      <div class="login-footer">
+        Don't have an account? <a onclick="doRegister()" style="cursor:pointer">Sign up for free</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================================
+     APP SHELL
+================================================================ -->
+<div id="app-shell" style="display:none">
+  <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="sidebar-brand">
+        <div class="sidebar-logo"><i class="fas fa-building"></i></div>
+        <div class="sidebar-brand-text">
+          <h3>MSME Sahay</h3>
+          <span>Concierge Platform</span>
+        </div>
+      </div>
+    </div>
+    <div class="sidebar-user">
+      <div class="user-avatar" id="side-avatar">YS</div>
+      <div class="user-info">
+        <h4 id="side-name">Yogesh Sharma</h4>
+        <span id="side-sub">Manufacturing · Micro</span>
+      </div>
+      <div class="user-badge">PRO</div>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Overview</div>
+        <div class="nav-item active" onclick="navigate('dashboard')">
+          <i class="fas fa-th-large"></i><span>Dashboard</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Growth</div>
+        <div class="nav-item" onclick="navigate('eligibility')">
+          <i class="fas fa-search-dollar"></i><span>Scheme Eligibility</span><span class="nav-badge">7</span>
+        </div>
+        <div class="nav-item" onclick="navigate('applications')">
+          <i class="fas fa-file-alt"></i><span>Applications</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Compliance</div>
+        <div class="nav-item" onclick="navigate('documents')">
+          <i class="fas fa-id-card"></i><span>KYC & Documents</span>
+        </div>
+        <div class="nav-item" onclick="navigate('finance')">
+          <i class="fas fa-chart-line"></i><span>Finance</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Account</div>
+        <div class="nav-item" onclick="navigate('notifications')">
+          <i class="fas fa-bell"></i><span>Notifications</span><span class="nav-badge">3</span>
+        </div>
+        <div class="nav-item" onclick="navigate('profile')">
+          <i class="fas fa-user-circle"></i><span>Profile</span>
+        </div>
+        <div class="nav-item" onclick="navigate('help')">
+          <i class="fas fa-life-ring"></i><span>Help Center</span>
+        </div>
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      <div class="sidebar-upgrade">
+        <h4>⚡ Upgrade to Enterprise</h4>
+        <p>Unlock AI insights, priority support & more schemes</p>
+        <button class="btn-upgrade">Upgrade Now</button>
+      </div>
+      <div class="sidebar-logout" onclick="gotoLogin()">
+        <i class="fas fa-sign-out-alt"></i> Sign Out
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <div class="main-content">
+    <!-- Topbar -->
+    <header class="topbar">
+      <button class="topbar-btn mobile-menu-btn" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+      </button>
+      <div class="topbar-search">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search schemes, documents, applications…">
+      </div>
+      <div class="topbar-actions">
+        <button class="topbar-btn" onclick="navigate('notifications')">
+          <i class="fas fa-bell"></i>
+          <div class="notif-dot"></div>
+        </button>
+        <button class="topbar-btn"><i class="fas fa-question-circle"></i></button>
+        <div class="topbar-avatar" onclick="navigate('profile')">YS</div>
+      </div>
+    </header>
+
+    <!-- ============================================================ PAGES ============================================================ -->
+
+    <!-- DASHBOARD -->
+    <div id="page-dashboard" class="page-content active animate-fadeup">
+      <div class="welcome-banner">
+        <div class="welcome-content">
+          <h2>Good Morning, <span id="dash-name">Yogesh</span> 👋</h2>
+          <p>Your business qualifies for <strong style="color:white">7 new government schemes</strong>. Here's your daily business summary.</p>
+          <div class="welcome-chips">
+            <div class="chip gold"><i class="fas fa-star"></i> 7 New Schemes</div>
+            <div class="chip"><i class="fas fa-clock"></i> 2 Deadlines This Week</div>
+            <div class="chip"><i class="fas fa-robot"></i> AI Recommendations Ready</div>
+          </div>
+        </div>
+        <div class="health-score">
+          <div class="score-ring">
+            <span class="score-num" id="dash-health">78</span>
+            <span class="score-label">/ 100</span>
+          </div>
+          <p>Business Health Score</p>
+        </div>
+      </div>
+
+      <!-- KPI Grid -->
+      <div class="kpi-grid">
+        <div class="kpi-card blue" onclick="navigate('eligibility')">
+          <div class="kpi-top">
+            <div class="kpi-icon blue"><i class="fas fa-star"></i></div>
+            <div class="kpi-trend up"><i class="fas fa-arrow-up"></i>7</div>
+          </div>
+          <div class="kpi-value" id="dash-schemes">7</div>
+          <div class="kpi-label">Eligible Schemes</div>
+        </div>
+        <div class="kpi-card orange" onclick="navigate('applications')">
+          <div class="kpi-top">
+            <div class="kpi-icon orange"><i class="fas fa-file-alt"></i></div>
+            <div class="kpi-trend up"><i class="fas fa-arrow-up"></i>2</div>
+          </div>
+          <div class="kpi-value" id="dash-apps">3</div>
+          <div class="kpi-label">Active Applications</div>
+        </div>
+        <div class="kpi-card green" onclick="navigate('documents')">
+          <div class="kpi-top">
+            <div class="kpi-icon green"><i class="fas fa-shield-check"></i></div>
+            <div class="kpi-trend up"><i class="fas fa-arrow-up"></i>1</div>
+          </div>
+          <div class="kpi-value" id="dash-docs">4/6</div>
+          <div class="kpi-label">Verified Documents</div>
+        </div>
+        <div class="kpi-card purple" onclick="navigate('finance')">
+          <div class="kpi-top">
+            <div class="kpi-icon purple"><i class="fas fa-rupee-sign"></i></div>
+            <div class="kpi-trend up"><i class="fas fa-arrow-up"></i>12%</div>
+          </div>
+          <div class="kpi-value" id="dash-cashflow">₹4.2L</div>
+          <div class="kpi-label">Net Cash Flow</div>
+        </div>
+        <div class="kpi-card red">
+          <div class="kpi-top">
+            <div class="kpi-icon red"><i class="fas fa-calendar-alt"></i></div>
+            <div class="kpi-trend down"><i class="fas fa-exclamation"></i>Urgent</div>
+          </div>
+          <div class="kpi-value">2</div>
+          <div class="kpi-label">Upcoming Deadlines</div>
+        </div>
+      </div>
+
+      <!-- AI Insights -->
+      <div class="ai-insights">
+        <div class="ai-card ai-blue">
+          <div class="ai-card-icon blue"><i class="fas fa-robot"></i></div>
+          <h4>MSME Credit Guarantee Scheme</h4>
+          <p>Your business profile matches 94% of the eligibility criteria. Apply now to secure up to ₹2Cr funding.</p>
+          <div class="ai-badge"><i class="fas fa-bolt"></i> 94% Match</div>
+        </div>
+        <div class="ai-card ai-orange">
+          <div class="ai-card-icon orange"><i class="fas fa-exclamation-triangle"></i></div>
+          <h4>GST Return Due in 5 Days</h4>
+          <p>Your GSTR-3B filing is due on June 5. Estimated liability: ₹18,400. Prepare your documents now.</p>
+          <div class="ai-badge" style="background:rgba(245,158,11,0.1);color:var(--orange)"><i class="fas fa-clock"></i> Action Required</div>
+        </div>
+        <div class="ai-card ai-green">
+          <div class="ai-card-icon green"><i class="fas fa-chart-line"></i></div>
+          <h4>Revenue Up 23% This Quarter</h4>
+          <p>Your Q1 revenue grew 23% YoY. AI projects 31% growth in Q2 based on current trajectory.</p>
+          <div class="ai-badge" style="background:rgba(16,185,129,0.1);color:var(--emerald)"><i class="fas fa-arrow-trend-up"></i> Positive Trend</div>
+        </div>
+      </div>
+
+      <!-- Dashboard Grid -->
+      <div class="dashboard-grid">
+        <div class="dashboard-main">
+          <!-- Recent Applications -->
+          <div class="card">
+            <div class="card-header">
+              <div>
+                <div class="card-title">Recent Applications</div>
+                <div class="card-subtitle">Track your scheme application status</div>
+              </div>
+              <a class="card-action" onclick="navigate('applications')">View All <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="card-body" style="padding:0">
+              <div class="table-wrap">
+                <table>
+                  <thead><tr>
+                    <th>Scheme Name</th><th>Category</th><th>Applied On</th><th>Status</th><th>Action</th>
+                  </tr></thead>
+                  <tbody>
+                    <tr>
+                      <td><strong>PMEGP Scheme</strong></td>
+                      <td><span class="tag">Employment</span></td>
+                      <td>May 15, 2025</td>
+                      <td><span class="badge review">Under Review</span></td>
+                      <td><a class="card-action" onclick="navigate('applications')">Track</a></td>
+                    </tr>
+                    <tr>
+                      <td><strong>Udyam Credit Scheme</strong></td>
+                      <td><span class="tag">Finance</span></td>
+                      <td>May 8, 2025</td>
+                      <td><span class="badge approved">Approved</span></td>
+                      <td><a class="card-action">Download</a></td>
+                    </tr>
+                    <tr>
+                      <td><strong>MSME Samridhi Scheme</strong></td>
+                      <td><span class="tag">Technology</span></td>
+                      <td>Apr 29, 2025</td>
+                      <td><span class="badge submitted">Submitted</span></td>
+                      <td><a class="card-action">View</a></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <!-- Finance Overview -->
+          <div class="card">
+            <div class="card-header">
+              <div><div class="card-title">This Month's Finances</div><div class="card-subtitle">May 2025</div></div>
+              <a class="card-action" onclick="navigate('finance')">Manage Money <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="card-body">
+              <div class="finance-summary" style="margin-bottom:0">
+                <div class="finance-stat">
+                  <div class="label">Total Income</div>
+                  <div class="value" style="color:var(--emerald)">₹8.4L</div>
+                  <div class="sub up"><i class="fas fa-arrow-up"></i> 12% vs last month</div>
+                </div>
+                <div class="finance-stat">
+                  <div class="label">Total Expenses</div>
+                  <div class="value">₹4.2L</div>
+                  <div class="sub down"><i class="fas fa-arrow-up"></i> 3% vs last month</div>
+                </div>
+                <div class="finance-stat">
+                  <div class="label">Net Cash Flow</div>
+                  <div class="value" style="color:var(--royal-blue)">₹4.2L</div>
+                  <div class="sub up"><i class="fas fa-arrow-up"></i> 23% growth</div>
+                </div>
+                <div class="finance-stat">
+                  <div class="label">Taxable Amount</div>
+                  <div class="value">₹1.8L</div>
+                  <div class="sub" style="color:var(--gray-400)">Est. for this month</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="dashboard-sidebar-panel">
+          <!-- KYC Documents -->
+          <div class="card">
+            <div class="card-header">
+              <div><div class="card-title">KYC Documents</div><div class="card-subtitle">Verification Status</div></div>
+              <a class="card-action" onclick="navigate('documents')">Upload</a>
+            </div>
+            <div class="card-body" style="padding:0">
+              <ul style="list-style:none">
+                <li style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-50)">
+                  <div class="notif-icon" style="background:rgba(16,185,129,0.1)"><i class="fas fa-id-card" style="color:var(--emerald)"></i></div>
+                  <div style="flex:1"><div class="text-sm font-semibold text-navy">Aadhaar Card</div><div class="text-xs text-gray">Verified · 23 Jan 2025</div></div>
+                  <span class="badge verified">Verified</span>
+                </li>
+                <li style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-50)">
+                  <div class="notif-icon" style="background:rgba(16,185,129,0.1)"><i class="fas fa-file-invoice" style="color:var(--emerald)"></i></div>
+                  <div style="flex:1"><div class="text-sm font-semibold text-navy">GST Certificate</div><div class="text-xs text-gray">Verified · 20 Jan 2025</div></div>
+                  <span class="badge verified">Verified</span>
+                </li>
+                <li style="display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--gray-50)">
+                  <div class="notif-icon" style="background:rgba(16,185,129,0.1)"><i class="fas fa-credit-card" style="color:var(--emerald)"></i></div>
+                  <div style="flex:1"><div class="text-sm font-semibold text-navy">PAN Card</div><div class="text-xs text-gray">Verified · 18 Jan 2025</div></div>
+                  <span class="badge verified">Verified</span>
+                </li>
+                <li style="display:flex;align-items:center;gap:10px;padding:10px 16px;">
+                  <div class="notif-icon" style="background:rgba(245,158,11,0.1)"><i class="fas fa-registered" style="color:var(--orange)"></i></div>
+                  <div style="flex:1"><div class="text-sm font-semibold text-navy">Udyam Certificate</div><div class="text-xs text-gray">Upload required</div></div>
+                  <span class="badge missing">Missing</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+          <!-- Upcoming Deadlines -->
+          <div class="card">
+            <div class="card-header">
+              <div><div class="card-title">Upcoming Deadlines</div><div class="card-subtitle">Action required</div></div>
+              <a class="card-action">Calendar</a>
+            </div>
+            <div class="card-body" style="padding:0">
+              <ul style="list-style:none">
+                <li style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;border-bottom:1px solid var(--gray-50)">
+                  <div style="width:38px;height:38px;border-radius:10px;background:rgba(239,68,68,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">
+                    <div style="font-size:14px;font-weight:800;color:var(--red)">05</div>
+                    <div style="font-size:9px;color:var(--red)">JUN</div>
+                  </div>
+                  <div>
+                    <div class="text-sm font-semibold text-navy">GSTR-3B Filing</div>
+                    <div class="text-xs text-gray">Due in 5 days · Est. ₹18,400</div>
+                  </div>
+                </li>
+                <li style="display:flex;align-items:flex-start;gap:10px;padding:12px 16px;">
+                  <div style="width:38px;height:38px;border-radius:10px;background:rgba(245,158,11,0.1);display:flex;flex-direction:column;align-items:center;justify-content:center;flex-shrink:0">
+                    <div style="font-size:14px;font-weight:800;color:var(--orange)">15</div>
+                    <div style="font-size:9px;color:var(--orange)">JUN</div>
+                  </div>
+                  <div>
+                    <div class="text-sm font-semibold text-navy">PMEGP Application Deadline</div>
+                    <div class="text-xs text-gray">Due in 15 days · 3 docs needed</div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ELIGIBILITY FINDER -->
+    <div id="page-eligibility" class="page-content" style="display:none">
+      <div class="page-header">
+        <div class="breadcrumb">
+          <span onclick="navigate('dashboard')" style="cursor:pointer">Dashboard</span>
+          <i class="fas fa-chevron-right"></i>
+          <span class="active">Scheme Eligibility Finder</span>
+        </div>
+        <h1>Scheme Eligibility Finder</h1>
+        <p>Answer a few questions about your business to discover government schemes you may qualify for.</p>
+      </div>
+      <div class="wizard-container">
+        <div class="wizard-steps">
+          <div class="wizard-step active" id="step-dot-1">
+            <div class="step-circle" id="step-circle-1">1</div>
+            <div class="step-label">Business Type</div>
+          </div>
+          <div class="wizard-step" id="step-dot-2">
+            <div class="step-circle" id="step-circle-2">2</div>
+            <div class="step-label">Investment</div>
+          </div>
+          <div class="wizard-step" id="step-dot-3">
+            <div class="step-circle" id="step-circle-3">3</div>
+            <div class="step-label">Turnover</div>
+          </div>
+          <div class="wizard-step" id="step-dot-4">
+            <div class="step-circle" id="step-circle-4">4</div>
+            <div class="step-label">Results</div>
+          </div>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="wizard-form-section active" id="wiz-step-1">
+          <div class="wizard-card">
+            <h3>Tell us about your business</h3>
+            <p>This helps us identify the most relevant government schemes for your enterprise.</p>
+            <div class="field-grid">
+              <div class="field-group">
+                <label>Business Type <i class="fas fa-info-circle" title="The primary nature of your business operations"></i></label>
+                <select class="field-select">
+                  <option value="">Choose business type…</option>
+                  <option>Manufacturing</option>
+                  <option>Service</option>
+                  <option>Trading</option>
+                  <option>Agro-based</option>
+                  <option>IT / Technology</option>
+                </select>
+                <div class="field-hint">Choose the primary nature of your business operations</div>
+              </div>
+              <div class="field-group">
+                <label>Business Size (MSME Category) <i class="fas fa-info-circle"></i></label>
+                <select class="field-select">
+                  <option value="">Auto-calculated…</option>
+                  <option>Micro</option>
+                  <option>Small</option>
+                  <option>Medium</option>
+                </select>
+                <div class="field-hint">Based on investment in plant/machinery and annual turnover limits</div>
+              </div>
+              <div class="field-group">
+                <label>Business Age</label>
+                <select class="field-select">
+                  <option>Less than 1 year</option>
+                  <option selected>1–3 years</option>
+                  <option>3–5 years</option>
+                  <option>5+ years</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label>State / UT</label>
+                <select class="field-select">
+                  <option>Maharashtra</option>
+                  <option>Gujarat</option>
+                  <option>Delhi</option>
+                  <option>Karnataka</option>
+                  <option>Tamil Nadu</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label>GST Registered? <i class="fas fa-info-circle"></i></label>
+                <div class="toggle-group">
+                  <button class="toggle-btn active" onclick="toggleActive(this)">Yes</button>
+                  <button class="toggle-btn" onclick="toggleActive(this)">No</button>
+                </div>
+              </div>
+              <div class="field-group">
+                <label>Export Oriented Business?</label>
+                <div class="toggle-group">
+                  <button class="toggle-btn active" onclick="toggleActive(this)">Yes</button>
+                  <button class="toggle-btn" onclick="toggleActive(this)">No</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="wizard-nav">
+            <div></div>
+            <button class="btn-next" onclick="nextStep(2)">Continue <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="wizard-form-section" id="wiz-step-2">
+          <div class="wizard-card">
+            <h3>Investment & Infrastructure</h3>
+            <p>Tell us about your capital investments to determine your MSME category and eligible schemes.</p>
+            <div class="field-grid">
+              <div class="field-group">
+                <label>Investment in Plant & Machinery (₹) <i class="fas fa-info-circle"></i></label>
+                <input type="number" class="field-input" placeholder="e.g. 5000000" value="8500000">
+                <div class="field-hint">Enter the total investment amount in INR without commas</div>
+              </div>
+              <div class="field-group">
+                <label>Equipment & Tools Value (₹)</label>
+                <input type="number" class="field-input" placeholder="e.g. 2000000" value="2000000">
+              </div>
+              <div class="field-group">
+                <label>Number of Employees</label>
+                <input type="number" class="field-input" placeholder="e.g. 25" value="18">
+              </div>
+              <div class="field-group">
+                <label>Existing Loans / Liabilities (₹)</label>
+                <input type="number" class="field-input" placeholder="e.g. 1000000" value="1500000">
+              </div>
+              <div class="field-group">
+                <label>SC/ST/Women-owned Business?</label>
+                <div class="toggle-group">
+                  <button class="toggle-btn" onclick="toggleActive(this)">Yes</button>
+                  <button class="toggle-btn active" onclick="toggleActive(this)">No</button>
+                </div>
+              </div>
+              <div class="field-group">
+                <label>Udyam Registration Status</label>
+                <select class="field-select">
+                  <option>Registered</option>
+                  <option>Pending</option>
+                  <option>Not registered</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="wizard-nav">
+            <button class="btn-back" onclick="nextStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="btn-next" onclick="nextStep(3)">Continue <i class="fas fa-arrow-right"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="wizard-form-section" id="wiz-step-3">
+          <div class="wizard-card">
+            <h3>Revenue & Turnover</h3>
+            <p>Share your business performance metrics to match you with the right financial schemes.</p>
+            <div class="field-grid">
+              <div class="field-group">
+                <label>Annual Turnover (₹) <i class="fas fa-info-circle"></i></label>
+                <input type="number" class="field-input" placeholder="e.g. 10000000" value="12000000">
+                <div class="field-hint">Your business's annual revenue in INR</div>
+              </div>
+              <div class="field-group">
+                <label>Monthly Revenue (Avg) (₹)</label>
+                <input type="number" class="field-input" placeholder="e.g. 833333" value="1000000">
+              </div>
+              <div class="field-group">
+                <label>Net Profit Margin (%)</label>
+                <input type="number" class="field-input" placeholder="e.g. 15" value="22">
+              </div>
+              <div class="field-group">
+                <label>Export Revenue (₹)</label>
+                <input type="number" class="field-input" placeholder="e.g. 2000000" value="3000000">
+              </div>
+              <div class="field-group">
+                <label>Credit Score (CIBIL)</label>
+                <select class="field-select">
+                  <option>750+ (Excellent)</option>
+                  <option selected>700–749 (Good)</option>
+                  <option>650–699 (Fair)</option>
+                  <option>Below 650 (Poor)</option>
+                </select>
+              </div>
+              <div class="field-group">
+                <label>Existing Bank Accounts</label>
+                <select class="field-select">
+                  <option>Public Sector Bank</option>
+                  <option selected>Private Bank</option>
+                  <option>Both</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="wizard-nav">
+            <button class="btn-back" onclick="nextStep(2)"><i class="fas fa-arrow-left"></i> Back</button>
+            <button class="btn-next" onclick="runEligibility()" style="background:linear-gradient(135deg,var(--emerald),#059669)">
+              <i class="fas fa-search-dollar"></i> Find Schemes
+            </button>
+          </div>
+        </div>
+
+        <!-- Step 4: Results -->
+        <div class="wizard-form-section" id="wiz-step-4">
+          <div class="eligibility-result">
+            <div style="font-size:14px;opacity:0.6;margin-bottom:8px;display:flex;align-items:center;justify-content:center;gap:6px"><i class="fas fa-robot"></i> AI Eligibility Analysis Complete</div>
+            <div class="result-score" id="elig-score">94%</div>
+            <div class="result-label">Eligibility Score</div>
+            <div class="result-sub" id="elig-sub">Excellent! Your business qualifies for <strong>7 government schemes</strong> worth up to <strong>₹50L+ in funding</strong></div>
+            <div class="scheme-cards" id="elig-scheme-cards">
+              <div class="scheme-card">
+                <h4>PMEGP Scheme</h4>
+                <p>Prime Minister's Employment Generation Programme – Margin money subsidy of 15-35%</p>
+                <div class="scheme-match">✓ 98% Match · Up to ₹25L</div>
+              </div>
+              <div class="scheme-card">
+                <h4>CGTMSE Fund</h4>
+                <p>Credit Guarantee Trust for Micro & Small Enterprises – Collateral-free loans</p>
+                <div class="scheme-match">✓ 95% Match · Up to ₹2Cr</div>
+              </div>
+              <div class="scheme-card">
+                <h4>Mudra Tarun Loan</h4>
+                <p>PMMY Tarun category – Business loans from ₹5L to ₹10L without collateral</p>
+                <div class="scheme-match">✓ 91% Match · Up to ₹10L</div>
+              </div>
+              <div class="scheme-card">
+                <h4>SIDF Scheme</h4>
+                <p>Small Industries Development Fund – Tech upgradation and modernisation support</p>
+                <div class="scheme-match">✓ 88% Match · Up to ₹15L</div>
+              </div>
+              <div class="scheme-card">
+                <h4>ZED Certification</h4>
+                <p>Zero Defect Zero Effect – Quality certification with 80% subsidy for Micro units</p>
+                <div class="scheme-match">✓ 86% Match · Subsidy 80%</div>
+              </div>
+              <div class="scheme-card">
+                <h4>IARI Technology</h4>
+                <p>Technology Development Fund for MSME modernisation and R&D support</p>
+                <div class="scheme-match">✓ 82% Match · Up to ₹1Cr</div>
+              </div>
+            </div>
+            <div style="margin-top:24px;display:flex;gap:12px;justify-content:center">
+              <button class="btn btn-blue" onclick="navigate('applications')"><i class="fas fa-file-alt"></i> Apply for Top Schemes</button>
+              <button class="btn btn-ghost" style="color:white;border-color:rgba(255,255,255,0.3)" onclick="nextStep(1)"><i class="fas fa-redo"></i> Run Again</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- APPLICATIONS -->
+    <div id="page-applications" class="page-content" style="display:none">
+      <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div>
+          <div class="breadcrumb"><span onclick="navigate('dashboard')" style="cursor:pointer">Dashboard</span><i class="fas fa-chevron-right"></i><span class="active">Applications</span></div>
+          <h1>Applications</h1>
+          <p>Track and manage all your scheme applications in one place.</p>
+        </div>
+        <button class="btn btn-blue" onclick="navigate('eligibility')"><i class="fas fa-plus"></i> New Application</button>
+      </div>
+      <div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);margin-bottom:24px">
+        <div class="kpi-card blue"><div class="kpi-top"><div class="kpi-icon blue"><i class="fas fa-file-alt"></i></div></div><div class="kpi-value">8</div><div class="kpi-label">Total Applications</div></div>
+        <div class="kpi-card orange"><div class="kpi-top"><div class="kpi-icon orange"><i class="fas fa-hourglass-half"></i></div></div><div class="kpi-value">3</div><div class="kpi-label">Under Review</div></div>
+        <div class="kpi-card green"><div class="kpi-top"><div class="kpi-icon green"><i class="fas fa-check-circle"></i></div></div><div class="kpi-value">3</div><div class="kpi-label">Approved</div></div>
+        <div class="kpi-card red"><div class="kpi-top"><div class="kpi-icon red"><i class="fas fa-times-circle"></i></div></div><div class="kpi-value">2</div><div class="kpi-label">Rejected</div></div>
+      </div>
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">All Applications</div>
+          <div style="display:flex;gap:8px">
+            <select style="padding:6px 12px;border:1.5px solid var(--gray-200);border-radius:8px;font-size:12px;font-family:inherit;outline:none;color:var(--gray-600)">
+              <option>All Statuses</option>
+              <option>Draft</option><option>Submitted</option><option>Under Review</option><option>Approved</option><option>Rejected</option>
+            </select>
+          </div>
+        </div>
+        <div class="card-body" style="padding:0">
+          <div class="table-wrap">
+            <table>
+              <thead><tr>
+                <th>Scheme Name</th><th>Category</th><th>Amount</th><th>Applied</th><th>Status</th><th>Probability</th><th>Action</th>
+              </tr></thead>
+              <tbody>
+                <tr><td><strong>PMEGP Scheme</strong><div class="text-xs text-gray">Ref: PMEGP/2025/04721</div></td><td><span class="tag">Employment</span></td><td>₹10L</td><td>May 15</td><td><span class="badge review">Under Review</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:60px;height:5px;background:var(--gray-100);border-radius:3px;overflow:hidden"><div style="width:78%;height:100%;background:var(--emerald);border-radius:3px"></div></div><span class="text-xs font-bold" style="color:var(--emerald)">78%</span></div></td><td><a class="card-action">Track</a></td></tr>
+                <tr><td><strong>Udyam Credit Scheme</strong><div class="text-xs text-gray">Ref: UCS/2025/03198</div></td><td><span class="tag">Finance</span></td><td>₹50L</td><td>May 8</td><td><span class="badge approved">Approved</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:60px;height:5px;background:var(--gray-100);border-radius:3px;overflow:hidden"><div style="width:100%;height:100%;background:var(--success);border-radius:3px"></div></div><span class="text-xs font-bold" style="color:var(--success)">100%</span></div></td><td><a class="card-action">Download</a></td></tr>
+                <tr><td><strong>MSME Samridhi Scheme</strong><div class="text-xs text-gray">Ref: MSS/2025/02847</div></td><td><span class="tag">Technology</span></td><td>₹15L</td><td>Apr 29</td><td><span class="badge submitted">Submitted</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:60px;height:5px;background:var(--gray-100);border-radius:3px;overflow:hidden"><div style="width:60%;height:100%;background:var(--royal-blue);border-radius:3px"></div></div><span class="text-xs font-bold" style="color:var(--royal-blue)">60%</span></div></td><td><a class="card-action">View</a></td></tr>
+                <tr><td><strong>Mudra Tarun Loan</strong><div class="text-xs text-gray">Ref: MTL/2025/01652</div></td><td><span class="tag">Finance</span></td><td>₹10L</td><td>Apr 18</td><td><span class="badge draft">Draft</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:60px;height:5px;background:var(--gray-100);border-radius:3px;overflow:hidden"><div style="width:30%;height:100%;background:var(--gray-300);border-radius:3px"></div></div><span class="text-xs font-bold text-gray">30%</span></div></td><td><a class="card-action">Continue</a></td></tr>
+                <tr><td><strong>ZED Certification</strong><div class="text-xs text-gray">Ref: ZED/2025/00921</div></td><td><span class="tag">Quality</span></td><td>Subsidy</td><td>Mar 22</td><td><span class="badge approved">Approved</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:60px;height:5px;background:var(--gray-100);border-radius:3px;overflow:hidden"><div style="width:100%;height:100%;background:var(--success);border-radius:3px"></div></div><span class="text-xs font-bold" style="color:var(--success)">100%</span></div></td><td><a class="card-action">Certificate</a></td></tr>
+                <tr><td><strong>SIDF Technology Fund</strong><div class="text-xs text-gray">Ref: SIDF/2025/00312</div></td><td><span class="tag">Technology</span></td><td>₹15L</td><td>Feb 14</td><td><span class="badge rejected">Rejected</span></td><td><div style="display:flex;align-items:center;gap:6px"><div style="width:60px;height:5px;background:var(--gray-100);border-radius:3px;overflow:hidden"><div style="width:0%;height:100%;background:var(--red);border-radius:3px"></div></div><span class="text-xs font-bold" style="color:var(--red)">0%</span></div></td><td><a class="card-action" style="color:var(--orange)">Re-apply</a></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div id="page-documents" class="page-content" style="display:none">
+      <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div>
+          <div class="breadcrumb"><span onclick="navigate('dashboard')" style="cursor:pointer">Dashboard</span><i class="fas fa-chevron-right"></i><span class="active">KYC & Documents</span></div>
+          <h1>KYC & Documents</h1>
+          <p>Upload, verify and manage all your business documents in one secure place.</p>
+        </div>
+        <button class="btn btn-blue" onclick="uploadDocPrompt()"><i class="fas fa-cloud-upload-alt"></i> Upload Document</button>
+      </div>
+      <!-- Verification Score -->
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-body" style="display:flex;align-items:center;gap:24px;flex-wrap:wrap">
+          <div style="text-align:center;flex-shrink:0">
+            <div style="font-size:48px;font-weight:900;color:var(--royal-blue);line-height:1" id="doc-verif-score">67%</div>
+            <div style="font-size:12px;color:var(--gray-400);font-weight:500">Verification Score</div>
+          </div>
+          <div style="flex:1;min-width:200px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:6px"><span class="text-sm font-semibold">Overall Profile Completion</span><span class="text-sm font-bold text-blue">4 of 6 documents</span></div>
+            <div class="progress-bar" style="height:10px;margin-bottom:12px"><div class="progress-fill blue" style="width:67%"></div></div>
+            <div style="display:flex;gap:16px;flex-wrap:wrap">
+              <div style="display:flex;align-items:center;gap:5px;font-size:12px"><i class="fas fa-check-circle" style="color:var(--success)"></i> 4 Verified</div>
+              <div style="display:flex;align-items:center;gap:5px;font-size:12px"><i class="fas fa-clock" style="color:var(--orange)"></i> 1 Pending</div>
+              <div style="display:flex;align-items:center;gap:5px;font-size:12px"><i class="fas fa-times-circle" style="color:var(--red)"></i> 1 Missing</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:6px">
+            <div class="chip" style="background:rgba(34,197,94,0.1);border-color:rgba(34,197,94,0.3);color:var(--success)"><i class="fas fa-shield-alt"></i> Aadhaar eKYC Verified</div>
+            <div class="chip" style="background:rgba(37,99,235,0.1);border-color:rgba(37,99,235,0.3);color:var(--royal-blue)"><i class="fas fa-robot"></i> OCR Auto-Processing Available</div>
+          </div>
+        </div>
+      </div>
+      <div class="docs-grid" id="docs-grid">
+        <div class="doc-card">
+          <div class="doc-icon blue"><i class="fas fa-id-card"></i></div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+            <h4>Aadhaar Card</h4><span class="badge verified">Verified</span>
+          </div>
+          <p>12-digit unique identification number issued by UIDAI</p>
+          <div class="doc-progress">
+            <div class="progress-text"><span>Upload Progress</span><span style="color:var(--success)">100%</span></div>
+            <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="btn btn-ghost" style="flex:1;font-size:11px;padding:6px 8px"><i class="fas fa-eye"></i> View</button>
+            <button class="btn btn-ghost" style="flex:1;font-size:11px;padding:6px 8px"><i class="fas fa-redo"></i> Re-upload</button>
+          </div>
+        </div>
+        <div class="doc-card">
+          <div class="doc-icon orange"><i class="fas fa-credit-card"></i></div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+            <h4>PAN Card</h4><span class="badge verified">Verified</span>
+          </div>
+          <p>Permanent Account Number for income tax and financial identity</p>
+          <div class="doc-progress">
+            <div class="progress-text"><span>Upload Progress</span><span style="color:var(--success)">100%</span></div>
+            <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="btn btn-ghost" style="flex:1;font-size:11px;padding:6px 8px"><i class="fas fa-eye"></i> View</button>
+            <button class="btn btn-ghost" style="flex:1;font-size:11px;padding:6px 8px"><i class="fas fa-redo"></i> Re-upload</button>
+          </div>
+        </div>
+        <div class="doc-card">
+          <div class="doc-icon green"><i class="fas fa-file-invoice"></i></div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+            <h4>GST Certificate</h4><span class="badge verified">Verified</span>
+          </div>
+          <p>Goods and Services Tax registration certificate from GSTN</p>
+          <div class="doc-progress">
+            <div class="progress-text"><span>Upload Progress</span><span style="color:var(--success)">100%</span></div>
+            <div class="progress-bar"><div class="progress-fill green" style="width:100%"></div></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="btn btn-ghost" style="flex:1;font-size:11px;padding:6px 8px"><i class="fas fa-eye"></i> View</button>
+            <button class="btn btn-ghost" style="flex:1;font-size:11px;padding:6px 8px"><i class="fas fa-redo"></i> Re-upload</button>
+          </div>
+        </div>
+        <div class="doc-card">
+          <div class="doc-icon purple"><i class="fas fa-registered"></i></div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+            <h4>Udyam Certificate</h4><span class="badge missing">Missing</span>
+          </div>
+          <p>Udyam Registration for MSME classification and benefits access</p>
+          <div class="doc-upload">
+            <i class="fas fa-cloud-upload-alt"></i>
+            <p>Drag & drop or <strong style="color:var(--royal-blue)">click to upload</strong></p>
+            <p style="margin-top:3px">PDF, JPG, PNG · Max 5MB · OCR auto-processing</p>
+          </div>
+        </div>
+        <div class="doc-card">
+          <div class="doc-icon blue"><i class="fas fa-university"></i></div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+            <h4>Bank Statement</h4><span class="badge verified">Verified</span>
+          </div>
+          <p>Last 12 months bank statement for financial verification</p>
+          <div class="doc-progress">
+            <div class="progress-text"><span>Upload Progress</span><span style="color:var(--success)">100%</span></div>
+            <div class="progress-bar"><div class="progress-fill blue" style="width:100%"></div></div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:12px">
+            <button class="btn btn-ghost" style="flex:1;font-size:11px;padding:6px 8px"><i class="fas fa-eye"></i> View</button>
+            <button class="btn btn-ghost" style="flex:1;font-size:11px;padding:6px 8px"><i class="fas fa-download"></i> Download</button>
+          </div>
+        </div>
+        <div class="doc-card">
+          <div class="doc-icon red"><i class="fas fa-file-contract"></i></div>
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:4px">
+            <h4>ITR / Tax Returns</h4><span class="badge pending">Processing</span>
+          </div>
+          <p>Income Tax Return documents for last 2 financial years</p>
+          <div class="doc-progress">
+            <div class="progress-text"><span>OCR Processing</span><span style="color:var(--orange)">65%</span></div>
+            <div class="progress-bar"><div class="progress-fill orange" style="width:65%"></div></div>
+          </div>
+          <div style="margin-top:10px;font-size:11px;color:var(--orange);display:flex;align-items:center;gap:4px">
+            <i class="fas fa-robot"></i> AI is extracting and verifying data…
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FINANCE -->
+    <div id="page-finance" class="page-content" style="display:none">
+      <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div>
+          <div class="breadcrumb"><span onclick="navigate('dashboard')" style="cursor:pointer">Dashboard</span><i class="fas fa-chevron-right"></i><span class="active">Finance</span></div>
+          <h1>Finance Dashboard</h1>
+          <p>Track revenue, expenses, tax liability and cash flow in real time.</p>
+        </div>
+        <div style="display:flex;gap:8px">
+          <button class="btn btn-ghost"><i class="fas fa-download"></i> Export</button>
+          <button class="btn btn-blue"><i class="fas fa-plus"></i> Add Transaction</button>
+        </div>
+      </div>
+      <!-- Finance KPIs -->
+      <div class="finance-summary">
+        <div class="finance-stat" style="border-top:3px solid var(--emerald)">
+          <div class="label">Total Income (May)</div>
+          <div class="value" style="color:var(--emerald)">₹8,40,000</div>
+          <div class="sub up"><i class="fas fa-arrow-up"></i> +12% vs Apr</div>
+        </div>
+        <div class="finance-stat" style="border-top:3px solid var(--red)">
+          <div class="label">Total Expenses (May)</div>
+          <div class="value">₹4,20,000</div>
+          <div class="sub down"><i class="fas fa-arrow-up"></i> +3% vs Apr</div>
+        </div>
+        <div class="finance-stat" style="border-top:3px solid var(--royal-blue)">
+          <div class="label">Net Cash Flow</div>
+          <div class="value" style="color:var(--royal-blue)">₹4,20,000</div>
+          <div class="sub up"><i class="fas fa-arrow-up"></i> +23% growth</div>
+        </div>
+        <div class="finance-stat" style="border-top:3px solid var(--orange)">
+          <div class="label">Taxable Amount (Est.)</div>
+          <div class="value">₹1,80,000</div>
+          <div class="sub" style="color:var(--gray-400)">GSTR-3B due Jun 5</div>
+        </div>
+      </div>
+      <div class="finance-grid">
+        <!-- Revenue Chart -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <div>
+              <h4>Revenue vs Expenses</h4>
+              <div style="font-size:11px;color:var(--gray-400)">Last 6 months trend</div>
+            </div>
+            <div class="chart-tabs">
+              <button class="chart-tab active">6M</button>
+              <button class="chart-tab" onclick="switchChartTab(this)">1Y</button>
+              <button class="chart-tab" onclick="switchChartTab(this)">All</button>
+            </div>
+          </div>
+          <div class="chart-body">
+            <canvas id="revenueChart" height="200"></canvas>
+          </div>
+        </div>
+        <!-- Expense Breakdown -->
+        <div class="chart-card">
+          <div class="chart-header">
+            <h4>Expense Breakdown</h4>
+            <div style="font-size:11px;color:var(--gray-400)">May 2025</div>
+          </div>
+          <div class="chart-body" style="display:flex;align-items:center;gap:20px">
+            <canvas id="expenseChart" width="160" height="160"></canvas>
+            <div style="flex:1">
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:var(--royal-blue)"></div><span class="text-xs">Raw Materials</span></div><span class="text-xs font-bold">38%</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:var(--orange)"></div><span class="text-xs">Salaries</span></div><span class="text-xs font-bold">27%</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:var(--emerald)"></div><span class="text-xs">Utilities</span></div><span class="text-xs font-bold">18%</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:var(--purple)"></div><span class="text-xs">Marketing</span></div><span class="text-xs font-bold">10%</span>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:space-between">
+                  <div style="display:flex;align-items:center;gap:6px"><div style="width:10px;height:10px;border-radius:2px;background:var(--red)"></div><span class="text-xs">Other</span></div><span class="text-xs font-bold">7%</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Transactions -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Recent Transactions</div>
+          <button class="btn btn-ghost" style="font-size:12px;padding:6px 12px"><i class="fas fa-filter"></i> Filter</button>
+        </div>
+        <div class="card-body" style="padding:0">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Description</th><th>Category</th><th>Date</th><th>Amount</th><th>Type</th></tr></thead>
+              <tbody>
+                <tr><td><strong>Client Payment – Acme Corp</strong></td><td><span class="tag">Revenue</span></td><td>May 28</td><td style="color:var(--success);font-weight:700">+₹2,40,000</td><td><span class="badge approved">Income</span></td></tr>
+                <tr><td><strong>Raw Material Purchase</strong></td><td><span class="tag">Materials</span></td><td>May 26</td><td style="color:var(--red);font-weight:700">-₹85,000</td><td><span class="badge rejected">Expense</span></td></tr>
+                <tr><td><strong>Staff Salaries – May</strong></td><td><span class="tag">Payroll</span></td><td>May 25</td><td style="color:var(--red);font-weight:700">-₹1,10,000</td><td><span class="badge rejected">Expense</span></td></tr>
+                <tr><td><strong>Export Revenue – Dubai</strong></td><td><span class="tag">Export</span></td><td>May 22</td><td style="color:var(--success);font-weight:700">+₹3,50,000</td><td><span class="badge approved">Income</span></td></tr>
+                <tr><td><strong>Utility Bills – May</strong></td><td><span class="tag">Utilities</span></td><td>May 20</td><td style="color:var(--red);font-weight:700">-₹22,000</td><td><span class="badge rejected">Expense</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS -->
+    <div id="page-notifications" class="page-content" style="display:none">
+      <div class="page-header" style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div>
+          <div class="breadcrumb"><span onclick="navigate('dashboard')" style="cursor:pointer">Dashboard</span><i class="fas fa-chevron-right"></i><span class="active">Notifications</span></div>
+          <h1>Notifications</h1>
+          <p>Stay updated on applications, deadlines, and AI recommendations.</p>
+        </div>
+        <button class="btn btn-ghost"><i class="fas fa-check-double"></i> Mark All Read</button>
+      </div>
+      <div class="card">
+        <ul class="notif-list" id="notif-list">
+          <li class="notif-item unread">
+            <div class="notif-dot-mark"></div>
+            <div class="notif-icon" style="background:rgba(37,99,235,0.1)"><i class="fas fa-robot" style="color:var(--royal-blue)"></i></div>
+            <div class="notif-content"><h4>AI Found 7 New Eligible Schemes</h4><p>Based on your updated business profile, you now qualify for 7 government schemes. The top match is PMEGP with 94% eligibility.</p></div>
+            <div class="notif-time">2h ago</div>
+          </li>
+          <li class="notif-item unread">
+            <div class="notif-dot-mark"></div>
+            <div class="notif-icon" style="background:rgba(239,68,68,0.1)"><i class="fas fa-exclamation-circle" style="color:var(--red)"></i></div>
+            <div class="notif-content"><h4>GST Filing Deadline in 5 Days</h4><p>Your GSTR-3B filing is due on June 5, 2025. Estimated tax liability is ₹18,400. Please prepare your documents.</p></div>
+            <div class="notif-time">5h ago</div>
+          </li>
+          <li class="notif-item unread">
+            <div class="notif-dot-mark"></div>
+            <div class="notif-icon" style="background:rgba(16,185,129,0.1)"><i class="fas fa-check-circle" style="color:var(--emerald)"></i></div>
+            <div class="notif-content"><h4>Udyam Credit Scheme Application Approved!</h4><p>Congratulations! Your application for Udyam Credit Scheme (Ref: UCS/2025/03198) has been approved. Amount: ₹50L.</p></div>
+            <div class="notif-time">1d ago</div>
+          </li>
+          <li class="notif-item">
+            <div class="notif-dot-mark" style="opacity:0"></div>
+            <div class="notif-icon" style="background:rgba(245,158,11,0.1)"><i class="fas fa-clock" style="color:var(--orange)"></i></div>
+            <div class="notif-content"><h4>ITR Document Processing Complete</h4><p>AI has finished processing your ITR documents. 2 years of financial data extracted and verified successfully.</p></div>
+            <div class="notif-time">2d ago</div>
+          </li>
+          <li class="notif-item">
+            <div class="notif-dot-mark" style="opacity:0"></div>
+            <div class="notif-icon" style="background:rgba(139,92,246,0.1)"><i class="fas fa-chart-bar" style="color:var(--purple)"></i></div>
+            <div class="notif-content"><h4>Monthly Financial Report Ready</h4><p>Your April 2025 financial summary is now available. Net cash flow: ₹3.8L. Revenue growth: +18% MoM.</p></div>
+            <div class="notif-time">3d ago</div>
+          </li>
+          <li class="notif-item">
+            <div class="notif-dot-mark" style="opacity:0"></div>
+            <div class="notif-icon" style="background:rgba(16,185,129,0.1)"><i class="fas fa-shield-check" style="color:var(--emerald)"></i></div>
+            <div class="notif-content"><h4>GST Certificate Verified</h4><p>Your GST Certificate has been successfully verified using OCR technology. Your document score is now 67%.</p></div>
+            <div class="notif-time">5d ago</div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PROFILE -->
+    <div id="page-profile" class="page-content" style="display:none">
+      <div class="page-header">
+        <div class="breadcrumb"><span onclick="navigate('dashboard')" style="cursor:pointer">Dashboard</span><i class="fas fa-chevron-right"></i><span class="active">Profile</span></div>
+        <h1>Business Profile</h1>
+      </div>
+      <div class="profile-header">
+        <div class="profile-avatar">YS</div>
+        <div class="profile-info">
+          <h2>Yogesh Sharma</h2>
+          <p>Yogesh Industries Pvt. Ltd. · GSTIN: 27AADCY0010J1ZX</p>
+          <div class="profile-badges">
+            <span class="profile-badge verified"><i class="fas fa-check-circle"></i> Udyam Verified</span>
+            <span class="profile-badge premium"><i class="fas fa-crown"></i> Pro Member</span>
+          </div>
+        </div>
+        <button class="btn btn-ghost" style="color:white;border-color:rgba(255,255,255,0.3);margin-left:auto;align-self:flex-start;position:relative;z-index:1"><i class="fas fa-edit"></i> Edit Profile</button>
+      </div>
+      <div class="profile-grid">
+        <div class="card">
+          <div class="card-header"><div class="card-title">Business Information</div><a class="card-action">Edit</a></div>
+          <div class="card-body">
+            <div style="display:grid;gap:14px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">Business Name</div><div class="text-sm font-semibold text-navy">Yogesh Industries Pvt. Ltd.</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">Business Type</div><div class="text-sm font-semibold text-navy">Manufacturing</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">MSME Category</div><div class="text-sm font-semibold text-navy">Micro Enterprise</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">Udyam Number</div><div class="text-sm font-semibold text-navy">UDYAM-MH-23-0042891</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">State / UT</div><div class="text-sm font-semibold text-navy">Maharashtra</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">Year of Establishment</div><div class="text-sm font-semibold text-navy">2022</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Contact Information</div><a class="card-action">Edit</a></div>
+          <div class="card-body">
+            <div style="display:grid;gap:14px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">Email Address</div><div class="text-sm font-semibold text-navy">yogesh@yogeshindustries.in</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">Mobile Number</div><div class="text-sm font-semibold text-navy">+91 98765 43210</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">GSTIN</div><div class="text-sm font-semibold text-navy">27AADCY0010J1ZX</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">PAN</div><div class="text-sm font-semibold text-navy">AADCY0010J</div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Financial Details</div><a class="card-action">Edit</a></div>
+          <div class="card-body">
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+              <div><div class="text-xs text-gray" style="margin-bottom:4px">Annual Turnover</div><div class="text-sm font-semibold text-navy">₹1.2 Crore</div></div>
+              <div><div class="text-xs text-gray" style="margin-bottom:4px">Plant & Machinery Investment</div><div class="text-sm font-semibold text-navy">₹85 Lakh</div></div>
+              <div><div class="text-xs text-gray" style="margin-bottom:4px">No. of Employees</div><div class="text-sm font-semibold text-navy">18</div></div>
+              <div><div class="text-xs text-gray" style="margin-bottom:4px">CIBIL Score</div><div class="text-sm font-semibold" style="color:var(--emerald)">724 (Good)</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header"><div class="card-title">Account Settings</div></div>
+          <div class="card-body">
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--gray-50);border-radius:10px">
+                <div><div class="text-sm font-semibold">Two-Factor Authentication</div><div class="text-xs text-gray">Add an extra layer of security</div></div>
+                <div style="width:38px;height:22px;background:var(--success);border-radius:11px;position:relative;cursor:pointer"><div style="position:absolute;right:3px;top:3px;width:16px;height:16px;background:white;border-radius:50%"></div></div>
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:10px;background:var(--gray-50);border-radius:10px">
+                <div><div class="text-sm font-semibold">Email Notifications</div><div class="text-xs text-gray">Receive updates via email</div></div>
+                <div style="width:38px;height:22px;background:var(--success);border-radius:11px;position:relative;cursor:pointer"><div style="position:absolute;right:3px;top:3px;width:16px;height:16px;background:white;border-radius:50%"></div></div>
+              </div>
+              <button class="btn btn-danger" style="width:100%;justify-content:center" onclick="gotoLogin()"><i class="fas fa-sign-out-alt"></i> Sign Out</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- HELP CENTER -->
+    <div id="page-help" class="page-content" style="display:none">
+      <div class="page-header">
+        <div class="breadcrumb"><span onclick="navigate('dashboard')" style="cursor:pointer">Dashboard</span><i class="fas fa-chevron-right"></i><span class="active">Help Center</span></div>
+        <h1>Help Center</h1>
+        <p>Get support, explore resources, and connect with our AI assistant.</p>
+      </div>
+      <div class="help-grid">
+        <div class="help-card">
+          <div class="help-card-icon" style="background:rgba(37,99,235,0.1)"><i class="fas fa-book" style="color:var(--royal-blue)"></i></div>
+          <h4>Knowledge Base</h4>
+          <p>Browse 200+ articles on MSME schemes, compliance, and financial planning</p>
+        </div>
+        <div class="help-card">
+          <div class="help-card-icon" style="background:rgba(16,185,129,0.1)"><i class="fas fa-video" style="color:var(--emerald)"></i></div>
+          <h4>Video Tutorials</h4>
+          <p>Step-by-step video guides for applying to schemes and managing documents</p>
+        </div>
+        <div class="help-card">
+          <div class="help-card-icon" style="background:rgba(245,158,11,0.1)"><i class="fas fa-ticket-alt" style="color:var(--orange)"></i></div>
+          <h4>Support Tickets</h4>
+          <p>Raise a support ticket and get resolution within 24 hours from our team</p>
+        </div>
+        <div class="help-card">
+          <div class="help-card-icon" style="background:rgba(139,92,246,0.1)"><i class="fas fa-users" style="color:var(--purple)"></i></div>
+          <h4>MSME Community</h4>
+          <p>Connect with 10,000+ MSME owners, share experiences and get advice</p>
+        </div>
+        <div class="help-card">
+          <div class="help-card-icon" style="background:rgba(236,72,153,0.1)"><i class="fas fa-user-tie" style="color:var(--pink)"></i></div>
+          <h4>Expert Consultation</h4>
+          <p>Book a 1-on-1 session with certified financial and legal experts</p>
+        </div>
+        <div class="help-card">
+          <div class="help-card-icon" style="background:rgba(239,68,68,0.1)"><i class="fas fa-phone-alt" style="color:var(--red)"></i></div>
+          <h4>Live Chat Support</h4>
+          <p>Chat with a support agent in real time. Available Mon–Sat, 9AM–6PM</p>
+        </div>
+      </div>
+      <!-- AI Chat -->
+      <div class="chat-container">
+        <div class="chat-header">
+          <div class="chat-ai-avatar"><i class="fas fa-robot"></i></div>
+          <div class="chat-header-info">
+            <h4>MSME AI Assistant</h4>
+            <span>Powered by GenAI · Trained on 50+ Govt Schemes</span>
+          </div>
+          <div class="chat-status">
+            <div class="status-dot"></div>
+            <span style="font-size:11px;color:rgba(255,255,255,0.6)">Online</span>
+          </div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+          <div class="msg ai">
+            <div class="msg-avatar ai"><i class="fas fa-robot"></i></div>
+            <div class="msg-bubble">Hello Yogesh! 👋 I'm your MSME AI Assistant. I can help you discover schemes, understand eligibility criteria, prepare applications, and manage compliance. What would you like to know today?</div>
+          </div>
+          <div class="msg ai">
+            <div class="msg-avatar ai"><i class="fas fa-robot"></i></div>
+            <div class="msg-bubble">Based on your profile, I've identified <strong>7 new schemes</strong> you're eligible for this month. Would you like me to walk you through the top 3?</div>
+          </div>
+        </div>
+        <div class="chat-input-area">
+          <input type="text" class="chat-input" id="chat-input" placeholder="Ask about MSME schemes, eligibility, documents…" onkeypress="if(event.key==='Enter')sendChat()">
+          <button class="btn-send" onclick="sendChat()"><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /main-content -->
+</div><!-- /app-shell -->
+
+<script>
+// ================================================================
+// NAVIGATION & STATE
+// ================================================================
+let currentPage = 'login';
+let currentStep = 1;
+
+function gotoApp() {
+  document.getElementById('page-login').classList.remove('active');
+  document.getElementById('page-login').style.display = 'none';
+  document.getElementById('app-shell').style.display = 'flex';
+  navigate('dashboard');
+}
+
+function gotoLogin() {
+  document.getElementById('app-shell').style.display = 'none';
+  document.getElementById('page-login').style.display = 'grid';
+  document.getElementById('page-login').classList.add('active');
+}
+
+function navigate(page) {
+  // Hide all page contents
+  document.querySelectorAll('.page-content').forEach(el => {
+    el.style.display = 'none';
+  });
+  // Show selected
+  const target = document.getElementById('page-' + page);
+  if (target) {
+    target.style.display = 'block';
+    target.classList.add('animate-fadeup');
+    setTimeout(() => target.classList.remove('animate-fadeup'), 350);
+  }
+  // Update sidebar active
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.remove('active');
+    if (el.getAttribute('onclick') && el.getAttribute('onclick').includes("'" + page + "'")) {
+      el.classList.add('active');
+    }
+  });
+  currentPage = page;
+  closeSidebar();
+  // Init charts if finance page
+  if (page === 'finance') {
+    setTimeout(initCharts, 100);
+  }
+}
+
+// ================================================================
+// LOGIN TABS
+// ================================================================
+function switchTab(btn, tab) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-email').style.display = tab === 'email' ? 'block' : 'none';
+  document.getElementById('tab-otp').style.display = tab === 'otp' ? 'block' : 'none';
+}
+
+function togglePw() {
+  const f = document.getElementById('pw-field');
+  f.type = f.type === 'password' ? 'text' : 'password';
+}
+
+// ================================================================
+// WIZARD
+// ================================================================
+function nextStep(step) {
+  // Hide all steps
+  document.querySelectorAll('.wizard-form-section').forEach(el => el.classList.remove('active'));
+  // Show target step
+  const target = document.getElementById('wiz-step-' + step);
+  if (target) target.classList.add('active');
+  // Update step indicators
+  for (let i = 1; i <= 4; i++) {
+    const dot = document.getElementById('step-dot-' + i);
+    const circle = document.getElementById('step-circle-' + i);
+    if (!dot) continue;
+    dot.classList.remove('active', 'completed');
+    if (i < step) {
+      dot.classList.add('completed');
+      circle.innerHTML = '<i class="fas fa-check" style="font-size:12px"></i>';
+    } else if (i === step) {
+      dot.classList.add('active');
+      circle.innerHTML = i;
+    } else {
+      circle.innerHTML = i;
+    }
+  }
+  currentStep = step;
+}
+
+function toggleActive(btn) {
+  const group = btn.parentElement;
+  group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ================================================================
+// CHART TABS
+// ================================================================
+function switchChartTab(btn) {
+  btn.closest('.chart-tabs').querySelectorAll('.chart-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+// ================================================================
+// CHARTS (Chart.js)
+// ================================================================
+let revenueChartInstance = null;
+let expenseChartInstance = null;
+
+function initCharts() {
+  // Revenue Chart
+  const rCtx = document.getElementById('revenueChart');
+  if (rCtx && !revenueChartInstance) {
+    revenueChartInstance = new Chart(rCtx, {
+      type: 'line',
+      data: {
+        labels: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'],
+        datasets: [{
+          label: 'Revenue',
+          data: [520000, 680000, 720000, 760000, 800000, 840000],
+          borderColor: '#2563EB',
+          backgroundColor: 'rgba(37,99,235,0.08)',
+          borderWidth: 2.5,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#2563EB',
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }, {
+          label: 'Expenses',
+          data: [310000, 350000, 340000, 390000, 410000, 420000],
+          borderColor: '#EF4444',
+          backgroundColor: 'rgba(239,68,68,0.05)',
+          borderWidth: 2.5,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: '#EF4444',
+          pointRadius: 4,
+          pointHoverRadius: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: { mode: 'index', intersect: false },
+        plugins: {
+          legend: { position: 'top', labels: { boxWidth: 10, font: { size: 12 } } },
+          tooltip: {
+            callbacks: {
+              label: ctx => '₹' + (ctx.parsed.y / 100000).toFixed(1) + 'L'
+            }
+          }
+        },
+        scales: {
+          y: {
+            grid: { color: '#F1F5F9' },
+            ticks: {
+              callback: v => '₹' + (v/100000).toFixed(0) + 'L',
+              font: { size: 11 }
+            }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { font: { size: 11 } }
+          }
+        }
+      }
+    });
+  }
+
+  // Expense Donut
+  const eCtx = document.getElementById('expenseChart');
+  if (eCtx && !expenseChartInstance) {
+    expenseChartInstance = new Chart(eCtx, {
+      type: 'doughnut',
+      data: {
+        labels: ['Raw Materials', 'Salaries', 'Utilities', 'Marketing', 'Other'],
+        datasets: [{
+          data: [38, 27, 18, 10, 7],
+          backgroundColor: ['#2563EB', '#F59E0B', '#10B981', '#8B5CF6', '#EF4444'],
+          borderWidth: 0,
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + '%' }
+          }
+        },
+        cutout: '68%'
+      }
+    });
+  }
+}
+
+// ================================================================
+// MOBILE SIDEBAR
+// ================================================================
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('sidebarOverlay').classList.toggle('open');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('sidebarOverlay').classList.remove('open');
+}
+
+// ================================================================
+// AI CHAT
+// ================================================================
+const aiReplies = [
+  "Great question! Based on your business profile, the PMEGP scheme offers the highest subsidy of up to 35% for manufacturing units. Your current turnover and investment makes you highly eligible.",
+  "For CGTMSE, you'll need your Udyam certificate, last 2 years ITR, and bank statements. I see you're missing the Udyam document - would you like to upload it now?",
+  "Your business health score is 78/100. To improve it, I recommend uploading the missing Udyam certificate and filing your pending GSTR-3B.",
+  "The application deadline for PMEGP is June 15, 2025. I recommend starting the application now - it takes about 30 minutes with your documents ready.",
+  "I've analyzed your financial data. Your net profit margin of 22% is excellent for a micro manufacturing unit. This improves your eligibility for collateral-free loans."
+];
+let replyIndex = 0;
+
+function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg) return;
+  const messages = document.getElementById('chat-messages');
+  // User message
+  messages.innerHTML += '<div class="msg user"><div class="msg-avatar user-av">YS</div><div class="msg-bubble">' + msg + '</div></div>';
+  input.value = '';
+  messages.scrollTop = messages.scrollHeight;
+  // AI reply
+  setTimeout(() => {
+    const reply = aiReplies[replyIndex % aiReplies.length];
+    replyIndex++;
+    messages.innerHTML += '<div class="msg ai"><div class="msg-avatar ai"><i class="fas fa-robot"></i></div><div class="msg-bubble">' + reply + '</div></div>';
+    messages.scrollTop = messages.scrollHeight;
+  }, 800);
+}
+</script>
+<script src="/static/api.js"></script>
+<script src="/static/integration.js"></script>
+</body>
+</html>
