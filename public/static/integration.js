@@ -119,6 +119,7 @@
     try {
       const fin = await API.getFinance()
       financeData = fin
+      window.financeData = fin
       setText('dash-health', fin.summary.health_score)
       const net = fin.summary.net_profit
       setText('dash-cashflow', '\u20b9' + (net / 100000).toFixed(1) + 'L')
@@ -140,30 +141,209 @@
     } catch (e) {}
   }
 
+  // ---------- FINANCE DASHBOARD ----------
+  function inrFull(n) { return '\u20b9' + (Number(n) || 0).toLocaleString('en-IN') }
+
+  async function loadFinance() {
+    // KPIs from overview
+    try {
+      const fin = await API.getFinance()
+      financeData = fin
+      window.financeData = fin
+      const s = fin.summary || {}
+      setText('fin-income', inrFull(s.total_revenue))
+      setText('fin-expenses', inrFull(s.total_expenses))
+      setText('fin-net', inrFull(s.net_profit))
+      setText('fin-health', s.health_score != null ? s.health_score : '\u2014')
+      const fr = document.getElementById('fin-health-sub')
+      if (fr) fr.textContent = 'Funding readiness ' + (s.funding_readiness != null ? s.funding_readiness + '%' : '')
+      const im = document.getElementById('fin-income-sub')
+      if (im) im.innerHTML = s.margin != null ? ('<i class="fas fa-percentage"></i> ' + s.margin + '% margin') : ''
+    } catch (e) {}
+    // Transactions table
+    try {
+      const { transactions } = await API.getTransactions()
+      const body = document.getElementById('fin-txn-body')
+      if (body) {
+        if (!transactions || !transactions.length) {
+          body.innerHTML = '<tr><td colspan="5" style="text-align:center;color:var(--gray-400);padding:20px">No transactions yet \u2014 click "Add Transaction" to record one.</td></tr>'
+        } else {
+          body.innerHTML = transactions.map((t) => {
+            const income = t.type === 'income'
+            const sign = income ? '+' : '-'
+            const color = income ? 'var(--success)' : 'var(--red)'
+            const badge = income ? '<span class="badge approved">Income</span>' : '<span class="badge rejected">Expense</span>'
+            return '<tr><td><strong>' + esc(t.description || (income ? 'Income' : 'Expense')) + '</strong></td>' +
+              '<td><span class="tag">' + esc(t.category || '\u2014') + '</span></td>' +
+              '<td>' + esc(t.txn_date || '') + '</td>' +
+              '<td style="color:' + color + ';font-weight:700">' + sign + inrFull(t.amount) + '</td>' +
+              '<td>' + badge + '</td></tr>'
+          }).join('')
+        }
+      }
+    } catch (e) {}
+    // Rebuild charts with live finance data (destroy stale demo instances first)
+    try {
+      if (window.revenueChartInstance) { window.revenueChartInstance.destroy(); window.revenueChartInstance = null }
+      if (window.expenseChartInstance) { window.expenseChartInstance.destroy(); window.expenseChartInstance = null }
+      if (typeof window.initCharts === 'function') window.initCharts()
+    } catch (e) {}
+  }
+  window._loadFinance = loadFinance
+
+  // ----- Add Transaction modal -----
+  window.openTxnModal = function () {
+    const m = document.getElementById('txn-modal'); if (!m) return
+    const dt = document.getElementById('txn-date'); if (dt && !dt.value) dt.value = new Date().toISOString().slice(0, 10)
+    const err = document.getElementById('txn-error'); if (err) err.style.display = 'none'
+    m.style.display = 'flex'
+  }
+  window.closeTxnModal = function () { const m = document.getElementById('txn-modal'); if (m) m.style.display = 'none' }
+
+  window.submitTxn = async function (ev) {
+    ev.preventDefault()
+    const err = document.getElementById('txn-error')
+    const typeBtn = document.querySelector('#txn-type .toggle-btn.active')
+    const body = {
+      type: typeBtn ? typeBtn.getAttribute('data-val') : 'income',
+      amount: Number(val('txn-amount') || 0),
+      txn_date: val('txn-date'),
+      category: val('txn-category'),
+      description: val('txn-desc')
+    }
+    if (!body.amount || body.amount <= 0) { showTxnErr('Please enter a valid amount.'); return false }
+    if (!body.txn_date) { showTxnErr('Please choose a date.'); return false }
+    const btn = document.getElementById('txn-submit'); const orig = btn.innerHTML
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…'
+    try {
+      await API.addTransaction(body)
+      window.closeTxnModal()
+      document.getElementById('txn-form').reset()
+      await loadFinance()
+      await loadDashboard()
+      toast('Transaction recorded successfully')
+    } catch (e) {
+      showTxnErr(e.data?.error || 'Failed to save transaction')
+    } finally {
+      btn.disabled = false; btn.innerHTML = orig
+    }
+    return false
+  }
+  function showTxnErr(msg) { const err = document.getElementById('txn-error'); if (err) { err.textContent = msg; err.style.display = 'block' } }
+
+  // ----- Export transactions to CSV -----
+  window.exportTransactions = async function () {
+    try {
+      const { transactions } = await API.getTransactions()
+      if (!transactions || !transactions.length) { toast('No transactions to export'); return }
+      const rows = [['Date', 'Type', 'Category', 'Description', 'Amount']]
+      transactions.forEach((t) => rows.push([t.txn_date || '', t.type || '', t.category || '', (t.description || '').replace(/"/g, "'"), t.amount || 0]))
+      const csv = rows.map((r) => r.map((c) => '"' + String(c) + '"').join(',')).join('\n')
+      const blob = new Blob([csv], { type: 'text/csv' })
+      const a = document.createElement('a')
+      a.href = URL.createObjectURL(blob); a.download = 'transactions.csv'; a.click()
+      URL.revokeObjectURL(a.href)
+      toast('Transactions exported')
+    } catch (e) { toast('Export failed') }
+  }
+
   // ---------- ELIGIBILITY ENGINE ----------
+  function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) }
+  function val(id) { const el = document.getElementById(id); return el ? el.value : '' }
+  function toggleVal(id) { const g = document.getElementById(id); if (!g) return ''; const b = g.querySelector('.toggle-btn.active'); return b ? b.getAttribute('data-val') : '' }
+
+  // Gather all wizard inputs into the engine's expected shape
+  function collectEligibilityInputs() {
+    return {
+      sector: val('ef-sector') || undefined,
+      social_category: val('ef-social') || 'General',
+      gender: val('ef-gender') || 'Male',
+      is_rural: Number(toggleVal('ef-rural') || 0),
+      state: val('ef-state') || undefined,
+      business_age: Number(val('ef-age') || 0),
+      investment: Number(val('ef-investment') || 0),
+      turnover: Number(val('ef-turnover') || 0),
+      udyam_registered: Number(val('ef-udyam') || 0)
+    }
+  }
+
+  // Live MSME classification badge (Step 2 / Step 3)
+  let _classifyTimer = null
+  window.updateClassification = function () {
+    const inv = Number(val('ef-investment') || 0)
+    const to = Number(val('ef-turnover') || 0)
+    const elText = document.getElementById('ef-class-text')
+    if (!elText) return
+    if (!inv && !to) { elText.textContent = 'Enter investment & turnover\u2026'; return }
+    clearTimeout(_classifyTimer)
+    _classifyTimer = setTimeout(async () => {
+      try {
+        const r = await API.classifyMSME(inv, to)
+        if (r.classification) {
+          elText.innerHTML = 'Your enterprise is <span style="color:var(--royal-blue)">' + r.classification + '</span>'
+        } else {
+          elText.innerHTML = '<span style="color:#ef4444">Exceeds MSME limits</span> (Investment > \u20b9125cr or Turnover > \u20b9500cr)'
+        }
+      } catch (e) {}
+    }, 350)
+  }
+
+  function fmtINR(n) { n = Number(n) || 0; if (n >= 1e7) return '\u20b9' + (n / 1e7).toFixed(2).replace(/\.00$/, '') + ' Cr'; if (n >= 1e5) return '\u20b9' + (n / 1e5).toFixed(1).replace(/\.0$/, '') + ' L'; return '\u20b9' + n.toLocaleString('en-IN') }
+
+  function renderSchemeCard(r) {
+    const blocked = !r.eligible
+    const statusClass = blocked ? 'no' : 'ok'
+    const statusText = blocked ? '\u2717 Not Eligible' : '\u2713 Eligible'
+    const newTag = r.is_new ? '<span class="es-tag-new">NEW</span>' : ''
+    const benefit = r.max_benefit ? fmtINR(r.max_benefit) : (r.subsidy_pct ? r.subsidy_pct + '% subsidy' : '\u2014')
+
+    // Why qualify / why not
+    const blockerList = (r.blockers || []).map((b) => '<li><i class="fas fa-ban" style="color:#f87171"></i>' + esc(b) + '</li>').join('')
+    const reasonList = (r.reasons || []).slice(0, 5).map((rs) => {
+      const warn = rs.indexOf('\u26a0') === 0 || /Missing|required/i.test(rs)
+      return '<li><i class="fas ' + (warn ? 'fa-exclamation-triangle" style="color:#fbbf24' : 'fa-check" style="color:#4ade80') + '"></i>' + esc(rs) + '</li>'
+    }).join('')
+
+    const benefitsHtml = (r.benefits || []).length ? '<h5>Benefits</h5><ul>' + r.benefits.map((b) => '<li>' + esc(b) + '</li>').join('') + '</ul>' : ''
+    const docsHtml = (r.required_docs || []).length ? '<h5>Documents Required</h5><div>' + r.required_docs.map((d) => '<span class="es-chip">' + esc(d) + '</span>').join('') + '</div>' : ''
+    const procHtml = r.application_process ? '<h5>How to Apply</h5><p>' + esc(r.application_process) + '</p>' : ''
+    const tipsHtml = (r.success_tips || []).length ? '<h5>Success Tips</h5><ul>' + r.success_tips.map((t) => '<li>' + esc(t) + '</li>').join('') + '</ul>' : ''
+    const deadlineHtml = r.deadline ? '<h5>Deadline</h5><p>' + esc(r.deadline) + '</p>' : ''
+    const applyBtn = r.application_link ? '<a class="es-apply" href="' + esc(r.application_link) + '" target="_blank" rel="noopener"><i class="fas fa-external-link-alt"></i> Apply on official portal</a>' : ''
+
+    return '<div class="es-card ' + (blocked ? 'blocked' : '') + '">' +
+      '<div class="es-head"><div><h4>' + esc(r.name) + newTag + '</h4>' +
+      '<div class="es-meta">' + esc(r.category || '') + (r.ministry ? ' \u00b7 ' + esc(r.ministry) : '') + ' \u00b7 Up to ' + benefit + '</div></div>' +
+      '<span class="es-status ' + statusClass + '">' + statusText + '</span></div>' +
+      '<div class="es-bar ' + statusClass + '"><div style="width:' + r.score + '%"></div></div>' +
+      '<ul class="es-reasons">' + (blocked ? blockerList : reasonList) + '</ul>' +
+      '<button class="es-toggle" onclick="this.closest(\'.es-card\').classList.toggle(\'open\'); this.textContent = this.closest(\'.es-card\').classList.contains(\'open\') ? \'\u2212 Hide details\' : \'+ View benefits, documents & how to apply\'">+ View benefits, documents &amp; how to apply</button>' +
+      '<div class="es-detail">' + benefitsHtml + docsHtml + procHtml + deadlineHtml + tipsHtml + applyBtn + '</div>' +
+      '</div>'
+  }
+
   window.runEligibility = async function () {
+    const inputs = collectEligibilityInputs()
+    // Input validation
+    if (!inputs.sector) { toast('Please select a Business Type (Step 1)'); window.nextStep(1); return }
+    if (!inputs.investment || inputs.investment <= 0) { toast('Please enter a valid Investment amount (Step 2)'); window.nextStep(2); return }
+    if (!inputs.turnover || inputs.turnover <= 0) { toast('Please enter a valid Annual Turnover (Step 3)'); return }
+
     window.nextStep(4)
     const cards = document.getElementById('elig-scheme-cards')
-    cards.innerHTML = '<div style="color:#fff;opacity:.7">Analyzing your profile\u2026</div>'
+    cards.innerHTML = '<div style="color:#fff;opacity:.7;grid-column:1/-1;text-align:center;padding:20px"><i class="fas fa-spinner fa-spin"></i> Analyzing your profile against latest govt criteria\u2026</div>'
     try {
-      const d = await API.computeEligibility()
-      setText('elig-score', d.readiness_score + '%')
+      const d = await API.computeEligibility(inputs)
+      setText('elig-score', (d.readiness_score || 0) + '%')
       const eligible = d.results.filter((r) => r.eligible)
+      const clsNote = d.classification ? ('Classified as <strong>' + d.classification + '</strong> \u2014 ') : ''
       document.getElementById('elig-sub').innerHTML =
-        'Your business qualifies for <strong>' + eligible.length + ' government schemes</strong> \u2014 ranked by AI match score.'
-      cards.innerHTML = d.results.map((r) => {
-        const benefit = r.max_benefit ? '\u20b9' + fmtMoney(r.max_benefit) : '\u2014'
-        const cls = r.eligible ? '' : 'opacity:.55'
-        return '<div class="scheme-card" style="' + cls + '">' +
-          '<h4>' + r.name + '</h4>' +
-          '<p>' + (r.reasons[0] || r.category || '') + '</p>' +
-          '<div class="scheme-match">' + (r.eligible ? '\u2713 ' : '\u2717 ') + r.score + '% Match \u00b7 Up to ' + benefit + '</div>' +
-          '</div>'
-      }).join('')
+        clsNote + 'your business qualifies for <strong>' + eligible.length + ' of ' + d.results.length + ' schemes</strong>, ranked by match score.'
+      cards.innerHTML = d.results.map(renderSchemeCard).join('')
       await loadDashboard()
       toast('Eligibility computed: ' + eligible.length + ' schemes matched')
     } catch (e) {
-      cards.innerHTML = '<div style="color:#fff">' + (e.data?.error || 'Failed') + '</div>'
+      cards.innerHTML = '<div style="color:#fff;grid-column:1/-1">' + esc(e.data?.error || 'Failed to compute eligibility') + '</div>'
     }
   }
 
@@ -218,35 +398,9 @@
     } catch (e) { toast(e.data?.error || 'Upload failed', true) }
   }
 
-  // ---------- FINANCE (override initCharts with live data) ----------
-  window.initCharts = function () {
-    const rCtx = document.getElementById('revenueChart')
-    const f = financeData
-    if (!f) return
-    if (rCtx && !window.revenueChartInstance) {
-      window.revenueChartInstance = new Chart(rCtx, {
-        type: 'line',
-        data: {
-          labels: f.trend.labels.map((p) => p.slice(5)),
-          datasets: [
-            { label: 'Revenue', data: f.trend.revenue, borderColor: '#2563EB', backgroundColor: 'rgba(37,99,235,0.08)', borderWidth: 2.5, fill: true, tension: 0.4, pointRadius: 4 },
-            { label: 'Expenses', data: f.trend.expenses, borderColor: '#EF4444', backgroundColor: 'rgba(239,68,68,0.05)', borderWidth: 2.5, fill: true, tension: 0.4, pointRadius: 4 }
-          ]
-        },
-        options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'top' }, tooltip: { callbacks: { label: (ctx) => '\u20b9' + (ctx.parsed.y / 100000).toFixed(1) + 'L' } } }, scales: { y: { ticks: { callback: (v) => '\u20b9' + (v / 100000).toFixed(0) + 'L' } } } }
-      })
-    }
-    const eCtx = document.getElementById('expenseChart')
-    if (eCtx && !window.expenseChartInstance) {
-      const bd = f.expense_breakdown || {}
-      const labels = Object.keys(bd), data = Object.values(bd)
-      window.expenseChartInstance = new Chart(eCtx, {
-        type: 'doughnut',
-        data: { labels, datasets: [{ data, backgroundColor: ['#2563EB', '#F59E0B', '#10B981', '#8B5CF6', '#EF4444'], borderWidth: 0 }] },
-        options: { responsive: false, plugins: { legend: { display: false }, tooltip: { callbacks: { label: (ctx) => ctx.label + ': ' + ctx.parsed + '%' } } }, cutout: '68%' }
-      })
-    }
-  }
+  // NOTE: Chart rendering (Van Gogh palette + live data) is handled by the
+  // single authoritative initCharts() defined inline in index.html, which reads
+  // window.financeData and tracks window.revenueChartInstance/expenseChartInstance.
 
   // ---------- AI CHAT (override sendChat with real backend) ----------
   window.sendChat = async function () {
@@ -270,6 +424,32 @@
     messages.scrollTop = messages.scrollHeight
   }
 
+  // ---------- WHAT'S NEW ----------
+  let _whatsNewLoaded = false
+  async function loadWhatsNew() {
+    const list = document.getElementById('whats-new-list')
+    if (!list) return
+    try {
+      const { updates } = await API.whatsNew()
+      if (!updates || !updates.length) { list.innerHTML = '<div class="text-xs text-gray">No recent updates.</div>'; return }
+      const tagColors = { new: ['NEW', '16,185,129'], updated: ['UPDATED', '37,99,235'], budget: ['BUDGET', '139,92,246'], deadline: ['DEADLINE', '239,68,68'] }
+      list.innerHTML = updates.map((u) => {
+        const t = tagColors[u.tag] || ['INFO', '107,114,128']
+        return '<div style="border:1px solid var(--gray-200);border-radius:10px;padding:14px;background:#fff">' +
+          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">' +
+          '<span style="font-size:9px;font-weight:800;letter-spacing:.04em;color:rgb(' + t[1] + ');background:rgba(' + t[1] + ',.1);padding:2px 8px;border-radius:999px">' + t[0] + '</span>' +
+          (u.effective_date ? '<span class="text-xs text-gray">' + esc(u.effective_date) + '</span>' : '') + '</div>' +
+          '<h4 style="font-size:13px;font-weight:700;color:var(--navy);margin:0 0 4px">' + esc(u.title) + '</h4>' +
+          '<p style="font-size:11px;color:var(--gray-500);line-height:1.5;margin:0">' + esc(u.summary || '') + '</p>' +
+          (u.source ? '<div class="text-xs text-gray" style="margin-top:6px"><i class="fas fa-link" style="font-size:9px"></i> ' + esc(u.source) + '</div>' : '') +
+          '</div>'
+      }).join('')
+      _whatsNewLoaded = true
+    } catch (e) {
+      list.innerHTML = '<div class="text-xs text-gray">Could not load updates.</div>'
+    }
+  }
+
   // ---------- Hook navigation to lazy-load page data ----------
   const _navigate = window.navigate
   window.navigate = function (page) {
@@ -277,6 +457,8 @@
     if (page === 'documents') loadDocuments()
     else if (page === 'notifications') loadNotifications()
     else if (page === 'dashboard') loadDashboard()
+    else if (page === 'eligibility' && !_whatsNewLoaded) loadWhatsNew()
+    else if (page === 'finance') loadFinance()
   }
 
   // ---------- helpers ----------

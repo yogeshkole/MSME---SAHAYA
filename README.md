@@ -24,8 +24,17 @@ business guidance. The original frontend was a static mockup — this project ad
   duplicate detection, status tracking, delete.
 - **KYC Verification**: Aadhaar/PAN/GST/Bank/Face verification with format validation,
   status overview, completion percentage, verification records.
-- **Scheme Eligibility Engine**: Rule + score-based matching (size, category, turnover band,
-  document readiness), 0–100 scoring, ranking, application-readiness score, persisted results.
+- **Scheme Eligibility Engine (Enhanced 2026)**: Dynamic rule-based + weighted scoring engine
+  that cross-references **investment, turnover, sector, state, social category (SC/ST/OBC),
+  gender (women-owned), rural status, business age, Udyam registration and document readiness**
+  against the latest Govt of India criteria. Implements the **revised 2026 MSME classification**
+  (both investment AND turnover conditions). Produces transparent `reasons[]` (why you qualify)
+  and `blockers[]` (why you don't), a 0–100 match score, MSME classification, and an
+  application-readiness score. Results + each search session are persisted. Catalogue holds
+  **17 official schemes** incl. the new 2025-26 launches (SME Growth Fund ₹10,000 Cr, MSE GIFT,
+  MSE SPICE, MSME TEAM, TREAD for women) with full benefits, required documents, application
+  process, official portal links, deadlines and success tips. A **"What's New"** changelog
+  surfaces budget updates and new scheme launches.
 - **Application Management**: Draft creation, auto-save, document-validated submission with
   reference numbers, status tracking, resubmission of rejected applications.
 - **Financial Dashboard**: Revenue/expense trends, profitability, health score, funding
@@ -66,8 +75,30 @@ Base path: `/api`
 - `POST /verify` `{kyc_type, reference_number}` · `GET /status`
 
 ### Schemes & Eligibility (`/api/schemes`)
-- `GET /` `?category=&search=` (public) · `GET /:id`
-- `POST /eligibility/compute` (auth) · `GET /eligibility/results` (auth)
+- `GET /` `?category=&search=&new=1` (public) — scheme catalogue; `new=1` filters 2025-26 launches
+- `GET /:id` (public) — full scheme detail (benefits, docs, process, link, tips)
+- `GET /whats-new` (public) — "What's New" changelog (budget updates, new schemes)
+- `POST /classify` `{investment, turnover}` (public) — live 2026 MSME classification (Micro/Small/Medium)
+- `POST /eligibility/compute` (auth) — body accepts overrides:
+  `{sector, investment, turnover, social_category, gender, is_rural, state, business_age, udyam_registered, save?}`
+  Returns `{classification, eligible_count, readiness_score, results:[{score, eligible, reasons[], blockers[],
+  benefits[], required_docs[], application_process, application_link, deadline, success_tips[], is_new}]}`
+- `GET /eligibility/results` (auth) — last computed results
+- `GET /eligibility/sessions` (auth) — eligibility search history
+
+#### 2026 MSME Classification (both conditions apply)
+| Category | Investment | Annual Turnover |
+|----------|-----------|-----------------|
+| Micro    | ≤ ₹2.5 cr | ≤ ₹10 cr        |
+| Small    | ≤ ₹25 cr  | ≤ ₹100 cr       |
+| Medium   | ≤ ₹125 cr | ≤ ₹500 cr       |
+
+#### Sample eligibility results (verified)
+- **Example 1** — New Manufacturing unit, Karnataka, Investment ₹1.8 cr / Turnover ₹7 cr, General →
+  **Micro**, 8 eligible: CGTMSE, ZED, MSME-INNOVATIVE, RAMP, PMEGP, MSE-CDP, MSE-GIFT, MSE-SPICE.
+- **Example 2** — Women-owned Service, rural Karnataka, Investment ₹80 lakh / Turnover ₹4 cr →
+  **Micro**, 9 eligible with women-specific **MSME-TEAM (100)** and **TREAD (100)** ranked top,
+  followed by CGTMSE, PMEGP, CGSSD, MSE-CDP.
 
 ### Applications (`/api/applications`) — auth required
 - `GET /` `?status=` · `POST /` `{scheme_id, amount_requested?}` · `PUT /:id` (auto-save)
@@ -112,9 +143,17 @@ Base path: `/api`
 1. Open the app — you land on the login page (demo credentials pre-filled).
 2. **Sign In** (or use OTP / Google / Facebook / Sign up) to enter the dashboard.
 3. **Dashboard** shows live health score, eligible schemes, active applications, verified docs, cash flow.
-4. **Scheme Eligibility** → click "Find Schemes" to run the engine; schemes are ranked by AI match score.
+4. **Scheme Eligibility** → review the **What's New** panel, fill the 3-step wizard (business type,
+   social category, gender, rural status, state, business age, investment, turnover, Udyam status —
+   with a **live MSME classification** badge), then click "Find Schemes". Each result shows
+   eligible/not-eligible status, match score, the exact reasons you qualify (or the blockers), and an
+   expandable panel with benefits, required documents, how-to-apply steps, deadline, success tips,
+   and a link to the official application portal.
 5. **Documents** → "Upload Document" to add docs (OCR extracts fields; eligibility updates).
-6. **Finance** → live revenue/expense charts and AI insights from your records.
+6. **Finance** → live KPIs (income, expenses, net profit, health score), revenue/expense charts, and a
+   transactions ledger. Click **"Add Transaction"** to record income/expenses (type, amount, date,
+   category, description) — saved to the backend and instantly reflected in the KPIs and table.
+   **"Export"** downloads all transactions as CSV.
 7. **Notifications** → live feed; click to mark read.
 8. **AI Assistant** (chat widget) → ask about schemes, documents, or finances — it answers using your real data.
 
@@ -153,7 +192,18 @@ Reset DB anytime: `npm run db:reset`
 4. Build out the **admin UI** screens (APIs already exist).
 5. Deploy to Cloudflare Pages and create the production D1 database + migrations.
 
+## Design — Van Gogh Theme
+The SPA uses a Van Gogh-inspired visual system applied via CSS custom-property remapping
+(variable names preserved, values changed) in `public/index.html`:
+- **Starry Night** deep blues (`#0B2C5E`, royal `#1A3A7A`) for the login hero and headers.
+- **Sunflower gold** (`#FFCC00` / `#F5B800`) and **warm orange glow** (`#FF9F1C`, wheat `#E07A00`) for CTAs.
+- **Cypress-olive green** (`#1E6B4E`), **crimson** (`#C8102E`), **iris violet** (`#6A4E9C`) accents.
+- **Warm cream/wheat** backgrounds (`#F5E8C7`, card `#FFFBF0`, moonlit `#EDE4D5`) with subtle swirl texture.
+- Glowing sunflower CTAs (`vg-glow`), twinkling stars (`vg-twinkle`), swirl-in animations (`vg-swirl-in`),
+  brush-stroke wizard connectors, impasto card depth, and Van-Gogh-tinted Chart.js graphs.
+- Dashboard greeting: "let your business shine like the stars ✨".
+
 ## Deployment
 - **Platform**: Cloudflare Pages (Workers runtime)
 - **Status**: ✅ Running locally via PM2 (sandbox). Not yet deployed to production.
-- **Last Updated**: 2026-06-01
+- **Last Updated**: 2026-06-08

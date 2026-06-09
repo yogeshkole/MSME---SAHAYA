@@ -11,7 +11,10 @@ module.exports = {
       },
       watch: false,
       instances: 1,
-      exec_mode: 'fork'
+      exec_mode: 'fork',
+      min_uptime: 5000,
+      max_restarts: 5,
+      restart_delay: 3000
     }
   ]
 }

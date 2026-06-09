@@ -11,38 +11,88 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <style>
   :root {
-    --navy: #0F172A;
-    --royal-blue: #2563EB;
-    --electric-blue: #3B82F6;
-    --sky-blue: #60A5FA;
-    --orange: #F59E0B;
-    --gold: #FBBF24;
-    --emerald: #10B981;
-    --success: #22C55E;
-    --red: #EF4444;
-    --purple: #8B5CF6;
-    --pink: #EC4899;
-    --gray-50: #F8FAFC;
-    --gray-100: #F1F5F9;
-    --gray-200: #E2E8F0;
-    --gray-300: #CBD5E1;
-    --gray-400: #94A3B8;
-    --gray-500: #64748B;
-    --gray-600: #475569;
-    --gray-700: #334155;
-    --gray-800: #1E293B;
-    --gray-900: #0F172A;
+    /* ===== Van Gogh palette ===== */
+    /* Starry Night deep blues */
+    --navy: #0B2C5E;            /* deep starry/ink blue — text, nav, depth */
+    --royal-blue: #1A3A7A;      /* ultramarine — primary trust elements */
+    --electric-blue: #3A5FA5;   /* twilight blue */
+    --sky-blue: #6A8EC4;        /* moonlit sky */
+    /* Sunflower gold + wheat orange — joy & action */
+    --orange: #E07A00;          /* wheat-field golden orange — accents/progress */
+    --gold: #FFCC00;            /* radiant chrome yellow — CTAs, highlights */
+    --sunflower: #F5B800;       /* sunflower gold */
+    --glow-orange: #FF9F1C;     /* warm orange glow */
+    /* Cypress / olive green — growth */
+    --emerald: #1E6B4E;         /* deep cypress-emerald */
+    --success: #2A8C6B;         /* olive-emerald growth */
+    /* Dramatic accents */
+    --red: #C8102E;             /* passionate crimson */
+    --purple: #6A4E9C;          /* irises violet */
+    --pink: #C8102E;
+    /* Warm luminous neutrals (cream / wheat / moonlit gray) */
+    --gray-50: #FBF4E2;         /* lightest cream */
+    --gray-100: #F5E8C7;        /* wheat beige — app background */
+    --gray-200: #E8D9B5;        /* card border / moonlit edge */
+    --gray-300: #D8C49A;        /* muted wheat */
+    --gray-400: #A8946E;        /* hint text on cream */
+    --gray-500: #6E6248;        /* secondary text — warm taupe */
+    --gray-600: #4A4233;        /* body emphasis */
+    --gray-700: #2C2B22;        /* strong text */
+    --gray-800: #1C2B4A;        /* deep charcoal-blue text */
+    --gray-900: #0B2C5E;        /* darkest — headings */
+    --cream-card: #FFFBF0;      /* card surface */
+    --moonlit: #EDE4D5;         /* soft card alt */
     --sidebar-w: 260px;
   }
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   html { scroll-behavior: smooth; }
   body {
     font-family: 'Inter', 'Plus Jakarta Sans', sans-serif;
-    background: var(--gray-50);
     color: var(--gray-800);
     min-height: 100vh;
     overflow-x: hidden;
+    /* Warm luminous cream with a very subtle swirling brush-stroke texture */
+    background-color: var(--gray-100);
+    background-image:
+      radial-gradient(circle at 12% 18%, rgba(255,204,0,0.07) 0%, transparent 28%),
+      radial-gradient(circle at 88% 12%, rgba(224,122,0,0.06) 0%, transparent 26%),
+      radial-gradient(circle at 78% 88%, rgba(30,107,78,0.05) 0%, transparent 30%),
+      radial-gradient(circle at 25% 85%, rgba(26,58,122,0.05) 0%, transparent 32%);
+    background-attachment: fixed;
   }
+  /* Expressive Van Gogh headings */
+  h1, h2, h3, .login-card h2, .page-header h1 {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    letter-spacing: -0.01em;
+  }
+  /* Swirling brush-stroke divider + starry particle keyframes (reusable) */
+  @keyframes vg-glow { 0%,100% { box-shadow: 0 0 0 rgba(255,204,0,0); } 50% { box-shadow: 0 0 18px rgba(255,204,0,0.55); } }
+  @keyframes vg-twinkle { 0%,100% { opacity: .25; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.15); } }
+  @keyframes vg-swirl-in { from { transform: rotate(-8deg) scale(.96); opacity: 0; } to { transform: rotate(0) scale(1); opacity: 1; } }
+  .vg-swirl-divider {
+    height: 14px; margin: 4px 0; border: 0;
+    background: radial-gradient(circle at 10% 50%, var(--sunflower) 1px, transparent 2px) repeat-x;
+    background-size: 22px 14px; opacity: .35;
+  }
+  /* ---- Modal (Van Gogh) ---- */
+  .vg-modal-overlay {
+    position: fixed; inset: 0; z-index: 1000;
+    background: rgba(11,44,94,0.55); backdrop-filter: blur(4px);
+    display: flex; align-items: center; justify-content: center; padding: 20px;
+    animation: vg-fade .2s ease;
+  }
+  @keyframes vg-fade { from { opacity: 0 } to { opacity: 1 } }
+  .vg-modal {
+    width: 100%; max-width: 520px;
+    background: var(--cream-card); border-radius: 20px;
+    border: 2px solid rgba(224,122,0,0.3);
+    box-shadow: 0 24px 60px rgba(11,44,94,0.4), inset 0 1px 0 rgba(255,255,255,0.5);
+    padding: 24px; animation: vg-swirl-in .35s ease both;
+  }
+  .vg-modal-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+  .vg-modal-head h3 { font-size: 18px; font-weight: 800; color: var(--navy); }
+  .vg-modal-close { background: none; border: none; font-size: 26px; line-height: 1; color: var(--gray-400); cursor: pointer; transition: color .2s; }
+  .vg-modal-close:hover { color: var(--red); }
 
   /* ============================================================
      SCROLLBAR
@@ -68,7 +118,12 @@
     min-height: 100vh;
   }
   .login-hero {
-    background: linear-gradient(135deg, #0F172A 0%, #1E3A8A 40%, #2563EB 100%);
+    /* Dramatic Starry Night sky: deep ultramarine → glowing twilight */
+    background:
+      radial-gradient(circle at 78% 22%, rgba(255,204,0,0.22) 0%, transparent 18%),
+      radial-gradient(circle at 20% 75%, rgba(255,159,28,0.16) 0%, transparent 24%),
+      conic-gradient(from 200deg at 70% 30%, rgba(58,95,165,0.5), rgba(11,44,94,0.1) 40%, rgba(58,95,165,0.5) 80%),
+      linear-gradient(135deg, #0B2C5E 0%, #1A3A7A 45%, #4A6FA5 100%);
     padding: 48px;
     display: flex;
     flex-direction: column;
@@ -76,32 +131,42 @@
     position: relative;
     overflow: hidden;
   }
+  /* Swirling cypress-like flow + glowing moon */
   .login-hero::before {
     content: '';
     position: absolute;
-    top: -100px; right: -100px;
-    width: 400px; height: 400px;
+    top: -120px; right: -90px;
+    width: 380px; height: 380px;
     border-radius: 50%;
-    background: rgba(96,165,250,0.1);
+    background: radial-gradient(circle, rgba(255,204,0,0.45) 0%, rgba(255,159,28,0.18) 35%, transparent 70%);
+    filter: blur(2px);
+    animation: vg-glow 6s ease-in-out infinite;
     pointer-events: none;
   }
   .login-hero::after {
     content: '';
     position: absolute;
-    bottom: -80px; left: -80px;
-    width: 300px; height: 300px;
-    border-radius: 50%;
-    background: rgba(245,158,11,0.08);
+    inset: 0;
+    background-image:
+      radial-gradient(2px 2px at 15% 30%, rgba(255,255,255,0.9), transparent),
+      radial-gradient(2px 2px at 35% 12%, rgba(255,204,0,0.9), transparent),
+      radial-gradient(1.5px 1.5px at 55% 40%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(2px 2px at 80% 60%, rgba(255,204,0,0.8), transparent),
+      radial-gradient(1.5px 1.5px at 42% 70%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(2px 2px at 65% 82%, rgba(255,255,255,0.85), transparent),
+      radial-gradient(1.5px 1.5px at 25% 55%, rgba(255,204,0,0.7), transparent);
+    opacity: .85;
     pointer-events: none;
   }
   .hero-brand { display: flex; align-items: center; gap: 12px; position: relative; z-index: 1; }
   .hero-logo {
     width: 48px; height: 48px;
-    background: linear-gradient(135deg, var(--orange), var(--gold));
-    border-radius: 12px;
+    background: radial-gradient(circle at 35% 30%, var(--gold), var(--glow-orange) 70%, var(--orange));
+    border-radius: 14px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 22px; color: white;
-    box-shadow: 0 8px 24px rgba(245,158,11,0.4);
+    font-size: 22px; color: #3a2200;
+    box-shadow: 0 8px 28px rgba(255,204,0,0.55), inset 0 2px 6px rgba(255,255,255,0.4);
+    animation: vg-glow 5s ease-in-out infinite;
   }
   .hero-brand-text { color: white; }
   .hero-brand-text h2 { font-size: 20px; font-weight: 700; }
@@ -135,11 +200,29 @@
   }
   .trust-badge i { color: var(--emerald); }
   .login-panel {
-    background: white;
+    background:
+      radial-gradient(circle at 90% 8%, rgba(255,204,0,0.10) 0%, transparent 30%),
+      radial-gradient(circle at 5% 95%, rgba(224,122,0,0.08) 0%, transparent 28%),
+      var(--gray-50);
     display: flex; align-items: center; justify-content: center;
     padding: 48px;
   }
-  .login-card { width: 100%; max-width: 420px; }
+  .login-card {
+    width: 100%; max-width: 420px;
+    background: var(--cream-card);
+    border: 2px solid rgba(224,122,0,0.28);
+    border-radius: 20px;
+    padding: 36px 32px;
+    box-shadow: 0 18px 48px rgba(11,44,94,0.12), inset 0 1px 0 rgba(255,255,255,0.6);
+    position: relative;
+  }
+  /* swirling gold accent on the card top-left */
+  .login-card::before {
+    content: '';
+    position: absolute; top: -2px; left: 24px; right: 24px; height: 4px;
+    background: linear-gradient(90deg, transparent, var(--sunflower), var(--glow-orange), transparent);
+    border-radius: 4px;
+  }
   .login-card h2 { font-size: 28px; font-weight: 800; color: var(--navy); margin-bottom: 8px; }
   .login-card p { color: var(--gray-500); font-size: 14px; margin-bottom: 32px; }
   .form-group { margin-bottom: 20px; }
@@ -169,9 +252,9 @@
     color: var(--gray-800);
   }
   .form-input:focus {
-    border-color: var(--royal-blue);
-    background: white;
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    border-color: var(--glow-orange);
+    background: #fff;
+    box-shadow: 0 0 0 3px rgba(255,159,28,0.18), 0 0 12px rgba(255,204,0,0.15);
   }
   .form-input::placeholder { color: var(--gray-400); }
   .form-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
@@ -181,17 +264,24 @@
   .forgot-link { font-size: 13px; color: var(--royal-blue); font-weight: 500; cursor: pointer; text-decoration: none; }
   .btn-primary {
     width: 100%; padding: 13px;
-    background: linear-gradient(135deg, var(--royal-blue), #1D4ED8);
-    color: white; font-size: 15px; font-weight: 600;
-    border: none; border-radius: 10px; cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 4px 14px rgba(37,99,235,0.35);
-    font-family: inherit;
+    /* Radiant sunflower gold with warm orange glow */
+    background: linear-gradient(135deg, var(--gold) 0%, var(--sunflower) 45%, var(--glow-orange) 100%);
+    color: #3a2200; font-size: 15px; font-weight: 800; letter-spacing: .01em;
+    border: none; border-radius: 12px; cursor: pointer;
+    transition: all 0.25s cubic-bezier(.34,1.56,.64,1);
+    box-shadow: 0 6px 18px rgba(255,159,28,0.45);
+    font-family: inherit; position: relative; overflow: hidden;
+  }
+  .btn-primary::after {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.5) 50%, transparent 70%);
+    transform: translateX(-120%); transition: transform .6s;
   }
   .btn-primary:hover {
-    transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(37,99,235,0.45);
+    transform: translateY(-2px) scale(1.01);
+    box-shadow: 0 10px 28px rgba(255,159,28,0.6), 0 0 22px rgba(255,204,0,0.4);
   }
+  .btn-primary:hover::after { transform: translateX(120%); }
   .btn-primary:active { transform: translateY(0); }
   .divider { text-align: center; margin: 20px 0; position: relative; }
   .divider::before {
@@ -200,7 +290,7 @@
     background: var(--gray-200);
   }
   .divider span {
-    background: white; padding: 0 12px;
+    background: var(--cream-card); padding: 0 12px;
     font-size: 12px; color: var(--gray-400);
     position: relative;
   }
@@ -240,7 +330,13 @@
   .sidebar {
     width: var(--sidebar-w);
     min-height: 100vh;
-    background: var(--navy);
+    /* Starry Night navy with subtle swirling glow + stars */
+    background:
+      radial-gradient(circle at 80% 8%, rgba(255,204,0,0.10) 0%, transparent 22%),
+      radial-gradient(1.5px 1.5px at 30% 18%, rgba(255,255,255,0.5), transparent),
+      radial-gradient(1.5px 1.5px at 70% 40%, rgba(255,204,0,0.5), transparent),
+      radial-gradient(1.5px 1.5px at 40% 70%, rgba(255,255,255,0.35), transparent),
+      linear-gradient(180deg, #0B2C5E 0%, #122F63 60%, #0B2C5E 100%);
     display: flex; flex-direction: column;
     position: fixed; left: 0; top: 0; bottom: 0;
     z-index: 100;
@@ -256,11 +352,11 @@
   }
   .sidebar-logo {
     width: 36px; height: 36px;
-    background: linear-gradient(135deg, var(--orange), var(--gold));
-    border-radius: 9px;
+    background: radial-gradient(circle at 35% 30%, var(--gold), var(--glow-orange) 70%, var(--orange));
+    border-radius: 10px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 16px; color: white;
-    box-shadow: 0 4px 12px rgba(245,158,11,0.3);
+    font-size: 16px; color: #3a2200;
+    box-shadow: 0 4px 14px rgba(255,204,0,0.45);
     flex-shrink: 0;
   }
   .sidebar-brand-text h3 { font-size: 15px; font-weight: 700; color: white; }
@@ -348,11 +444,12 @@
      TOP BAR
   ============================================================ */
   .topbar {
-    height: 64px; background: white;
-    border-bottom: 1px solid var(--gray-100);
+    height: 64px; background: var(--cream-card);
+    border-bottom: 2px solid rgba(224,122,0,0.2);
     display: flex; align-items: center;
     padding: 0 24px; gap: 16px;
     position: sticky; top: 0; z-index: 50;
+    box-shadow: 0 2px 12px rgba(11,44,94,0.05);
   }
   .topbar-search {
     flex: 1; max-width: 400px;
@@ -416,9 +513,11 @@
      CARDS
   ============================================================ */
   .card {
-    background: white; border-radius: 16px;
-    border: 1px solid var(--gray-100);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.03);
+    background: var(--cream-card); border-radius: 16px;
+    border: 1px solid var(--gray-200);
+    border-left: 4px solid rgba(26,58,122,0.7);
+    /* impasto-like depth: layered warm shadow + inner highlight */
+    box-shadow: 0 6px 18px rgba(11,44,94,0.08), 0 1px 2px rgba(11,44,94,0.06), inset 0 1px 0 rgba(255,255,255,0.5);
     overflow: hidden;
   }
   .card-header {
@@ -436,16 +535,16 @@
   ============================================================ */
   .kpi-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-bottom: 24px; }
   .kpi-card {
-    background: white; border-radius: 16px;
-    border: 1px solid var(--gray-100);
+    background: var(--cream-card); border-radius: 16px;
+    border: 1px solid var(--gray-200);
     padding: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-    transition: all 0.2s; cursor: pointer;
+    box-shadow: 0 5px 16px rgba(11,44,94,0.08), inset 0 1px 0 rgba(255,255,255,0.5);
+    transition: all 0.25s cubic-bezier(.34,1.4,.64,1); cursor: pointer;
     position: relative; overflow: hidden;
   }
   .kpi-card::before {
     content: ''; position: absolute;
-    top: 0; left: 0; right: 0; height: 3px;
+    top: 0; left: 0; right: 0; height: 4px;
   }
   .kpi-card.blue::before { background: linear-gradient(90deg, var(--royal-blue), var(--sky-blue)); }
   .kpi-card.orange::before { background: linear-gradient(90deg, var(--orange), var(--gold)); }
@@ -453,8 +552,8 @@
   .kpi-card.purple::before { background: linear-gradient(90deg, var(--purple), #A78BFA); }
   .kpi-card.red::before { background: linear-gradient(90deg, var(--red), #F87171); }
   .kpi-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+    transform: translateY(-3px) scale(1.01);
+    box-shadow: 0 12px 30px rgba(11,44,94,0.14), 0 0 16px rgba(255,204,0,0.12);
   }
   .kpi-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 12px; }
   .kpi-icon {
@@ -488,24 +587,32 @@
      WELCOME BANNER
   ============================================================ */
   .welcome-banner {
-    background: linear-gradient(135deg, var(--navy) 0%, #1E3A8A 50%, var(--royal-blue) 100%);
+    /* Starry Night over golden fields */
+    background:
+      radial-gradient(circle at 85% 20%, rgba(255,204,0,0.22) 0%, transparent 22%),
+      radial-gradient(2px 2px at 25% 30%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(2px 2px at 55% 18%, rgba(255,204,0,0.7), transparent),
+      radial-gradient(1.5px 1.5px at 70% 55%, rgba(255,255,255,0.5), transparent),
+      linear-gradient(135deg, #0B2C5E 0%, #1A3A7A 50%, #4A6FA5 100%);
     border-radius: 20px; padding: 28px 32px;
     position: relative; overflow: hidden;
     margin-bottom: 24px;
+    box-shadow: 0 12px 34px rgba(11,44,94,0.25);
   }
   .welcome-banner::before {
     content: ''; position: absolute;
     right: -40px; top: -60px;
-    width: 220px; height: 220px;
+    width: 240px; height: 240px;
     border-radius: 50%;
-    background: rgba(96,165,250,0.12);
+    background: radial-gradient(circle, rgba(255,204,0,0.35) 0%, rgba(255,159,28,0.12) 40%, transparent 70%);
+    animation: vg-glow 6s ease-in-out infinite;
   }
   .welcome-banner::after {
     content: ''; position: absolute;
     right: 80px; bottom: -40px;
     width: 150px; height: 150px;
     border-radius: 50%;
-    background: rgba(245,158,11,0.1);
+    background: rgba(30,107,78,0.18);
   }
   .welcome-content { position: relative; z-index: 1; }
   .welcome-content h2 { font-size: 24px; font-weight: 800; color: white; margin-bottom: 8px; }
@@ -635,41 +742,53 @@
   .wizard-step { display: flex; flex-direction: column; align-items: center; flex: 1; position: relative; }
   .wizard-step:not(:last-child)::after {
     content: ''; position: absolute;
-    top: 20px; left: 50%; width: 100%;
-    height: 2px; background: var(--gray-200);
+    top: 22px; left: 50%; width: 100%;
+    height: 3px; border-radius: 3px;
+    background: repeating-linear-gradient(90deg, var(--gray-300) 0 6px, transparent 6px 12px);
     z-index: 0;
   }
-  .wizard-step.completed:not(:last-child)::after { background: var(--royal-blue); }
-  .step-circle {
-    width: 40px; height: 40px; border-radius: 50%;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; font-weight: 700;
-    background: var(--gray-100); color: var(--gray-400);
-    border: 2px solid var(--gray-200);
-    position: relative; z-index: 1;
-    transition: all 0.3s;
+  /* flowing sunflower brush-stroke connector once completed */
+  .wizard-step.completed:not(:last-child)::after {
+    background: linear-gradient(90deg, var(--sunflower), var(--glow-orange));
+    box-shadow: 0 0 8px rgba(255,159,28,0.4);
   }
+  .step-circle {
+    width: 44px; height: 44px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px; font-weight: 800;
+    background: var(--cream-card); color: var(--gray-400);
+    border: 2px solid var(--gray-300);
+    position: relative; z-index: 1;
+    transition: all 0.35s cubic-bezier(.34,1.5,.64,1);
+  }
+  /* glowing sunflower orb for the active step */
   .wizard-step.active .step-circle {
-    background: var(--royal-blue); color: white;
-    border-color: var(--royal-blue);
-    box-shadow: 0 0 0 4px rgba(37,99,235,0.15);
+    background: radial-gradient(circle at 35% 30%, var(--gold), var(--glow-orange) 75%, var(--orange));
+    color: #3a2200;
+    border-color: var(--sunflower);
+    box-shadow: 0 0 0 5px rgba(255,204,0,0.22), 0 0 18px rgba(255,159,28,0.5);
+    animation: vg-glow 3s ease-in-out infinite;
   }
   .wizard-step.completed .step-circle {
-    background: var(--success); color: white;
-    border-color: var(--success);
+    background: radial-gradient(circle at 35% 30%, #2fae84, var(--emerald));
+    color: white;
+    border-color: var(--emerald);
   }
-  .step-label { font-size: 11px; font-weight: 600; color: var(--gray-400); margin-top: 8px; text-align: center; }
-  .wizard-step.active .step-label { color: var(--royal-blue); }
-  .wizard-step.completed .step-label { color: var(--success); }
+  .step-label { font-size: 11px; font-weight: 600; color: var(--gray-500); margin-top: 8px; text-align: center; }
+  .wizard-step.active .step-label { color: var(--orange); font-weight: 800; }
+  .wizard-step.completed .step-label { color: var(--emerald); }
 
   .wizard-form-section { display: none; }
   .wizard-form-section.active { display: block; }
   .wizard-card {
-    background: white; border-radius: 20px;
-    border: 1px solid var(--gray-100);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+    background: var(--cream-card); border-radius: 20px;
+    border: 1px solid var(--gray-200);
+    border-top: 4px solid transparent;
+    border-image: linear-gradient(90deg, var(--sunflower), var(--glow-orange), var(--royal-blue)) 1;
+    box-shadow: 0 8px 28px rgba(11,44,94,0.1), inset 0 1px 0 rgba(255,255,255,0.5);
     padding: 32px;
     margin-bottom: 20px;
+    animation: vg-swirl-in .4s ease both;
   }
   .wizard-card h3 { font-size: 18px; font-weight: 800; color: var(--navy); margin-bottom: 6px; }
   .wizard-card p { font-size: 13px; color: var(--gray-500); margin-bottom: 24px; }
@@ -688,8 +807,8 @@
     transition: all 0.2s; appearance: none;
   }
   .field-select:focus, .field-input:focus {
-    border-color: var(--royal-blue); background: white;
-    box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+    border-color: var(--glow-orange); background: #fff;
+    box-shadow: 0 0 0 3px rgba(255,159,28,0.18), 0 0 10px rgba(255,204,0,0.15);
   }
   .field-select { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394A3B8' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 12px center; padding-right: 32px; }
   .field-hint { font-size: 11px; color: var(--gray-400); margin-top: 5px; }
@@ -703,7 +822,7 @@
   }
   .toggle-btn:first-child { border-radius: 10px 0 0 10px; }
   .toggle-btn:last-child { border-radius: 0 10px 10px 0; border-left: none; }
-  .toggle-btn.active { background: var(--royal-blue); color: white; border-color: var(--royal-blue); z-index: 1; }
+  .toggle-btn.active { background: linear-gradient(135deg, var(--royal-blue), var(--electric-blue)); color: white; border-color: var(--royal-blue); z-index: 1; box-shadow: inset 0 1px 0 rgba(255,255,255,0.2); }
   .wizard-nav { display: flex; gap: 12px; justify-content: space-between; }
   .btn-back {
     padding: 11px 24px; border: 1.5px solid var(--gray-200);
@@ -714,19 +833,26 @@
   .btn-back:hover { background: var(--gray-50); }
   .btn-next {
     padding: 11px 28px;
-    background: linear-gradient(135deg, var(--royal-blue), #1D4ED8);
-    color: white; font-size: 14px; font-weight: 600;
-    border: none; border-radius: 10px; cursor: pointer;
-    font-family: inherit; transition: all 0.2s;
-    box-shadow: 0 4px 14px rgba(37,99,235,0.3);
+    background: linear-gradient(135deg, var(--gold) 0%, var(--sunflower) 45%, var(--glow-orange) 100%);
+    color: #3a2200; font-size: 14px; font-weight: 800;
+    border: none; border-radius: 12px; cursor: pointer;
+    font-family: inherit; transition: all 0.25s cubic-bezier(.34,1.56,.64,1);
+    box-shadow: 0 5px 16px rgba(255,159,28,0.4);
     display: flex; align-items: center; gap: 8px;
   }
-  .btn-next:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(37,99,235,0.4); }
+  .btn-next:hover { transform: translateY(-2px) scale(1.02); box-shadow: 0 10px 26px rgba(255,159,28,0.55), 0 0 18px rgba(255,204,0,0.35); }
   .eligibility-result {
-    background: linear-gradient(135deg, #0F172A, #1E3A8A);
+    /* Starry Night results panel */
+    background:
+      radial-gradient(circle at 78% 18%, rgba(255,204,0,0.2) 0%, transparent 20%),
+      radial-gradient(2px 2px at 20% 25%, rgba(255,255,255,0.8), transparent),
+      radial-gradient(2px 2px at 60% 15%, rgba(255,204,0,0.8), transparent),
+      radial-gradient(1.5px 1.5px at 85% 45%, rgba(255,255,255,0.6), transparent),
+      linear-gradient(135deg, #0B2C5E 0%, #1A3A7A 50%, #4A6FA5 100%);
     border-radius: 20px; padding: 36px; text-align: center; color: white;
+    box-shadow: 0 14px 40px rgba(11,44,94,0.3);
   }
-  .result-score { font-size: 72px; font-weight: 900; color: var(--gold); line-height: 1; }
+  .result-score { font-size: 72px; font-weight: 900; color: var(--gold); line-height: 1; text-shadow: 0 0 24px rgba(255,204,0,0.55); }
   .result-label { font-size: 18px; font-weight: 700; margin: 8px 0 4px; }
   .result-sub { font-size: 14px; color: rgba(255,255,255,0.6); margin-bottom: 28px; }
   .scheme-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-top: 24px; }
@@ -738,6 +864,30 @@
   .scheme-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
   .scheme-card p { font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 10px; }
   .scheme-match { font-size: 11px; font-weight: 700; color: var(--success); }
+  /* ---- Detailed eligibility result cards ---- */
+  .es-card { background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 18px; text-align: left; }
+  .es-card.blocked { opacity: .62; }
+  .es-card .es-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+  .es-card h4 { font-size: 14px; font-weight: 800; margin: 0; color: #fff; }
+  .es-tag-new { font-size: 9px; font-weight: 800; letter-spacing: .04em; background: linear-gradient(135deg,#f59e0b,#ef4444); color: #fff; padding: 2px 7px; border-radius: 999px; margin-left: 6px; vertical-align: middle; }
+  .es-status { font-size: 10px; font-weight: 800; padding: 4px 10px; border-radius: 999px; white-space: nowrap; }
+  .es-status.ok { background: rgba(34,197,94,.18); color: #4ade80; }
+  .es-status.no { background: rgba(239,68,68,.18); color: #f87171; }
+  .es-meta { font-size: 11px; color: rgba(255,255,255,.65); margin: 8px 0 10px; }
+  .es-bar { height: 6px; background: rgba(255,255,255,.12); border-radius: 4px; overflow: hidden; margin-bottom: 12px; }
+  .es-bar > div { height: 100%; border-radius: 4px; background: linear-gradient(90deg,#22c55e,#16a34a); }
+  .es-bar.no > div { background: linear-gradient(90deg,#f87171,#ef4444); }
+  .es-reasons { list-style: none; padding: 0; margin: 0 0 10px; }
+  .es-reasons li { font-size: 11px; color: rgba(255,255,255,.8); margin: 3px 0; display: flex; gap: 6px; align-items: flex-start; }
+  .es-reasons li i { margin-top: 2px; font-size: 10px; }
+  .es-detail { border-top: 1px solid rgba(255,255,255,.1); margin-top: 8px; padding-top: 10px; display: none; }
+  .es-card.open .es-detail { display: block; }
+  .es-detail h5 { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: rgba(255,255,255,.55); margin: 10px 0 4px; }
+  .es-detail p, .es-detail li { font-size: 11px; color: rgba(255,255,255,.78); line-height: 1.5; margin: 2px 0; }
+  .es-detail ul { padding-left: 16px; margin: 2px 0; }
+  .es-toggle { font-size: 11px; font-weight: 700; color: #93c5fd; cursor: pointer; background: none; border: none; padding: 0; }
+  .es-apply { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 11px; font-weight: 700; color: #fff; background: linear-gradient(135deg,var(--royal-blue),#1e40af); padding: 7px 14px; border-radius: 8px; text-decoration: none; }
+  .es-chip { display: inline-block; font-size: 10px; background: rgba(255,255,255,.1); color: rgba(255,255,255,.8); padding: 2px 8px; border-radius: 999px; margin: 2px 4px 2px 0; }
 
   /* ============================================================
      DOCUMENTS / KYC
@@ -962,14 +1112,14 @@
 
   .btn {
     display: inline-flex; align-items: center; gap: 6px;
-    padding: 8px 16px; border-radius: 8px; font-size: 13px;
-    font-weight: 600; font-family: inherit; cursor: pointer;
-    transition: all 0.2s; border: none;
+    padding: 9px 18px; border-radius: 10px; font-size: 13px;
+    font-weight: 700; font-family: inherit; cursor: pointer;
+    transition: all 0.25s cubic-bezier(.34,1.5,.64,1); border: none;
   }
-  .btn-blue { background: var(--royal-blue); color: white; }
-  .btn-blue:hover { background: #1D4ED8; }
-  .btn-orange { background: var(--orange); color: white; }
-  .btn-orange:hover { background: #D97706; }
+  .btn-blue { background: linear-gradient(135deg, var(--royal-blue), var(--electric-blue)); color: white; box-shadow: 0 4px 14px rgba(26,58,122,0.35); }
+  .btn-blue:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(26,58,122,0.5), 0 0 14px rgba(255,204,0,0.18); }
+  .btn-orange { background: linear-gradient(135deg, var(--sunflower), var(--glow-orange)); color: #3a2200; box-shadow: 0 4px 14px rgba(255,159,28,0.4); }
+  .btn-orange:hover { transform: translateY(-2px); box-shadow: 0 8px 22px rgba(255,159,28,0.55); }
   .btn-ghost { background: transparent; color: var(--gray-600); border: 1.5px solid var(--gray-200); }
   .btn-ghost:hover { background: var(--gray-50); }
   .btn-danger { background: rgba(239,68,68,0.1); color: var(--red); border: 1.5px solid rgba(239,68,68,0.2); }
@@ -1121,7 +1271,7 @@
           <a class="forgot-link">Forgot password?</a>
         </div>
         <button class="btn-primary" onclick="doLogin()">Sign In <i class="fas fa-arrow-right" style="margin-left:8px"></i></button>
-        <div id="login-error" style="color:#EF4444;font-size:13px;margin-top:10px;display:none"></div>
+        <div id="login-error" style="color:#C8102E;font-size:13px;margin-top:10px;display:none"></div>
       </div>
       <div id="tab-otp" style="display:none">
         <div class="form-group">
@@ -1257,8 +1407,8 @@
     <div id="page-dashboard" class="page-content active animate-fadeup">
       <div class="welcome-banner">
         <div class="welcome-content">
-          <h2>Good Morning, <span id="dash-name">Yogesh</span> 👋</h2>
-          <p>Your business qualifies for <strong style="color:white">7 new government schemes</strong>. Here's your daily business summary.</p>
+          <h2>Welcome back, <span id="dash-name">Yogesh</span> — let your business shine like the stars ✨</h2>
+          <p>Your business qualifies for <strong style="color:white">7 new government schemes</strong>. Here's your daily business summary, glowing with possibility.</p>
           <div class="welcome-chips">
             <div class="chip gold"><i class="fas fa-star"></i> 7 New Schemes</div>
             <div class="chip"><i class="fas fa-clock"></i> 2 Deadlines This Week</div>
@@ -1498,6 +1648,20 @@
         <h1>Scheme Eligibility Finder</h1>
         <p>Answer a few questions about your business to discover government schemes you may qualify for.</p>
       </div>
+
+      <!-- What's New in MSME Schemes -->
+      <section id="whats-new-panel" class="card" style="margin-bottom:24px;border-left:4px solid var(--emerald)">
+        <div class="card-header">
+          <div class="card-title"><i class="fas fa-bullhorn" style="color:var(--emerald);margin-right:8px"></i>What's New in MSME Schemes</div>
+          <span class="text-xs text-gray">Latest updates &amp; 2025-26 launches</span>
+        </div>
+        <div class="card-body">
+          <div id="whats-new-list" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px">
+            <div class="text-xs text-gray">Loading latest updates…</div>
+          </div>
+        </div>
+      </section>
+
       <div class="wizard-container">
         <div class="wizard-steps">
           <div class="wizard-step active" id="step-dot-1">
@@ -1526,57 +1690,61 @@
             <div class="field-grid">
               <div class="field-group">
                 <label>Business Type <i class="fas fa-info-circle" title="The primary nature of your business operations"></i></label>
-                <select class="field-select">
+                <select class="field-select" id="ef-sector">
                   <option value="">Choose business type…</option>
-                  <option>Manufacturing</option>
-                  <option>Service</option>
-                  <option>Trading</option>
-                  <option>Agro-based</option>
-                  <option>IT / Technology</option>
+                  <option value="Manufacturing">Manufacturing</option>
+                  <option value="Service">Service</option>
+                  <option value="Trading">Trading</option>
+                  <option value="Agro-based">Agro-based</option>
+                  <option value="IT / Technology">IT / Technology</option>
                 </select>
                 <div class="field-hint">Choose the primary nature of your business operations</div>
               </div>
               <div class="field-group">
-                <label>Business Size (MSME Category) <i class="fas fa-info-circle"></i></label>
-                <select class="field-select">
-                  <option value="">Auto-calculated…</option>
-                  <option>Micro</option>
-                  <option>Small</option>
-                  <option>Medium</option>
+                <label>Social Category <i class="fas fa-info-circle" title="Used to match reserved schemes (SC/ST). Stored securely."></i></label>
+                <select class="field-select" id="ef-social">
+                  <option value="General">General</option>
+                  <option value="SC">SC (Scheduled Caste)</option>
+                  <option value="ST">ST (Scheduled Tribe)</option>
+                  <option value="OBC">OBC</option>
                 </select>
-                <div class="field-hint">Based on investment in plant/machinery and annual turnover limits</div>
+                <div class="field-hint">Unlocks reserved schemes like NSSH, KGVY</div>
               </div>
               <div class="field-group">
                 <label>Business Age</label>
-                <select class="field-select">
-                  <option>Less than 1 year</option>
-                  <option selected>1–3 years</option>
-                  <option>3–5 years</option>
-                  <option>5+ years</option>
+                <select class="field-select" id="ef-age">
+                  <option value="0">Less than 1 year</option>
+                  <option value="2" selected>1–3 years</option>
+                  <option value="4">3–5 years</option>
+                  <option value="7">5+ years</option>
                 </select>
               </div>
               <div class="field-group">
                 <label>State / UT</label>
-                <select class="field-select">
-                  <option>Maharashtra</option>
-                  <option>Gujarat</option>
-                  <option>Delhi</option>
-                  <option>Karnataka</option>
-                  <option>Tamil Nadu</option>
+                <select class="field-select" id="ef-state">
+                  <option value="Maharashtra">Maharashtra</option>
+                  <option value="Gujarat">Gujarat</option>
+                  <option value="Delhi">Delhi</option>
+                  <option value="Karnataka" selected>Karnataka</option>
+                  <option value="Tamil Nadu">Tamil Nadu</option>
+                  <option value="Uttar Pradesh">Uttar Pradesh</option>
+                  <option value="Rajasthan">Rajasthan</option>
+                  <option value="West Bengal">West Bengal</option>
                 </select>
               </div>
               <div class="field-group">
-                <label>GST Registered? <i class="fas fa-info-circle"></i></label>
-                <div class="toggle-group">
-                  <button class="toggle-btn active" onclick="toggleActive(this)">Yes</button>
-                  <button class="toggle-btn" onclick="toggleActive(this)">No</button>
-                </div>
+                <label>Gender of Owner <i class="fas fa-info-circle" title="Women-owned businesses qualify for additional schemes (TREAD, MSME-TEAM)"></i></label>
+                <select class="field-select" id="ef-gender">
+                  <option value="Male">Male</option>
+                  <option value="Female">Female (Women-owned)</option>
+                  <option value="Other">Other</option>
+                </select>
               </div>
               <div class="field-group">
-                <label>Export Oriented Business?</label>
-                <div class="toggle-group">
-                  <button class="toggle-btn active" onclick="toggleActive(this)">Yes</button>
-                  <button class="toggle-btn" onclick="toggleActive(this)">No</button>
+                <label>Located in a Rural Area? <i class="fas fa-info-circle" title="Rural enterprises qualify for SFURTI, KGVY etc."></i></label>
+                <div class="toggle-group" id="ef-rural">
+                  <button class="toggle-btn" data-val="1" onclick="toggleActive(this)">Yes</button>
+                  <button class="toggle-btn active" data-val="0" onclick="toggleActive(this)">No</button>
                 </div>
               </div>
             </div>
@@ -1594,36 +1762,33 @@
             <p>Tell us about your capital investments to determine your MSME category and eligible schemes.</p>
             <div class="field-grid">
               <div class="field-group">
-                <label>Investment in Plant & Machinery (₹) <i class="fas fa-info-circle"></i></label>
-                <input type="number" class="field-input" placeholder="e.g. 5000000" value="8500000">
+                <label>Investment in Plant &amp; Machinery / Equipment (₹) <i class="fas fa-info-circle" title="2026 rule: Micro ≤₹2.5cr, Small ≤₹25cr, Medium ≤₹125cr"></i></label>
+                <input type="number" id="ef-investment" class="field-input" placeholder="e.g. 5000000" value="18000000" oninput="updateClassification()">
                 <div class="field-hint">Enter the total investment amount in INR without commas</div>
               </div>
               <div class="field-group">
-                <label>Equipment & Tools Value (₹)</label>
-                <input type="number" class="field-input" placeholder="e.g. 2000000" value="2000000">
+                <label>Number of Employees</label>
+                <input type="number" id="ef-employees" class="field-input" placeholder="e.g. 25" value="18">
               </div>
               <div class="field-group">
-                <label>Number of Employees</label>
-                <input type="number" class="field-input" placeholder="e.g. 25" value="18">
+                <label>Udyam Registration Status <i class="fas fa-info-circle" title="Most schemes require an active Udyam Registration Number"></i></label>
+                <select class="field-select" id="ef-udyam">
+                  <option value="1">Registered</option>
+                  <option value="0">Pending</option>
+                  <option value="0">Not registered</option>
+                </select>
+                <div class="field-hint">Register free at udyamregistration.gov.in</div>
               </div>
               <div class="field-group">
                 <label>Existing Loans / Liabilities (₹)</label>
-                <input type="number" class="field-input" placeholder="e.g. 1000000" value="1500000">
+                <input type="number" id="ef-loans" class="field-input" placeholder="e.g. 1000000" value="1500000">
               </div>
-              <div class="field-group">
-                <label>SC/ST/Women-owned Business?</label>
-                <div class="toggle-group">
-                  <button class="toggle-btn" onclick="toggleActive(this)">Yes</button>
-                  <button class="toggle-btn active" onclick="toggleActive(this)">No</button>
-                </div>
-              </div>
-              <div class="field-group">
-                <label>Udyam Registration Status</label>
-                <select class="field-select">
-                  <option>Registered</option>
-                  <option>Pending</option>
-                  <option>Not registered</option>
-                </select>
+            </div>
+            <div id="ef-class-badge" style="margin-top:18px;padding:14px 18px;border-radius:12px;background:rgba(37,99,235,.07);border:1px solid rgba(37,99,235,.18);display:flex;align-items:center;gap:12px">
+              <i class="fas fa-calculator" style="color:var(--royal-blue);font-size:18px"></i>
+              <div>
+                <div style="font-size:12px;color:var(--gray-500);font-weight:600">Live MSME Classification (2026)</div>
+                <div id="ef-class-text" style="font-size:15px;font-weight:800;color:var(--navy)">Enter investment &amp; turnover…</div>
               </div>
             </div>
           </div>
@@ -1640,21 +1805,21 @@
             <p>Share your business performance metrics to match you with the right financial schemes.</p>
             <div class="field-grid">
               <div class="field-group">
-                <label>Annual Turnover (₹) <i class="fas fa-info-circle"></i></label>
-                <input type="number" class="field-input" placeholder="e.g. 10000000" value="12000000">
+                <label>Annual Turnover (₹) <i class="fas fa-info-circle" title="2026 rule: Micro ≤₹10cr, Small ≤₹100cr, Medium ≤₹500cr"></i></label>
+                <input type="number" id="ef-turnover" class="field-input" placeholder="e.g. 10000000" value="7000000" oninput="updateClassification()">
                 <div class="field-hint">Your business's annual revenue in INR</div>
               </div>
               <div class="field-group">
                 <label>Monthly Revenue (Avg) (₹)</label>
-                <input type="number" class="field-input" placeholder="e.g. 833333" value="1000000">
+                <input type="number" id="ef-monthly" class="field-input" placeholder="e.g. 833333" value="583000">
               </div>
               <div class="field-group">
                 <label>Net Profit Margin (%)</label>
-                <input type="number" class="field-input" placeholder="e.g. 15" value="22">
+                <input type="number" id="ef-margin" class="field-input" placeholder="e.g. 15" value="22">
               </div>
               <div class="field-group">
                 <label>Export Revenue (₹)</label>
-                <input type="number" class="field-input" placeholder="e.g. 2000000" value="3000000">
+                <input type="number" id="ef-export" class="field-input" placeholder="e.g. 2000000" value="0">
               </div>
               <div class="field-group">
                 <label>Credit Score (CIBIL)</label>
@@ -1690,38 +1855,7 @@
             <div class="result-score" id="elig-score">94%</div>
             <div class="result-label">Eligibility Score</div>
             <div class="result-sub" id="elig-sub">Excellent! Your business qualifies for <strong>7 government schemes</strong> worth up to <strong>₹50L+ in funding</strong></div>
-            <div class="scheme-cards" id="elig-scheme-cards">
-              <div class="scheme-card">
-                <h4>PMEGP Scheme</h4>
-                <p>Prime Minister's Employment Generation Programme – Margin money subsidy of 15-35%</p>
-                <div class="scheme-match">✓ 98% Match · Up to ₹25L</div>
-              </div>
-              <div class="scheme-card">
-                <h4>CGTMSE Fund</h4>
-                <p>Credit Guarantee Trust for Micro & Small Enterprises – Collateral-free loans</p>
-                <div class="scheme-match">✓ 95% Match · Up to ₹2Cr</div>
-              </div>
-              <div class="scheme-card">
-                <h4>Mudra Tarun Loan</h4>
-                <p>PMMY Tarun category – Business loans from ₹5L to ₹10L without collateral</p>
-                <div class="scheme-match">✓ 91% Match · Up to ₹10L</div>
-              </div>
-              <div class="scheme-card">
-                <h4>SIDF Scheme</h4>
-                <p>Small Industries Development Fund – Tech upgradation and modernisation support</p>
-                <div class="scheme-match">✓ 88% Match · Up to ₹15L</div>
-              </div>
-              <div class="scheme-card">
-                <h4>ZED Certification</h4>
-                <p>Zero Defect Zero Effect – Quality certification with 80% subsidy for Micro units</p>
-                <div class="scheme-match">✓ 86% Match · Subsidy 80%</div>
-              </div>
-              <div class="scheme-card">
-                <h4>IARI Technology</h4>
-                <p>Technology Development Fund for MSME modernisation and R&D support</p>
-                <div class="scheme-match">✓ 82% Match · Up to ₹1Cr</div>
-              </div>
-            </div>
+            <div class="scheme-cards" id="elig-scheme-cards" style="grid-template-columns:repeat(2,1fr)"></div>
             <div style="margin-top:24px;display:flex;gap:12px;justify-content:center">
               <button class="btn btn-blue" onclick="navigate('applications')"><i class="fas fa-file-alt"></i> Apply for Top Schemes</button>
               <button class="btn btn-ghost" style="color:white;border-color:rgba(255,255,255,0.3)" onclick="nextStep(1)"><i class="fas fa-redo"></i> Run Again</button>
@@ -1908,31 +2042,31 @@
           <p>Track revenue, expenses, tax liability and cash flow in real time.</p>
         </div>
         <div style="display:flex;gap:8px">
-          <button class="btn btn-ghost"><i class="fas fa-download"></i> Export</button>
-          <button class="btn btn-blue"><i class="fas fa-plus"></i> Add Transaction</button>
+          <button class="btn btn-ghost" onclick="exportTransactions()"><i class="fas fa-download"></i> Export</button>
+          <button class="btn btn-blue" onclick="openTxnModal()"><i class="fas fa-plus"></i> Add Transaction</button>
         </div>
       </div>
       <!-- Finance KPIs -->
       <div class="finance-summary">
         <div class="finance-stat" style="border-top:3px solid var(--emerald)">
-          <div class="label">Total Income (May)</div>
-          <div class="value" style="color:var(--emerald)">₹8,40,000</div>
-          <div class="sub up"><i class="fas fa-arrow-up"></i> +12% vs Apr</div>
+          <div class="label">Total Income</div>
+          <div class="value" id="fin-income" style="color:var(--emerald)">₹8,40,000</div>
+          <div class="sub up" id="fin-income-sub"><i class="fas fa-arrow-up"></i> +12% vs prev</div>
         </div>
         <div class="finance-stat" style="border-top:3px solid var(--red)">
-          <div class="label">Total Expenses (May)</div>
-          <div class="value">₹4,20,000</div>
-          <div class="sub down"><i class="fas fa-arrow-up"></i> +3% vs Apr</div>
+          <div class="label">Total Expenses</div>
+          <div class="value" id="fin-expenses">₹4,20,000</div>
+          <div class="sub down" id="fin-expenses-sub"><i class="fas fa-arrow-up"></i> +3% vs prev</div>
         </div>
         <div class="finance-stat" style="border-top:3px solid var(--royal-blue)">
           <div class="label">Net Cash Flow</div>
-          <div class="value" style="color:var(--royal-blue)">₹4,20,000</div>
-          <div class="sub up"><i class="fas fa-arrow-up"></i> +23% growth</div>
+          <div class="value" id="fin-net" style="color:var(--royal-blue)">₹4,20,000</div>
+          <div class="sub up" id="fin-net-sub"><i class="fas fa-arrow-up"></i> growth</div>
         </div>
         <div class="finance-stat" style="border-top:3px solid var(--orange)">
-          <div class="label">Taxable Amount (Est.)</div>
-          <div class="value">₹1,80,000</div>
-          <div class="sub" style="color:var(--gray-400)">GSTR-3B due Jun 5</div>
+          <div class="label">Health Score</div>
+          <div class="value" id="fin-health">72</div>
+          <div class="sub" id="fin-health-sub" style="color:var(--gray-400)">Funding readiness</div>
         </div>
       </div>
       <div class="finance-grid">
@@ -1993,12 +2127,8 @@
           <div class="table-wrap">
             <table>
               <thead><tr><th>Description</th><th>Category</th><th>Date</th><th>Amount</th><th>Type</th></tr></thead>
-              <tbody>
-                <tr><td><strong>Client Payment – Acme Corp</strong></td><td><span class="tag">Revenue</span></td><td>May 28</td><td style="color:var(--success);font-weight:700">+₹2,40,000</td><td><span class="badge approved">Income</span></td></tr>
-                <tr><td><strong>Raw Material Purchase</strong></td><td><span class="tag">Materials</span></td><td>May 26</td><td style="color:var(--red);font-weight:700">-₹85,000</td><td><span class="badge rejected">Expense</span></td></tr>
-                <tr><td><strong>Staff Salaries – May</strong></td><td><span class="tag">Payroll</span></td><td>May 25</td><td style="color:var(--red);font-weight:700">-₹1,10,000</td><td><span class="badge rejected">Expense</span></td></tr>
-                <tr><td><strong>Export Revenue – Dubai</strong></td><td><span class="tag">Export</span></td><td>May 22</td><td style="color:var(--success);font-weight:700">+₹3,50,000</td><td><span class="badge approved">Income</span></td></tr>
-                <tr><td><strong>Utility Bills – May</strong></td><td><span class="tag">Utilities</span></td><td>May 20</td><td style="color:var(--red);font-weight:700">-₹22,000</td><td><span class="badge rejected">Expense</span></td></tr>
+              <tbody id="fin-txn-body">
+                <tr><td colspan="5" style="text-align:center;color:var(--gray-400);padding:20px">Loading transactions…</td></tr>
               </tbody>
             </table>
           </div>
@@ -2314,37 +2444,60 @@ function switchChartTab(btn) {
 // ================================================================
 // CHARTS (Chart.js)
 // ================================================================
-let revenueChartInstance = null;
-let expenseChartInstance = null;
+window.revenueChartInstance = window.revenueChartInstance || null;
+window.expenseChartInstance = window.expenseChartInstance || null;
+
+// Van Gogh chart palette
+const VG_CHART = {
+  navy: '#0B2C5E', royalBlue: '#1A3A7A', starGlow: '#4A6FA5',
+  gold: '#FFCC00', sunflower: '#F5B800', glowOrange: '#FF9F1C',
+  wheatOrange: '#E07A00', emerald: '#1E6B4E', crimson: '#C8102E', iris: '#6A4E9C',
+  grid: 'rgba(11,44,94,0.08)', text: '#3A3326'
+};
 
 function initCharts() {
+  // Use live finance data when available, else demo fallback
+  const fd = window.financeData || null;
+  const labels = (fd && fd.trend && fd.trend.labels) ? fd.trend.labels.map(p => p.slice(5)) : ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'];
+  const revData = (fd && fd.trend && fd.trend.revenue) ? fd.trend.revenue : [520000, 680000, 720000, 760000, 800000, 840000];
+  const expData = (fd && fd.trend && fd.trend.expenses) ? fd.trend.expenses : [310000, 350000, 340000, 390000, 410000, 420000];
+
   // Revenue Chart
   const rCtx = document.getElementById('revenueChart');
-  if (rCtx && !revenueChartInstance) {
-    revenueChartInstance = new Chart(rCtx, {
+  if (rCtx && !window.revenueChartInstance) {
+    const g = rCtx.getContext('2d');
+    const revFill = g.createLinearGradient(0, 0, 0, 240);
+    revFill.addColorStop(0, 'rgba(255,159,28,0.32)'); revFill.addColorStop(1, 'rgba(255,204,0,0.02)');
+    const expFill = g.createLinearGradient(0, 0, 0, 240);
+    expFill.addColorStop(0, 'rgba(26,58,122,0.28)'); expFill.addColorStop(1, 'rgba(11,44,94,0.02)');
+    window.revenueChartInstance = new Chart(rCtx, {
       type: 'line',
       data: {
-        labels: ['Dec', 'Jan', 'Feb', 'Mar', 'Apr', 'May'],
+        labels: labels,
         datasets: [{
           label: 'Revenue',
-          data: [520000, 680000, 720000, 760000, 800000, 840000],
-          borderColor: '#2563EB',
-          backgroundColor: 'rgba(37,99,235,0.08)',
-          borderWidth: 2.5,
+          data: revData,
+          borderColor: VG_CHART.wheatOrange,
+          backgroundColor: revFill,
+          borderWidth: 3,
           fill: true,
-          tension: 0.4,
-          pointBackgroundColor: '#2563EB',
+          tension: 0.45,
+          pointBackgroundColor: VG_CHART.gold,
+          pointBorderColor: VG_CHART.wheatOrange,
+          pointBorderWidth: 2,
           pointRadius: 4,
           pointHoverRadius: 6
         }, {
           label: 'Expenses',
-          data: [310000, 350000, 340000, 390000, 410000, 420000],
-          borderColor: '#EF4444',
-          backgroundColor: 'rgba(239,68,68,0.05)',
-          borderWidth: 2.5,
+          data: expData,
+          borderColor: VG_CHART.royalBlue,
+          backgroundColor: expFill,
+          borderWidth: 3,
           fill: true,
-          tension: 0.4,
-          pointBackgroundColor: '#EF4444',
+          tension: 0.45,
+          pointBackgroundColor: VG_CHART.starGlow,
+          pointBorderColor: VG_CHART.navy,
+          pointBorderWidth: 2,
           pointRadius: 4,
           pointHoverRadius: 6
         }]
@@ -2354,24 +2507,27 @@ function initCharts() {
         maintainAspectRatio: false,
         interaction: { mode: 'index', intersect: false },
         plugins: {
-          legend: { position: 'top', labels: { boxWidth: 10, font: { size: 12 } } },
+          legend: { position: 'top', labels: { boxWidth: 10, color: VG_CHART.text, font: { size: 12, weight: '600' }, usePointStyle: true } },
           tooltip: {
+            backgroundColor: VG_CHART.navy, titleColor: VG_CHART.gold, bodyColor: '#FFFBF0',
+            borderColor: VG_CHART.glowOrange, borderWidth: 1,
             callbacks: {
-              label: ctx => '₹' + (ctx.parsed.y / 100000).toFixed(1) + 'L'
+              label: ctx => ctx.dataset.label + ': ₹' + (ctx.parsed.y / 100000).toFixed(1) + 'L'
             }
           }
         },
         scales: {
           y: {
-            grid: { color: '#F1F5F9' },
+            grid: { color: VG_CHART.grid },
             ticks: {
+              color: VG_CHART.text,
               callback: v => '₹' + (v/100000).toFixed(0) + 'L',
               font: { size: 11 }
             }
           },
           x: {
             grid: { display: false },
-            ticks: { font: { size: 11 } }
+            ticks: { color: VG_CHART.text, font: { size: 11 } }
           }
         }
       }
@@ -2380,15 +2536,18 @@ function initCharts() {
 
   // Expense Donut
   const eCtx = document.getElementById('expenseChart');
-  if (eCtx && !expenseChartInstance) {
-    expenseChartInstance = new Chart(eCtx, {
+  if (eCtx && !window.expenseChartInstance) {
+    const bd = (fd && fd.expense_breakdown) ? fd.expense_breakdown : { 'Raw Materials': 38, 'Salaries': 27, 'Utilities': 18, 'Marketing': 10, 'Other': 7 };
+    const dLabels = Object.keys(bd), dData = Object.values(bd);
+    window.expenseChartInstance = new Chart(eCtx, {
       type: 'doughnut',
       data: {
-        labels: ['Raw Materials', 'Salaries', 'Utilities', 'Marketing', 'Other'],
+        labels: dLabels,
         datasets: [{
-          data: [38, 27, 18, 10, 7],
-          backgroundColor: ['#2563EB', '#F59E0B', '#10B981', '#8B5CF6', '#EF4444'],
-          borderWidth: 0,
+          data: dData,
+          backgroundColor: [VG_CHART.navy, VG_CHART.gold, VG_CHART.emerald, VG_CHART.iris, VG_CHART.crimson, VG_CHART.wheatOrange, VG_CHART.glowOrange],
+          borderColor: '#FFFBF0',
+          borderWidth: 2,
           hoverOffset: 6
         }]
       },
@@ -2397,6 +2556,7 @@ function initCharts() {
         plugins: {
           legend: { display: false },
           tooltip: {
+            backgroundColor: VG_CHART.navy, titleColor: VG_CHART.gold, bodyColor: '#FFFBF0',
             callbacks: { label: ctx => ctx.label + ': ' + ctx.parsed + '%' }
           }
         },
@@ -2448,6 +2608,57 @@ function sendChat() {
   }, 800);
 }
 </script>
+
+<!-- Add Transaction Modal -->
+<div id="txn-modal" class="vg-modal-overlay" style="display:none" onclick="if(event.target===this)closeTxnModal()">
+  <div class="vg-modal" role="dialog" aria-modal="true" aria-labelledby="txn-modal-title">
+    <div class="vg-modal-head">
+      <h3 id="txn-modal-title"><i class="fas fa-receipt" style="color:var(--orange);margin-right:8px"></i>Add Transaction</h3>
+      <button class="vg-modal-close" onclick="closeTxnModal()" aria-label="Close">&times;</button>
+    </div>
+    <form id="txn-form" onsubmit="return submitTxn(event)">
+      <div class="field-group" style="margin-bottom:14px">
+        <label>Transaction Type</label>
+        <div class="toggle-group" id="txn-type">
+          <button type="button" class="toggle-btn active" data-val="income" onclick="toggleActive(this)">Income</button>
+          <button type="button" class="toggle-btn" data-val="expense" onclick="toggleActive(this)">Expense</button>
+        </div>
+      </div>
+      <div class="field-grid" style="grid-template-columns:1fr 1fr;gap:14px">
+        <div class="field-group">
+          <label>Amount (₹)</label>
+          <input type="number" id="txn-amount" class="field-input" placeholder="e.g. 50000" min="1" step="0.01" required>
+        </div>
+        <div class="field-group">
+          <label>Date</label>
+          <input type="date" id="txn-date" class="field-input" required>
+        </div>
+        <div class="field-group">
+          <label>Category</label>
+          <select id="txn-category" class="field-select">
+            <option value="Revenue">Revenue</option>
+            <option value="Export">Export</option>
+            <option value="Materials">Materials</option>
+            <option value="Payroll">Payroll</option>
+            <option value="Utilities">Utilities</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Other">Other</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Description</label>
+          <input type="text" id="txn-desc" class="field-input" placeholder="e.g. Client payment" maxlength="120">
+        </div>
+      </div>
+      <div id="txn-error" style="color:var(--red);font-size:12px;margin-top:10px;display:none"></div>
+      <div class="wizard-nav" style="margin-top:20px">
+        <button type="button" class="btn-back" onclick="closeTxnModal()">Cancel</button>
+        <button type="submit" class="btn-next" id="txn-submit"><i class="fas fa-check"></i> Save Transaction</button>
+      </div>
+    </form>
+  </div>
+</div>
+
 <script src="/static/api.js"></script>
 <script src="/static/integration.js"></script>
 </body>
