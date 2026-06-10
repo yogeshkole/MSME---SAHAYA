@@ -11,31 +11,69 @@ finance.get('/overview', async (c) => {
   const { results } = await c.env.DB.prepare('SELECT * FROM financial_records WHERE user_id = ? ORDER BY period ASC').bind(uid).all()
   const records = results as any[]
 
-  const totalRevenue = records.reduce((a, r) => a + (r.revenue || 0), 0)
-  const totalExpenses = records.reduce((a, r) => a + (r.expenses || 0), 0)
-  const netProfit = totalRevenue - totalExpenses
-  const margin = totalRevenue ? Math.round((netProfit / totalRevenue) * 100) : 0
+  // Pull live transactions so the graph + KPIs reflect anything added via the modal
+  const txnRes = await c.env.DB.prepare('SELECT type, category, amount, txn_date FROM transactions WHERE user_id = ?').bind(uid).all()
+  const txns = (txnRes.results || []) as any[]
 
-  // Latest month category breakdown
+  // Build a per-month map (YYYY-MM) merging financial_records with transactions
+  const monthMap: Record<string, { revenue: number; expenses: number }> = {}
+  for (const r of records) {
+    const period = String(r.period || '').slice(0, 7)
+    if (!period) continue
+    if (!monthMap[period]) monthMap[period] = { revenue: 0, expenses: 0 }
+    monthMap[period].revenue += (r.revenue || 0)
+    monthMap[period].expenses += (r.expenses || 0)
+  }
+  // Category breakdown: seed from latest financial_record, then layer in expense transactions
   let breakdown: Record<string, number> = {}
   if (records.length) {
     const last = records[records.length - 1]
     breakdown = last.category_breakdown ? JSON.parse(last.category_breakdown) : {}
   }
+  // Raw expense amounts by category (for accurate live breakdown when transactions exist)
+  const expByCat: Record<string, number> = {}
+  for (const t of txns) {
+    const period = String(t.txn_date || '').slice(0, 7)
+    const amt = Number(t.amount) || 0
+    if (period) {
+      if (!monthMap[period]) monthMap[period] = { revenue: 0, expenses: 0 }
+      if (t.type === 'income') monthMap[period].revenue += amt
+      else monthMap[period].expenses += amt
+    }
+    if (t.type === 'expense') {
+      const cat = t.category || 'Other'
+      expByCat[cat] = (expByCat[cat] || 0) + amt
+    }
+  }
+
+  const periods = Object.keys(monthMap).sort()
+
+  const totalRevenue = periods.reduce((a, p) => a + monthMap[p].revenue, 0)
+  const totalExpenses = periods.reduce((a, p) => a + monthMap[p].expenses, 0)
+  const netProfit = totalRevenue - totalExpenses
+  const margin = totalRevenue ? Math.round((netProfit / totalRevenue) * 100) : 0
+
+  // If we have real expense transactions, derive a percentage breakdown from them
+  const expTxnTotal = Object.values(expByCat).reduce((a, b) => a + b, 0)
+  if (expTxnTotal > 0) {
+    const pct: Record<string, number> = {}
+    for (const [k, v] of Object.entries(expByCat)) pct[k] = Math.round((v / expTxnTotal) * 100)
+    breakdown = pct
+  }
 
   // Health score (0-100): margin (40) + revenue growth (30) + consistency (30)
   let growth = 0
-  if (records.length >= 2) {
-    const first = records[0].revenue || 1
-    const last = records[records.length - 1].revenue || 0
+  if (periods.length >= 2) {
+    const first = monthMap[periods[0]].revenue || 1
+    const last = monthMap[periods[periods.length - 1]].revenue || 0
     growth = Math.round(((last - first) / first) * 100)
   }
   const healthScore = Math.min(100, Math.max(0,
-    Math.round((Math.min(margin, 40) / 40) * 40 + (Math.min(Math.max(growth, 0), 60) / 60) * 30 + (records.length >= 6 ? 30 : records.length * 5))
+    Math.round((Math.min(margin, 40) / 40) * 40 + (Math.min(Math.max(growth, 0), 60) / 60) * 30 + (periods.length >= 6 ? 30 : periods.length * 5))
   ))
 
   // Funding readiness
-  const fundingReadiness = Math.min(100, Math.round(healthScore * 0.6 + (margin > 15 ? 25 : margin) + (records.length >= 3 ? 15 : 0)))
+  const fundingReadiness = Math.min(100, Math.round(healthScore * 0.6 + (margin > 15 ? 25 : margin) + (periods.length >= 3 ? 15 : 0)))
 
   return c.json({
     summary: {
@@ -43,14 +81,16 @@ finance.get('/overview', async (c) => {
       total_expenses: totalExpenses,
       net_profit: netProfit,
       profit_margin: margin,
+      margin: margin,
       revenue_growth: growth,
       health_score: healthScore,
-      funding_readiness: fundingReadiness
+      funding_readiness: fundingReadiness,
+      transaction_count: txns.length
     },
     trend: {
-      labels: records.map((r) => r.period),
-      revenue: records.map((r) => r.revenue || 0),
-      expenses: records.map((r) => r.expenses || 0)
+      labels: periods,
+      revenue: periods.map((p) => monthMap[p].revenue),
+      expenses: periods.map((p) => monthMap[p].expenses)
     },
     expense_breakdown: breakdown,
     insights: generateInsights(margin, growth, healthScore)

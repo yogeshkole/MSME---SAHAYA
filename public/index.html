@@ -2195,54 +2195,54 @@
         <h1>Business Profile</h1>
       </div>
       <div class="profile-header">
-        <div class="profile-avatar">YS</div>
+        <div class="profile-avatar" id="prof-avatar">YS</div>
         <div class="profile-info">
-          <h2>Yogesh Sharma</h2>
-          <p>Yogesh Industries Pvt. Ltd. · GSTIN: 27AADCY0010J1ZX</p>
+          <h2 id="prof-name">Yogesh Sharma</h2>
+          <p id="prof-subtitle">Yogesh Industries Pvt. Ltd. · GSTIN: 27AADCY0010J1ZX</p>
           <div class="profile-badges">
-            <span class="profile-badge verified"><i class="fas fa-check-circle"></i> Udyam Verified</span>
+            <span class="profile-badge verified" id="prof-udyam-badge"><i class="fas fa-check-circle"></i> Udyam Verified</span>
             <span class="profile-badge premium"><i class="fas fa-crown"></i> Pro Member</span>
           </div>
         </div>
-        <button class="btn btn-ghost" style="color:white;border-color:rgba(255,255,255,0.3);margin-left:auto;align-self:flex-start;position:relative;z-index:1"><i class="fas fa-edit"></i> Edit Profile</button>
+        <button class="btn btn-ghost" style="color:white;border-color:rgba(255,255,255,0.3);margin-left:auto;align-self:flex-start;position:relative;z-index:1" onclick="openProfileModal()"><i class="fas fa-edit"></i> Edit Profile</button>
       </div>
       <div class="profile-grid">
         <div class="card">
-          <div class="card-header"><div class="card-title">Business Information</div><a class="card-action">Edit</a></div>
+          <div class="card-header"><div class="card-title">Business Information</div><a class="card-action" onclick="openProfileModal()">Edit</a></div>
           <div class="card-body">
             <div style="display:grid;gap:14px">
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-                <div><div class="text-xs text-gray" style="margin-bottom:4px">Business Name</div><div class="text-sm font-semibold text-navy">Yogesh Industries Pvt. Ltd.</div></div>
-                <div><div class="text-xs text-gray" style="margin-bottom:4px">Business Type</div><div class="text-sm font-semibold text-navy">Manufacturing</div></div>
-                <div><div class="text-xs text-gray" style="margin-bottom:4px">MSME Category</div><div class="text-sm font-semibold text-navy">Micro Enterprise</div></div>
-                <div><div class="text-xs text-gray" style="margin-bottom:4px">Udyam Number</div><div class="text-sm font-semibold text-navy">UDYAM-MH-23-0042891</div></div>
-                <div><div class="text-xs text-gray" style="margin-bottom:4px">State / UT</div><div class="text-sm font-semibold text-navy">Maharashtra</div></div>
-                <div><div class="text-xs text-gray" style="margin-bottom:4px">Year of Establishment</div><div class="text-sm font-semibold text-navy">2022</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">Business Name</div><div class="text-sm font-semibold text-navy" id="prof-business-name">Yogesh Industries Pvt. Ltd.</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">Business Type</div><div class="text-sm font-semibold text-navy" id="prof-business-type">Manufacturing</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">MSME Category</div><div class="text-sm font-semibold text-navy" id="prof-msme-category">Micro Enterprise</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">Udyam Number</div><div class="text-sm font-semibold text-navy" id="prof-udyam">UDYAM-MH-23-0042891</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">State / UT</div><div class="text-sm font-semibold text-navy" id="prof-state">Maharashtra</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">Year of Establishment</div><div class="text-sm font-semibold text-navy" id="prof-year">2022</div></div>
               </div>
             </div>
           </div>
         </div>
         <div class="card">
-          <div class="card-header"><div class="card-title">Contact Information</div><a class="card-action">Edit</a></div>
+          <div class="card-header"><div class="card-title">Contact Information</div><a class="card-action" onclick="openProfileModal()">Edit</a></div>
           <div class="card-body">
             <div style="display:grid;gap:14px">
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-                <div><div class="text-xs text-gray" style="margin-bottom:4px">Email Address</div><div class="text-sm font-semibold text-navy">yogesh@yogeshindustries.in</div></div>
-                <div><div class="text-xs text-gray" style="margin-bottom:4px">Mobile Number</div><div class="text-sm font-semibold text-navy">+91 98765 43210</div></div>
-                <div><div class="text-xs text-gray" style="margin-bottom:4px">GSTIN</div><div class="text-sm font-semibold text-navy">27AADCY0010J1ZX</div></div>
-                <div><div class="text-xs text-gray" style="margin-bottom:4px">PAN</div><div class="text-sm font-semibold text-navy">AADCY0010J</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">Email Address</div><div class="text-sm font-semibold text-navy" id="prof-email">yogesh@yogeshindustries.in</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">Mobile Number</div><div class="text-sm font-semibold text-navy" id="prof-phone">+91 98765 43210</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">GSTIN</div><div class="text-sm font-semibold text-navy" id="prof-gst">27AADCY0010J1ZX</div></div>
+                <div><div class="text-xs text-gray" style="margin-bottom:4px">PAN</div><div class="text-sm font-semibold text-navy" id="prof-pan">AADCY0010J</div></div>
               </div>
             </div>
           </div>
         </div>
         <div class="card">
-          <div class="card-header"><div class="card-title">Financial Details</div><a class="card-action">Edit</a></div>
+          <div class="card-header"><div class="card-title">Financial Details</div><a class="card-action" onclick="openProfileModal()">Edit</a></div>
           <div class="card-body">
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
-              <div><div class="text-xs text-gray" style="margin-bottom:4px">Annual Turnover</div><div class="text-sm font-semibold text-navy">₹1.2 Crore</div></div>
-              <div><div class="text-xs text-gray" style="margin-bottom:4px">Plant & Machinery Investment</div><div class="text-sm font-semibold text-navy">₹85 Lakh</div></div>
-              <div><div class="text-xs text-gray" style="margin-bottom:4px">No. of Employees</div><div class="text-sm font-semibold text-navy">18</div></div>
-              <div><div class="text-xs text-gray" style="margin-bottom:4px">CIBIL Score</div><div class="text-sm font-semibold" style="color:var(--emerald)">724 (Good)</div></div>
+              <div><div class="text-xs text-gray" style="margin-bottom:4px">Annual Turnover</div><div class="text-sm font-semibold text-navy" id="prof-turnover">₹1.2 Crore</div></div>
+              <div><div class="text-xs text-gray" style="margin-bottom:4px">No. of Employees</div><div class="text-sm font-semibold text-navy" id="prof-employees">18</div></div>
+              <div><div class="text-xs text-gray" style="margin-bottom:4px">Business Size</div><div class="text-sm font-semibold text-navy" id="prof-size">Micro</div></div>
+              <div><div class="text-xs text-gray" style="margin-bottom:4px">City</div><div class="text-sm font-semibold text-navy" id="prof-city">—</div></div>
             </div>
           </div>
         </div>
@@ -2654,6 +2654,93 @@ function sendChat() {
       <div class="wizard-nav" style="margin-top:20px">
         <button type="button" class="btn-back" onclick="closeTxnModal()">Cancel</button>
         <button type="submit" class="btn-next" id="txn-submit"><i class="fas fa-check"></i> Save Transaction</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- EDIT PROFILE MODAL -->
+<div id="profile-modal" class="vg-modal-overlay" style="display:none" onclick="if(event.target===this)closeProfileModal()">
+  <div class="vg-modal" role="dialog" aria-modal="true" aria-labelledby="profile-modal-title" style="max-width:640px">
+    <div class="vg-modal-head">
+      <h3 id="profile-modal-title"><i class="fas fa-user-edit" style="color:var(--orange);margin-right:8px"></i>Edit Business Profile</h3>
+      <button type="button" class="vg-modal-close" onclick="closeProfileModal()" aria-label="Close">&times;</button>
+    </div>
+    <form id="profile-form" onsubmit="return saveProfile(event)">
+      <div class="field-grid" style="grid-template-columns:1fr 1fr;gap:14px">
+        <div class="field-group">
+          <label>Full Name</label>
+          <input type="text" id="pf-full-name" class="field-input" placeholder="Your name">
+        </div>
+        <div class="field-group">
+          <label>Mobile Number</label>
+          <input type="text" id="pf-phone" class="field-input" placeholder="+91 …">
+        </div>
+        <div class="field-group">
+          <label>Business Name</label>
+          <input type="text" id="pf-business-name" class="field-input" placeholder="Business / firm name">
+        </div>
+        <div class="field-group">
+          <label>Business Type</label>
+          <select id="pf-business-category" class="field-select">
+            <option value="Manufacturing">Manufacturing</option>
+            <option value="Services">Services</option>
+            <option value="Trading">Trading</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Business Size</label>
+          <select id="pf-business-size" class="field-select">
+            <option value="Micro">Micro</option>
+            <option value="Small">Small</option>
+            <option value="Medium">Medium</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Year Established</label>
+          <input type="number" id="pf-year" class="field-input" placeholder="e.g. 2022" min="1900" max="2026">
+        </div>
+        <div class="field-group">
+          <label>Annual Turnover (₹)</label>
+          <input type="number" id="pf-turnover" class="field-input" placeholder="e.g. 12000000" min="0" step="1000">
+        </div>
+        <div class="field-group">
+          <label>No. of Employees</label>
+          <input type="number" id="pf-employees" class="field-input" placeholder="e.g. 18" min="0">
+        </div>
+        <div class="field-group">
+          <label>Udyam Number</label>
+          <input type="text" id="pf-udyam" class="field-input" placeholder="UDYAM-XX-00-0000000">
+        </div>
+        <div class="field-group">
+          <label>GSTIN</label>
+          <input type="text" id="pf-gst" class="field-input" placeholder="22AAAAA0000A1Z5" maxlength="15">
+        </div>
+        <div class="field-group">
+          <label>PAN</label>
+          <input type="text" id="pf-pan" class="field-input" placeholder="AAAAA0000A" maxlength="10">
+        </div>
+        <div class="field-group">
+          <label>City</label>
+          <input type="text" id="pf-city" class="field-input" placeholder="City">
+        </div>
+        <div class="field-group">
+          <label>State / UT</label>
+          <input type="text" id="pf-state" class="field-input" placeholder="e.g. Maharashtra">
+        </div>
+        <div class="field-group">
+          <label>Pincode</label>
+          <input type="text" id="pf-pincode" class="field-input" placeholder="6-digit" maxlength="6">
+        </div>
+      </div>
+      <div class="field-group" style="margin-top:12px">
+        <label>Address</label>
+        <input type="text" id="pf-address" class="field-input" placeholder="Address line">
+      </div>
+      <div id="profile-error" style="color:var(--red);font-size:12px;margin-top:10px;display:none"></div>
+      <div class="wizard-nav" style="margin-top:20px">
+        <button type="button" class="btn-back" onclick="closeProfileModal()">Cancel</button>
+        <button type="submit" class="btn-next" id="profile-submit"><i class="fas fa-check"></i> Save Changes</button>
       </div>
     </form>
   </div>

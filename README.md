@@ -152,10 +152,14 @@ Base path: `/api`
 5. **Documents** → "Upload Document" to add docs (OCR extracts fields; eligibility updates).
 6. **Finance** → live KPIs (income, expenses, net profit, health score), revenue/expense charts, and a
    transactions ledger. Click **"Add Transaction"** to record income/expenses (type, amount, date,
-   category, description) — saved to the backend and instantly reflected in the KPIs and table.
-   **"Export"** downloads all transactions as CSV.
-7. **Notifications** → live feed; click to mark read.
-8. **AI Assistant** (chat widget) → ask about schemes, documents, or finances — it answers using your real data.
+   category, description) — saved to the backend and **instantly merged into the KPIs, the
+   month-by-month trend graph, and the expense-breakdown donut**. **"Export"** downloads all
+   transactions as CSV.
+7. **Profile** → view your live business profile. Click **"Edit Profile"** (or any card's "Edit") to
+   open a form and update name, contact, business details, financials, Udyam/GST/PAN, and address —
+   saved via `PUT /api/profile` and reflected immediately across the profile and sidebar.
+8. **Notifications** → live feed; click to mark read.
+9. **AI Assistant** (chat widget) → ask about schemes, documents, or finances — it answers using your real data.
 
 ## Tech Stack
 - **Backend**: Hono 4 (TypeScript), Cloudflare Workers runtime
@@ -206,4 +210,4 @@ The SPA uses a Van Gogh-inspired visual system applied via CSS custom-property r
 ## Deployment
 - **Platform**: Cloudflare Pages (Workers runtime)
 - **Status**: ✅ Running locally via PM2 (sandbox). Not yet deployed to production.
-- **Last Updated**: 2026-06-08
+- **Last Updated**: 2026-06-09

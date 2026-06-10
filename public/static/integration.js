@@ -247,6 +247,125 @@
     } catch (e) { toast('Export failed') }
   }
 
+  // ---------- PROFILE ----------
+  let profileData = null
+  function inrShort(n) {
+    n = Number(n) || 0
+    if (n >= 1e7) return '\u20b9' + (n / 1e7).toFixed(2).replace(/\.00$/, '') + ' Crore'
+    if (n >= 1e5) return '\u20b9' + (n / 1e5).toFixed(1).replace(/\.0$/, '') + ' Lakh'
+    return '\u20b9' + n.toLocaleString('en-IN')
+  }
+  function classifySizeLabel(size) {
+    if (!size) return '\u2014'
+    const s = String(size).toLowerCase()
+    if (s.indexOf('micro') >= 0) return 'Micro Enterprise'
+    if (s.indexOf('small') >= 0) return 'Small Enterprise'
+    if (s.indexOf('medium') >= 0) return 'Medium Enterprise'
+    return size
+  }
+  async function loadProfile() {
+    try {
+      const { user, profile } = await API.getProfile()
+      profileData = { user: user || {}, profile: profile || {} }
+      const u = profileData.user, p = profileData.profile
+      const name = u.full_name || 'User'
+      setText('prof-name', name)
+      const initials = name.split(' ').map((w) => w[0]).join('').slice(0, 2).toUpperCase()
+      setText('prof-avatar', initials)
+      setText('prof-subtitle', (p.business_name || '\u2014') + (p.gst_number ? ' \u00b7 GSTIN: ' + p.gst_number : ''))
+      // Business info
+      setText('prof-business-name', p.business_name || '\u2014')
+      setText('prof-business-type', p.business_category || '\u2014')
+      setText('prof-msme-category', classifySizeLabel(p.business_size))
+      setText('prof-udyam', p.udyam_number || 'Not registered')
+      setText('prof-state', p.state || '\u2014')
+      setText('prof-year', p.year_established || '\u2014')
+      // Contact
+      setText('prof-email', u.email || '\u2014')
+      setText('prof-phone', u.phone || '\u2014')
+      setText('prof-gst', p.gst_number || '\u2014')
+      setText('prof-pan', p.pan_number || '\u2014')
+      // Financial
+      setText('prof-turnover', p.annual_turnover ? inrShort(p.annual_turnover) : '\u2014')
+      setText('prof-employees', p.employee_count != null ? p.employee_count : '\u2014')
+      setText('prof-size', p.business_size || '\u2014')
+      setText('prof-city', p.city || '\u2014')
+      // Udyam badge
+      const badge = document.getElementById('prof-udyam-badge')
+      if (badge) badge.style.display = p.udyam_number ? '' : 'none'
+    } catch (e) {}
+  }
+  window._loadProfile = loadProfile
+
+  window.openProfileModal = function () {
+    const m = document.getElementById('profile-modal'); if (!m) return
+    const u = (profileData && profileData.user) || {}, p = (profileData && profileData.profile) || {}
+    const set = (id, v) => { const el = document.getElementById(id); if (el) el.value = (v == null ? '' : v) }
+    set('pf-full-name', u.full_name)
+    set('pf-phone', u.phone)
+    set('pf-business-name', p.business_name)
+    set('pf-business-category', p.business_category || 'Manufacturing')
+    set('pf-business-size', p.business_size || 'Micro')
+    set('pf-year', p.year_established)
+    set('pf-turnover', p.annual_turnover)
+    set('pf-employees', p.employee_count)
+    set('pf-udyam', p.udyam_number)
+    set('pf-gst', p.gst_number)
+    set('pf-pan', p.pan_number)
+    set('pf-city', p.city)
+    set('pf-state', p.state)
+    set('pf-pincode', p.pincode)
+    set('pf-address', p.address_line)
+    const err = document.getElementById('profile-error'); if (err) err.style.display = 'none'
+    m.style.display = 'flex'
+  }
+  window.closeProfileModal = function () { const m = document.getElementById('profile-modal'); if (m) m.style.display = 'none' }
+
+  function showProfileErr(msg) { const err = document.getElementById('profile-error'); if (err) { err.textContent = msg; err.style.display = 'block' } }
+
+  window.saveProfile = async function (ev) {
+    ev.preventDefault()
+    const body = {
+      full_name: val('pf-full-name').trim(),
+      phone: val('pf-phone').trim(),
+      business_name: val('pf-business-name').trim(),
+      business_category: val('pf-business-category'),
+      business_size: val('pf-business-size'),
+      year_established: val('pf-year') ? Number(val('pf-year')) : undefined,
+      annual_turnover: val('pf-turnover') ? Number(val('pf-turnover')) : undefined,
+      employee_count: val('pf-employees') ? Number(val('pf-employees')) : undefined,
+      udyam_number: val('pf-udyam').trim(),
+      gst_number: val('pf-gst').trim().toUpperCase(),
+      pan_number: val('pf-pan').trim().toUpperCase(),
+      city: val('pf-city').trim(),
+      state: val('pf-state').trim(),
+      pincode: val('pf-pincode').trim(),
+      address_line: val('pf-address').trim()
+    }
+    if (!body.full_name) { showProfileErr('Full name is required.'); return false }
+    if (body.gst_number && body.gst_number.length !== 15) { showProfileErr('GSTIN must be 15 characters (or leave blank).'); return false }
+    if (body.pan_number && body.pan_number.length !== 10) { showProfileErr('PAN must be 10 characters (or leave blank).'); return false }
+    if (body.pincode && !/^\d{6}$/.test(body.pincode)) { showProfileErr('Pincode must be 6 digits (or leave blank).'); return false }
+    const btn = document.getElementById('profile-submit'); const orig = btn.innerHTML
+    btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving…'
+    try {
+      await API.updateProfile(body)
+      window.closeProfileModal()
+      await loadProfile()
+      // Refresh sidebar identity too
+      try {
+        const sn = document.getElementById('side-sub')
+        if (sn) sn.textContent = (body.business_category || '') + ' \u00b7 ' + (body.business_size || '')
+      } catch (e) {}
+      toast('Profile updated successfully')
+    } catch (e) {
+      showProfileErr(e.data && e.data.error ? e.data.error : 'Failed to update profile')
+    } finally {
+      btn.disabled = false; btn.innerHTML = orig
+    }
+    return false
+  }
+
   // ---------- ELIGIBILITY ENGINE ----------
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) }
   function val(id) { const el = document.getElementById(id); return el ? el.value : '' }
@@ -459,6 +578,7 @@
     else if (page === 'dashboard') loadDashboard()
     else if (page === 'eligibility' && !_whatsNewLoaded) loadWhatsNew()
     else if (page === 'finance') loadFinance()
+    else if (page === 'profile') loadProfile()
   }
 
   // ---------- helpers ----------
