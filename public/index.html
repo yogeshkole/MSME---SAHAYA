@@ -1207,6 +1207,99 @@
     background: rgba(0,0,0,0.5); z-index: 99;
   }
   .sidebar-overlay.open { display: block; }
+
+  /* ===== BRANCHES / FIND A BRANCH ===== */
+  .branch-stats {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 22px;
+  }
+  .branch-stat {
+    background: var(--cream-card); border: 1px solid var(--moonlit);
+    border-radius: 16px; padding: 18px 20px; position: relative; overflow: hidden;
+    box-shadow: 0 6px 18px rgba(11,44,94,0.06);
+  }
+  .branch-stat::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 4px;
+    background: linear-gradient(180deg, var(--gold), var(--glow-orange));
+  }
+  .branch-stat .bs-icon {
+    width: 40px; height: 40px; border-radius: 11px; display: flex; align-items: center;
+    justify-content: center; font-size: 16px; margin-bottom: 10px;
+    background: radial-gradient(circle at 35% 30%, var(--gold), var(--glow-orange) 75%);
+    color: var(--navy); box-shadow: 0 0 14px rgba(255,159,28,0.45);
+  }
+  .branch-stat .bs-value { font-size: 26px; font-weight: 800; color: var(--navy); line-height: 1; }
+  .branch-stat .bs-label { font-size: 12px; color: #8a7d63; margin-top: 5px; font-weight: 600; }
+
+  .branch-map-wrap {
+    border-radius: 16px; overflow: hidden; border: 1px solid var(--moonlit);
+    box-shadow: 0 8px 24px rgba(11,44,94,0.10); margin-bottom: 22px; background: var(--cream-card);
+  }
+  .branch-map-wrap iframe { display: block; width: 100%; height: 360px; border: 0; }
+
+  .branch-filters { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 18px; }
+  .branch-filter-btn {
+    padding: 8px 18px; border-radius: 999px; border: 1px solid var(--moonlit);
+    background: var(--cream-card); color: var(--navy); font-size: 13px; font-weight: 600;
+    cursor: pointer; transition: all .2s;
+  }
+  .branch-filter-btn:hover { border-color: var(--glow-orange); }
+  .branch-filter-btn.active {
+    background: linear-gradient(135deg, var(--gold), var(--glow-orange));
+    border-color: var(--glow-orange); color: var(--navy);
+    box-shadow: 0 0 14px rgba(255,159,28,0.4);
+  }
+
+  .branch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  .branch-card {
+    background: var(--cream-card); border: 1px solid var(--moonlit); border-radius: 18px;
+    padding: 20px; position: relative; box-shadow: 0 6px 18px rgba(11,44,94,0.07);
+    transition: transform .25s, box-shadow .25s;
+  }
+  .branch-card:hover { transform: translateY(-3px); box-shadow: 0 14px 32px rgba(11,44,94,0.14); }
+  .branch-card-head { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 14px; }
+  .branch-type-icon {
+    width: 46px; height: 46px; border-radius: 12px; flex-shrink: 0; display: flex;
+    align-items: center; justify-content: center; font-size: 18px; color: #fff;
+  }
+  .branch-type-icon.di { background: linear-gradient(135deg, var(--navy), var(--royal-blue)); }
+  .branch-type-icon.dfo { background: linear-gradient(135deg, var(--emerald), #2e8b6a); }
+  .branch-card h3 { font-size: 16px; font-weight: 800; color: var(--navy); margin: 0; }
+  .branch-card .branch-sub { font-size: 12px; color: #8a7d63; font-weight: 600; margin-top: 2px; }
+  .branch-rating { margin-left: auto; text-align: right; flex-shrink: 0; }
+  .branch-rating .stars { color: var(--gold); font-size: 13px; }
+  .branch-rating .rnum { font-size: 13px; font-weight: 800; color: var(--navy); }
+
+  .branch-status {
+    display: inline-flex; align-items: center; gap: 6px; padding: 3px 10px; border-radius: 999px;
+    font-size: 11px; font-weight: 700; margin-bottom: 12px;
+  }
+  .branch-status.open { background: rgba(30,107,78,0.12); color: var(--emerald); }
+  .branch-status.closed { background: rgba(200,16,46,0.10); color: var(--red); }
+  .branch-status .dot { width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+  .branch-status.open .dot { box-shadow: 0 0 6px var(--emerald); animation: vg-twinkle 1.8s infinite; }
+
+  .branch-meta { display: flex; flex-direction: column; gap: 9px; margin-bottom: 14px; }
+  .branch-meta-row { display: flex; gap: 10px; font-size: 13px; color: #4a4334; }
+  .branch-meta-row i { color: var(--glow-orange); width: 16px; text-align: center; margin-top: 2px; flex-shrink: 0; }
+  .branch-meta-row a { color: var(--royal-blue); text-decoration: none; font-weight: 600; }
+  .branch-meta-row a:hover { text-decoration: underline; }
+
+  .branch-services { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 16px; }
+  .branch-service-tag {
+    font-size: 11px; font-weight: 600; padding: 3px 10px; border-radius: 999px;
+    background: var(--moonlit); color: var(--navy);
+  }
+  .branch-actions { display: flex; gap: 10px; }
+  .branch-actions .btn { flex: 1; justify-content: center; font-size: 13px; }
+
+  @media (max-width: 900px) {
+    .branch-stats { grid-template-columns: 1fr 1fr; }
+    .branch-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 480px) {
+    .branch-stats { grid-template-columns: 1fr 1fr; }
+    .branch-actions { flex-direction: column; }
+  }
 </style>
 </head>
 <body>
@@ -1353,6 +1446,12 @@
         </div>
         <div class="nav-item" onclick="navigate('finance')">
           <i class="fas fa-chart-line"></i><span>Finance</span>
+        </div>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">Support Network</div>
+        <div class="nav-item" onclick="navigate('branches')">
+          <i class="fas fa-map-marker-alt"></i><span>Find a Branch</span><span class="nav-badge">4</span>
         </div>
       </div>
       <div class="nav-section">
@@ -2263,6 +2362,58 @@
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- FIND A BRANCH -->
+    <div id="page-branches" class="page-content" style="display:none">
+      <div class="page-header">
+        <div class="breadcrumb"><span onclick="navigate('dashboard')" style="cursor:pointer">Dashboard</span><i class="fas fa-chevron-right"></i><span class="active">Find a Branch</span></div>
+        <h1>MSME Support Offices Near You</h1>
+        <p>Visit a Development Institute (MSME-DI) or District Facilitation Office (MSME-DFO) for scheme guidance, registration help, and on-ground support.</p>
+      </div>
+
+      <!-- Stat strip -->
+      <section class="branch-stats" id="branch-stats" aria-label="Branch statistics">
+        <div class="branch-stat">
+          <div class="bs-icon"><i class="fas fa-building"></i></div>
+          <div class="bs-value" id="bstat-total">4</div>
+          <div class="bs-label">Total Branches</div>
+        </div>
+        <div class="branch-stat">
+          <div class="bs-icon"><i class="fas fa-door-open"></i></div>
+          <div class="bs-value" id="bstat-open">0</div>
+          <div class="bs-label">Open Now</div>
+        </div>
+        <div class="branch-stat">
+          <div class="bs-icon"><i class="fas fa-hand-holding-usd"></i></div>
+          <div class="bs-value" id="bstat-schemes">17</div>
+          <div class="bs-label">Schemes Supported</div>
+        </div>
+        <div class="branch-stat">
+          <div class="bs-icon"><i class="fas fa-map"></i></div>
+          <div class="bs-value" id="bstat-states">4</div>
+          <div class="bs-label">States Covered</div>
+        </div>
+      </section>
+
+      <!-- Live Google Maps embed (all 4 locations) -->
+      <section class="branch-map-wrap" aria-label="Branch locations map">
+        <iframe
+          title="MSME branch locations"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          src="https://www.google.com/maps?q=MSME+Development+Institute+India&z=4&output=embed"></iframe>
+      </section>
+
+      <!-- Filters -->
+      <div class="branch-filters" id="branch-filters" role="tablist" aria-label="Filter branches by type">
+        <button class="branch-filter-btn active" data-filter="all" onclick="filterBranches('all', this)">All Branches</button>
+        <button class="branch-filter-btn" data-filter="DI" onclick="filterBranches('DI', this)">MSME-DI</button>
+        <button class="branch-filter-btn" data-filter="DFO" onclick="filterBranches('DFO', this)">MSME-DFO</button>
+      </div>
+
+      <!-- Branch cards (rendered by JS) -->
+      <section class="branch-grid" id="branch-grid" aria-label="Branch list"></section>
     </div>
 
     <!-- HELP CENTER -->

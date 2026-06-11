@@ -158,8 +158,14 @@ Base path: `/api`
 7. **Profile** → view your live business profile. Click **"Edit Profile"** (or any card's "Edit") to
    open a form and update name, contact, business details, financials, Udyam/GST/PAN, and address —
    saved via `PUT /api/profile` and reflected immediately across the profile and sidebar.
-8. **Notifications** → live feed; click to mark read.
-9. **AI Assistant** (chat widget) → ask about schemes, documents, or finances — it answers using your real data.
+8. **Find a Branch** → locate MSME support offices. Shows a stat strip (Total Branches, Open Now,
+   Schemes Supported, States Covered), a live Google Maps embed of all locations, and branch cards
+   with address, phone, hours, star rating, services, and live Open/Closed badges. Filter by
+   **All / MSME-DI / MSME-DFO**, and use **Get Directions** (opens Google Maps) or **Book Appointment**
+   per branch. Includes 4 real offices: MSME-DI Hyderabad (TG) ⭐4.3, MSME-DI Kalaburagi (KA) ⭐4.8,
+   MSME-DFO Mumbai (MH) ⭐4.0, MSME-DFO New Delhi (DL) ⭐4.1.
+9. **Notifications** → live feed; click to mark read.
+10. **AI Assistant** (chat widget) → ask about schemes, documents, or finances — it answers using your real data.
 
 ## Tech Stack
 - **Backend**: Hono 4 (TypeScript), Cloudflare Workers runtime

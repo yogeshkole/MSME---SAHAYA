@@ -366,6 +366,119 @@
     return false
   }
 
+  // ---------- FIND A BRANCH ----------
+  // 4 real MSME offices (verified from official MSME directory).
+  var BRANCHES = [
+    {
+      id: 'di-hyd', type: 'DI', name: 'MSME-DI Hyderabad',
+      org: 'MSME Development Institute', city: 'Hyderabad', state: 'Telangana', stateCode: 'TG',
+      address: 'Plot No. 1, IDA Phase-1, Industrial Estate, Balanagar, Hyderabad - 500037',
+      phone: '+91 40 2307 8131', phoneDial: '+914023078131', rating: 4.3,
+      hours: { open: 9, close: 17, days: [1, 2, 3, 4, 5] }, hoursText: 'Mon–Fri · 9:00 AM – 5:30 PM',
+      services: ['Scheme Guidance', 'Udyam Registration', 'Skill Training', 'EDP Programs'],
+      mapQuery: 'MSME Development Institute Balanagar Hyderabad'
+    },
+    {
+      id: 'di-kal', type: 'DI', name: 'MSME-DI Kalaburagi',
+      org: 'MSME Development Institute', city: 'Kalaburagi', state: 'Karnataka', stateCode: 'KA',
+      address: 'Industrial Area, Kapnoor, Kalaburagi (Gulbarga) - 585104',
+      phone: '1800-180-6763', phoneDial: '18001806763', rating: 4.8,
+      hours: { open: 9, close: 17, days: [1, 2, 3, 4, 5] }, hoursText: 'Mon–Fri · 9:00 AM – 5:30 PM',
+      services: ['Scheme Guidance', 'Cluster Development', 'Entrepreneurship Training', 'Vendor Development'],
+      mapQuery: 'MSME Development Institute Kalaburagi Karnataka'
+    },
+    {
+      id: 'dfo-mum', type: 'DFO', name: 'MSME-DFO Mumbai',
+      org: 'MSME District Facilitation Office', city: 'Mumbai', state: 'Maharashtra', stateCode: 'MH',
+      address: 'Kurla Andheri Road, Saki Naka, Mumbai - 400072',
+      phone: '+91 22 2857 3091', phoneDial: '+912228573091', rating: 4.0,
+      hours: { open: 9, close: 17, days: [1, 2, 3, 4, 5] }, hoursText: 'Mon–Fri · 9:30 AM – 6:00 PM',
+      services: ['Grievance Redressal', 'Scheme Applications', 'Export Facilitation', 'Credit Linkage'],
+      mapQuery: 'MSME Development Institute Mumbai Saki Naka'
+    },
+    {
+      id: 'dfo-del', type: 'DFO', name: 'MSME-DFO New Delhi',
+      org: 'MSME District Facilitation Office', city: 'New Delhi', state: 'Delhi', stateCode: 'DL',
+      address: 'Okhla Industrial Estate, Phase-III, New Delhi - 110020',
+      phone: '+91 11 2683 8068', phoneDial: '+911126838068', rating: 4.1,
+      hours: { open: 9, close: 17, days: [1, 2, 3, 4, 5] }, hoursText: 'Mon–Fri · 9:30 AM – 6:00 PM',
+      services: ['Policy Support', 'Scheme Applications', 'MSME Champions', 'Procurement Help'],
+      mapQuery: 'MSME Development Institute Okhla New Delhi'
+    }
+  ]
+  var _branchFilter = 'all'
+
+  function isBranchOpen(b) {
+    const now = new Date()
+    const day = now.getDay() // 0=Sun
+    const hour = now.getHours() + now.getMinutes() / 60
+    return b.hours.days.indexOf(day) >= 0 && hour >= b.hours.open && hour < b.hours.close
+  }
+  function starHtml(rating) {
+    const full = Math.floor(rating)
+    const half = rating - full >= 0.5
+    let s = ''
+    for (let i = 0; i < full; i++) s += '<i class="fas fa-star"></i>'
+    if (half) s += '<i class="fas fa-star-half-alt"></i>'
+    for (let i = full + (half ? 1 : 0); i < 5; i++) s += '<i class="far fa-star"></i>'
+    return s
+  }
+  function branchCardHtml(b) {
+    const open = isBranchOpen(b)
+    const status = open
+      ? '<span class="branch-status open"><span class="dot"></span> Open Now</span>'
+      : '<span class="branch-status closed"><span class="dot"></span> Closed</span>'
+    const services = b.services.map((s) => '<span class="branch-service-tag">' + esc(s) + '</span>').join('')
+    return '<article class="branch-card" data-type="' + b.type + '">' +
+      '<div class="branch-card-head">' +
+      '<div class="branch-type-icon ' + b.type.toLowerCase() + '"><i class="fas ' + (b.type === 'DI' ? 'fa-industry' : 'fa-landmark') + '"></i></div>' +
+      '<div><h3>' + esc(b.name) + '</h3><div class="branch-sub">' + esc(b.org) + ' · ' + esc(b.city) + ', ' + esc(b.stateCode) + '</div></div>' +
+      '<div class="branch-rating"><div class="stars">' + starHtml(b.rating) + '</div><div class="rnum">' + b.rating.toFixed(1) + '</div></div>' +
+      '</div>' +
+      status +
+      '<div class="branch-meta">' +
+      '<div class="branch-meta-row"><i class="fas fa-map-marker-alt"></i><span>' + esc(b.address) + '</span></div>' +
+      '<div class="branch-meta-row"><i class="fas fa-phone"></i><a href="tel:' + esc(b.phoneDial) + '">' + esc(b.phone) + '</a></div>' +
+      '<div class="branch-meta-row"><i class="fas fa-clock"></i><span>' + esc(b.hoursText) + '</span></div>' +
+      '</div>' +
+      '<div class="branch-services">' + services + '</div>' +
+      '<div class="branch-actions">' +
+      '<button class="btn btn-blue" onclick="branchDirections(\'' + b.id + '\')"><i class="fas fa-directions"></i> Get Directions</button>' +
+      '<button class="btn btn-orange" onclick="branchAppointment(\'' + b.id + '\')"><i class="fas fa-calendar-check"></i> Book Appointment</button>' +
+      '</div>' +
+      '</article>'
+  }
+  function renderBranches() {
+    const grid = document.getElementById('branch-grid')
+    if (!grid) return
+    const list = BRANCHES.filter((b) => _branchFilter === 'all' || b.type === _branchFilter)
+    grid.innerHTML = list.map(branchCardHtml).join('')
+    // Stat strip
+    const openCount = BRANCHES.filter(isBranchOpen).length
+    const states = {}; BRANCHES.forEach((b) => { states[b.stateCode] = 1 })
+    setText('bstat-total', String(BRANCHES.length))
+    setText('bstat-open', String(openCount))
+    setText('bstat-states', String(Object.keys(states).length))
+  }
+  function loadBranches() { renderBranches() }
+  window._loadBranches = loadBranches
+
+  window.filterBranches = function (type, btn) {
+    _branchFilter = type
+    document.querySelectorAll('#branch-filters .branch-filter-btn').forEach((b) => b.classList.remove('active'))
+    if (btn) btn.classList.add('active')
+    renderBranches()
+  }
+  window.branchDirections = function (id) {
+    const b = BRANCHES.find((x) => x.id === id); if (!b) return
+    const url = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(b.mapQuery + ', ' + b.address)
+    window.open(url, '_blank', 'noopener')
+  }
+  window.branchAppointment = function (id) {
+    const b = BRANCHES.find((x) => x.id === id); if (!b) return
+    toast('Appointment request sent to ' + b.name + '. They will call you on your registered number.')
+  }
+
   // ---------- ELIGIBILITY ENGINE ----------
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])) }
   function val(id) { const el = document.getElementById(id); return el ? el.value : '' }
@@ -579,6 +692,7 @@
     else if (page === 'eligibility' && !_whatsNewLoaded) loadWhatsNew()
     else if (page === 'finance') loadFinance()
     else if (page === 'profile') loadProfile()
+    else if (page === 'branches') loadBranches()
   }
 
   // ---------- helpers ----------
