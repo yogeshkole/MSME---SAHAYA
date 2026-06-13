@@ -366,117 +366,241 @@
     return false
   }
 
-  // ---------- FIND A BRANCH ----------
-  // 4 real MSME offices (verified from official MSME directory).
-  var BRANCHES = [
-    {
-      id: 'di-hyd', type: 'DI', name: 'MSME-DI Hyderabad',
-      org: 'MSME Development Institute', city: 'Hyderabad', state: 'Telangana', stateCode: 'TG',
-      address: 'Plot No. 1, IDA Phase-1, Industrial Estate, Balanagar, Hyderabad - 500037',
-      phone: '+91 40 2307 8131', phoneDial: '+914023078131', rating: 4.3,
-      hours: { open: 9, close: 17, days: [1, 2, 3, 4, 5] }, hoursText: 'Mon–Fri · 9:00 AM – 5:30 PM',
-      services: ['Scheme Guidance', 'Udyam Registration', 'Skill Training', 'EDP Programs'],
-      mapQuery: 'MSME Development Institute Balanagar Hyderabad'
-    },
-    {
-      id: 'di-kal', type: 'DI', name: 'MSME-DI Kalaburagi',
-      org: 'MSME Development Institute', city: 'Kalaburagi', state: 'Karnataka', stateCode: 'KA',
-      address: 'Industrial Area, Kapnoor, Kalaburagi (Gulbarga) - 585104',
-      phone: '1800-180-6763', phoneDial: '18001806763', rating: 4.8,
-      hours: { open: 9, close: 17, days: [1, 2, 3, 4, 5] }, hoursText: 'Mon–Fri · 9:00 AM – 5:30 PM',
-      services: ['Scheme Guidance', 'Cluster Development', 'Entrepreneurship Training', 'Vendor Development'],
-      mapQuery: 'MSME Development Institute Kalaburagi Karnataka'
-    },
-    {
-      id: 'dfo-mum', type: 'DFO', name: 'MSME-DFO Mumbai',
-      org: 'MSME District Facilitation Office', city: 'Mumbai', state: 'Maharashtra', stateCode: 'MH',
-      address: 'Kurla Andheri Road, Saki Naka, Mumbai - 400072',
-      phone: '+91 22 2857 3091', phoneDial: '+912228573091', rating: 4.0,
-      hours: { open: 9, close: 17, days: [1, 2, 3, 4, 5] }, hoursText: 'Mon–Fri · 9:30 AM – 6:00 PM',
-      services: ['Grievance Redressal', 'Scheme Applications', 'Export Facilitation', 'Credit Linkage'],
-      mapQuery: 'MSME Development Institute Mumbai Saki Naka'
-    },
-    {
-      id: 'dfo-del', type: 'DFO', name: 'MSME-DFO New Delhi',
-      org: 'MSME District Facilitation Office', city: 'New Delhi', state: 'Delhi', stateCode: 'DL',
-      address: 'Okhla Industrial Estate, Phase-III, New Delhi - 110020',
-      phone: '+91 11 2683 8068', phoneDial: '+911126838068', rating: 4.1,
-      hours: { open: 9, close: 17, days: [1, 2, 3, 4, 5] }, hoursText: 'Mon–Fri · 9:30 AM – 6:00 PM',
-      services: ['Policy Support', 'Scheme Applications', 'MSME Champions', 'Procurement Help'],
-      mapQuery: 'MSME Development Institute Okhla New Delhi'
-    }
-  ]
-  var _branchFilter = 'all'
-
-  function isBranchOpen(b) {
-    const now = new Date()
-    const day = now.getDay() // 0=Sun
-    const hour = now.getHours() + now.getMinutes() / 60
-    return b.hours.days.indexOf(day) >= 0 && hour >= b.hours.open && hour < b.hours.close
+  // ---------- BRANCH LOCATOR ----------
+  // 28 real MSME offices (DI / TC / DFO) from the official MSME directory.
+  var TYPE_META = {
+    DI:  { code: 'DI',  full: 'Development Institute',  badgeBg: '#fff5e6', badgeText: '#c47d0a', iconBg: '#fff5e6', icon: '\uD83C\uDFDB\uFE0F', dot: 'var(--gold)' },
+    DFO: { code: 'DFO', full: 'Facilitation Office',     badgeBg: '#eaf2ff', badgeText: '#2859a8', iconBg: '#eaf2ff', icon: '\uD83C\uDFE2', dot: '#3b7de9' },
+    TC:  { code: 'TC',  full: 'Technology Centre',       badgeBg: '#e6f7ef', badgeText: '#1f7a50', iconBg: '#e6f7ef', icon: '\u2699\uFE0F', dot: 'var(--emerald)' }
   }
-  function starHtml(rating) {
-    const full = Math.floor(rating)
-    const half = rating - full >= 0.5
+  function svc() { return Array.prototype.slice.call(arguments) }
+  var BRANCHES = [
+    { id: 1,  type: 'DI',  name: 'MSME-DI Hyderabad', state: 'Telangana', stateCode: 'TG', address: 'Narsapur Cross Roads, Balanagar Main Rd, IDA, Balanagar, Hyderabad \u2013 500037', phone: '+91 40 2307 8131', hours: 'Mon\u2013Fri: 10:00 AM \u2013 5:00 PM', rating: 4.3, reviews: 72, status: 'open', services: svc('EDP Training','Scheme Guidance','UDYAM Registration','CGTMSE'), lat: 17.4675, lng: 78.4455 },
+    { id: 2,  type: 'DI',  name: 'MSME-DI Kalaburagi', state: 'Karnataka', stateCode: 'KA', address: 'Industrial Area, Kapnoor, Kalaburagi (Gulbarga) \u2013 585104', phone: '1800-180-6763', hours: 'Mon\u2013Fri: 10:00 AM \u2013 5:00 PM', rating: 4.8, reviews: 41, status: 'open', services: svc('Scheme Guidance','Cluster Development','Entrepreneurship Training','Vendor Development'), lat: 17.3460, lng: 76.8343 },
+    { id: 5,  type: 'DI',  name: 'MSME-DI Chennai', state: 'Tamil Nadu', stateCode: 'TN', address: '65/1, GST Road, Guindy, Chennai \u2013 600032', phone: '+91 44 2250 1011', hours: 'Mon\u2013Fri: 9:15 AM \u2013 5:45 PM', rating: 4.6, reviews: 128, status: 'open', services: svc('Scheme Guidance','Export Facilitation','Skill Training','UDYAM Registration'), lat: 13.0067, lng: 80.2206 },
+    { id: 6,  type: 'DI',  name: 'MSME-DI Kolkata', state: 'West Bengal', stateCode: 'WB', address: '111/112, B.T. Road, Kolkata \u2013 700035', phone: '+91 89100 52893', hours: 'Mon\u2013Fri: 10:00 AM \u2013 6:00 PM', rating: 4.5, reviews: 96, status: 'open', services: svc('Scheme Guidance','Cluster Development','EDP Training','Credit Linkage'), lat: 22.6427, lng: 88.3766 },
+    { id: 7,  type: 'DI',  name: 'MSME-DI Ahmedabad', state: 'Gujarat', stateCode: 'GJ', address: 'Harsiddh Chambers, Ashram Road, Ahmedabad \u2013 380014', phone: '1800-180-6763', hours: 'Mon\u2013Fri: 10:00 AM \u2013 6:00 PM', rating: 4.7, reviews: 154, status: 'open', services: svc('Scheme Guidance','Export Promotion','UDYAM Registration','CGTMSE'), lat: 23.0395, lng: 72.5660 },
+    { id: 8,  type: 'DI',  name: 'MSME-DI Bengaluru', state: 'Karnataka', stateCode: 'KA', address: 'Rajaji Nagar Industrial Estate, Bengaluru \u2013 560044', phone: '+91 80 2315 1581', hours: 'Mon\u2013Fri: 9:30 AM \u2013 6:00 PM', rating: 4.0, reviews: 88, status: 'open', services: svc('Scheme Guidance','Skill Training','Vendor Development','UDYAM Registration'), lat: 12.9916, lng: 77.5546 },
+    { id: 10, type: 'DI',  name: 'MSME-DI Jaipur', state: 'Rajasthan', stateCode: 'RJ', address: 'Industrial Area, Jhalana Doongri, Jaipur \u2013 302004', phone: '+91 141 221 0553', hours: 'Mon\u2013Fri: 10:00 AM \u2013 6:00 PM', rating: 4.3, reviews: 67, status: 'open', services: svc('Scheme Guidance','EDP Training','Cluster Development','Credit Linkage'), lat: 26.8930, lng: 75.8230 },
+    { id: 12, type: 'DI',  name: 'MSME-DI Lucknow', state: 'Uttar Pradesh', stateCode: 'UP', address: '107, Industrial Estate, Kalpi Road, Lucknow \u2013 226008', phone: '+91 74087 33333', hours: 'Mon\u2013Sat: 10:00 AM \u2013 6:30 PM', rating: 4.6, reviews: 112, status: 'open', services: svc('Scheme Guidance','Skill Training','UDYAM Registration','Export Facilitation'), lat: 26.8467, lng: 80.9462 },
+    { id: 14, type: 'DI',  name: 'MSME-DI Kanpur', state: 'Uttar Pradesh', stateCode: 'UP', address: '10, Industrial Estate, Fazalganj, Kanpur \u2013 208012', phone: '+91 512 229 5070', hours: 'Mon\u2013Fri: 9:30 AM \u2013 6:00 PM', rating: 3.7, reviews: 54, status: 'open', services: svc('Scheme Guidance','EDP Training','Vendor Development'), lat: 26.4499, lng: 80.3319 },
+    { id: 15, type: 'DI',  name: 'MSME-DI Nagpur', state: 'Maharashtra', stateCode: 'MH', address: 'C-46, MIDC Industrial Area, Hingna Road, Nagpur \u2013 440016', phone: '+91 712 251 0352', hours: 'Mon\u2013Fri: 10:00 AM \u2013 5:30 PM', rating: 3.8, reviews: 49, status: 'open', services: svc('Scheme Guidance','Cluster Development','Skill Training'), lat: 21.1147, lng: 79.0070 },
+    { id: 16, type: 'DI',  name: 'MSME-DI Indore', state: 'Madhya Pradesh', stateCode: 'MP', address: 'Polo Ground Industrial Estate, Indore \u2013 452015', phone: '+91 731 242 0723', hours: 'Mon\u2013Fri: 9:45 AM \u2013 6:00 PM', rating: 4.2, reviews: 73, status: 'open', services: svc('Scheme Guidance','EDP Training','UDYAM Registration','CGTMSE'), lat: 22.7196, lng: 75.8577 },
+    { id: 19, type: 'DI',  name: 'MSME-DI Patna', state: 'Bihar', stateCode: 'BR', address: 'Patliputra Industrial Area, Patna \u2013 800013', phone: '+91 612 226 2208', hours: 'Mon\u2013Fri: 9:30 AM \u2013 6:00 PM', rating: 4.5, reviews: 81, status: 'open', services: svc('Scheme Guidance','Skill Training','Credit Linkage','UDYAM Registration'), lat: 25.6093, lng: 85.1376 },
+    { id: 21, type: 'DI',  name: 'MSME-DI Cuttack', state: 'Odisha', stateCode: 'OD', address: 'College Square, Cuttack \u2013 753003', phone: '+91 671 254 8049', hours: 'Mon\u2013Fri: 10:00 AM \u2013 5:30 PM', rating: 4.3, reviews: 58, status: 'open', services: svc('Scheme Guidance','Cluster Development','EDP Training'), lat: 20.4625, lng: 85.8828 },
+    { id: 22, type: 'DI',  name: 'MSME-DI Guwahati', state: 'Assam', stateCode: 'AS', address: 'Industrial Estate, Bamunimaidam, Guwahati \u2013 781021', phone: '+91 361 255 0052', hours: 'Mon\u2013Fri: 9:00 AM \u2013 6:30 PM', rating: 3.5, reviews: 44, status: 'open', services: svc('Scheme Guidance','Skill Training','Vendor Development'), lat: 26.1820, lng: 91.7860 },
+    { id: 23, type: 'DI',  name: 'MSME-DI Ludhiana', state: 'Punjab', stateCode: 'PB', address: 'Industrial Area-A, Ludhiana \u2013 141003', phone: '+91 161 253 1733', hours: 'Mon\u2013Fri: 9:00 AM \u2013 5:30 PM', rating: 3.7, reviews: 62, status: 'open', services: svc('Scheme Guidance','Export Facilitation','Cluster Development'), lat: 30.9010, lng: 75.8573 },
+    { id: 25, type: 'DI',  name: 'MSME-DI Ranchi', state: 'Jharkhand', stateCode: 'JH', address: 'Industrial Area, Tupudana, Ranchi \u2013 834003', phone: '+91 651 254 6133', hours: 'Mon\u2013Fri: 9:00 AM \u2013 5:30 PM', rating: 3.5, reviews: 39, status: 'open', services: svc('Scheme Guidance','EDP Training','UDYAM Registration'), lat: 23.3441, lng: 85.3096 },
+    { id: 26, type: 'DI',  name: 'MSME-DI Jammu', state: 'J&K', stateCode: 'JK', address: 'Industrial Estate, Gangyal, Jammu \u2013 180010', phone: '+91 191 243 1077', hours: 'Mon\u2013Fri: 10:00 AM \u2013 5:00 PM', rating: 4.0, reviews: 35, status: 'open', services: svc('Scheme Guidance','Skill Training','Credit Linkage'), lat: 32.7266, lng: 74.8570 },
+    { id: 28, type: 'DI',  name: 'MSME-DI Muzaffarpur', state: 'Bihar', stateCode: 'BR', address: 'Bela Industrial Estate, Muzaffarpur \u2013 842005', phone: '+91 621 228 4425', hours: 'Mon\u2013Fri: 9:30 AM \u2013 6:00 PM', rating: 4.6, reviews: 47, status: 'open', services: svc('Scheme Guidance','Cluster Development','EDP Training','UDYAM Registration'), lat: 26.1209, lng: 85.3647 },
+    { id: 9,  type: 'TC',  name: 'MSME-TC Bengaluru', state: 'Karnataka', stateCode: 'KA', address: 'CTR Campus, Tumkur Road, Bengaluru \u2013 560022', phone: '+91 93532 75370', hours: 'Mon\u2013Fri: 9:00 AM \u2013 6:00 PM', rating: 4.3, reviews: 91, status: 'open', services: svc('Tool Room','Skill Training','Precision Machining','Prototyping'), lat: 13.0280, lng: 77.5180 },
+    { id: 11, type: 'TC',  name: 'MSME-TC Bhopal (Acharpura)', state: 'Madhya Pradesh', stateCode: 'MP', address: 'Acharpura Industrial Area, Bhopal \u2013 462038', phone: '+91 93731 61257', hours: 'Mon\u2013Sat: 9:00 AM \u2013 5:30 PM', rating: 4.4, reviews: 66, status: 'open', services: svc('Tool Room','CAD/CAM','Skill Training','Testing Lab'), lat: 23.1500, lng: 77.5400 },
+    { id: 13, type: 'TC',  name: 'MSME-TC Agra (PPDC)', state: 'Uttar Pradesh', stateCode: 'UP', address: 'Foundry Nagar, Agra \u2013 282006', phone: '+91 562 234 4673', hours: 'Mon\u2013Sat: 9:30 AM \u2013 5:30 PM', rating: 4.2, reviews: 58, status: 'open', services: svc('Process Development','Skill Training','Testing','Tool Room'), lat: 27.1767, lng: 78.0081 },
+    { id: 18, type: 'TC',  name: 'MSME-TC Visakhapatnam', state: 'Andhra Pradesh', stateCode: 'AP', address: 'Autonagar, Visakhapatnam \u2013 530012', phone: '+91 79955 31372', hours: 'Mon\u2013Sat: 9:30 AM \u2013 6:00 PM', rating: 4.5, reviews: 77, status: 'open', services: svc('Tool Room','Precision Machining','Skill Training','Prototyping'), lat: 17.7305, lng: 83.2400 },
+    { id: 20, type: 'TC',  name: 'MSME-TC Bhopal City', state: 'Madhya Pradesh', stateCode: 'MP', address: 'Govindpura Industrial Area, Bhopal \u2013 462023', phone: '+91 755 258 6075', hours: 'Mon\u2013Sat: 7:00 AM \u2013 10:00 PM', rating: 4.5, reviews: 102, status: 'open', services: svc('Tool Room','CAD/CAM','Testing Lab','Skill Training'), lat: 23.2599, lng: 77.4880 },
+    { id: 24, type: 'TC',  name: 'MSME-TC Durg', state: 'Chhattisgarh', stateCode: 'CG', address: 'Industrial Area, Durg \u2013 491001', phone: '+91 788 261 7200', hours: 'Mon\u2013Sat: 9:00 AM \u2013 5:30 PM', rating: 4.2, reviews: 48, status: 'open', services: svc('Tool Room','Skill Training','Prototyping'), lat: 21.1904, lng: 81.2849 },
+    { id: 3,  type: 'DFO', name: 'MSME-DFO Mumbai', state: 'Maharashtra', stateCode: 'MH', address: 'Kurla Andheri Road, Saki Naka, Mumbai \u2013 400072', phone: '+91 22 2857 3091', hours: 'Mon\u2013Fri: 9:30 AM \u2013 5:30 PM', rating: 4.0, reviews: 64, status: 'open', services: svc('Grievance Redressal','Scheme Applications','Export Facilitation','Credit Linkage'), lat: 19.1075, lng: 72.8890 },
+    { id: 4,  type: 'DFO', name: 'MSME-DFO New Delhi', state: 'Delhi', stateCode: 'DL', address: 'Okhla Industrial Estate, Phase-III, New Delhi \u2013 110020', phone: '+91 11 2683 8068', hours: 'Mon\u2013Fri: 9:00 AM \u2013 5:30 PM', rating: 4.1, reviews: 88, status: 'open', services: svc('Policy Support','Scheme Applications','MSME Champions','Procurement Help'), lat: 28.5450, lng: 77.2730 },
+    { id: 17, type: 'DFO', name: 'MSME-DFO Coimbatore', state: 'Tamil Nadu', stateCode: 'TN', address: 'Trichy Road, Singanallur, Coimbatore \u2013 641005', phone: '+91 422 299 3949', hours: 'Mon\u2013Fri: 9:30 AM \u2013 5:30 PM', rating: 4.9, reviews: 143, status: 'open', services: svc('Grievance Redressal','Scheme Applications','Export Facilitation','Cluster Support'), lat: 11.0018, lng: 77.0285 },
+    { id: 27, type: 'DFO', name: 'DIC Thiruvananthapuram', state: 'Kerala', stateCode: 'KL', address: 'Vikas Bhavan, Thiruvananthapuram \u2013 695033', phone: '+91 471 232 6756', hours: 'Mon\u2013Sat: 10:00 AM \u2013 5:00 PM', rating: 4.5, reviews: 59, status: 'open', services: svc('District Facilitation','Scheme Applications','UDYAM Registration','Credit Linkage'), lat: 8.5074, lng: 76.9570 }
+  ]
+  var _brTypeFilter = 'all'
+  var _brState = 'All States'
+  var _brSearch = ''
+  var _brSelected = 3   // default selected branch id (Mumbai)
+  var _brInit = false
+
+  function brStars(rating) {
+    const full = Math.floor(rating), half = rating - full >= 0.5
     let s = ''
     for (let i = 0; i < full; i++) s += '<i class="fas fa-star"></i>'
     if (half) s += '<i class="fas fa-star-half-alt"></i>'
     for (let i = full + (half ? 1 : 0); i < 5; i++) s += '<i class="far fa-star"></i>'
     return s
   }
-  function branchCardHtml(b) {
-    const open = isBranchOpen(b)
-    const status = open
-      ? '<span class="branch-status open"><span class="dot"></span> Open Now</span>'
-      : '<span class="branch-status closed"><span class="dot"></span> Closed</span>'
-    const services = b.services.map((s) => '<span class="branch-service-tag">' + esc(s) + '</span>').join('')
-    return '<article class="branch-card" data-type="' + b.type + '">' +
-      '<div class="branch-card-head">' +
-      '<div class="branch-type-icon ' + b.type.toLowerCase() + '"><i class="fas ' + (b.type === 'DI' ? 'fa-industry' : 'fa-landmark') + '"></i></div>' +
-      '<div><h3>' + esc(b.name) + '</h3><div class="branch-sub">' + esc(b.org) + ' · ' + esc(b.city) + ', ' + esc(b.stateCode) + '</div></div>' +
-      '<div class="branch-rating"><div class="stars">' + starHtml(b.rating) + '</div><div class="rnum">' + b.rating.toFixed(1) + '</div></div>' +
-      '</div>' +
-      status +
-      '<div class="branch-meta">' +
-      '<div class="branch-meta-row"><i class="fas fa-map-marker-alt"></i><span>' + esc(b.address) + '</span></div>' +
-      '<div class="branch-meta-row"><i class="fas fa-phone"></i><a href="tel:' + esc(b.phoneDial) + '">' + esc(b.phone) + '</a></div>' +
-      '<div class="branch-meta-row"><i class="fas fa-clock"></i><span>' + esc(b.hoursText) + '</span></div>' +
-      '</div>' +
-      '<div class="branch-services">' + services + '</div>' +
-      '<div class="branch-actions">' +
-      '<button class="btn btn-blue" onclick="branchDirections(\'' + b.id + '\')"><i class="fas fa-directions"></i> Get Directions</button>' +
-      '<button class="btn btn-orange" onclick="branchAppointment(\'' + b.id + '\')"><i class="fas fa-calendar-check"></i> Book Appointment</button>' +
-      '</div>' +
-      '</article>'
+  function brMapsUrl(b) { return 'https://maps.google.com/?q=' + b.lat + ',' + b.lng }
+  function brEmbedUrl(b) { return 'https://maps.google.com/maps?q=' + b.lat + ',' + b.lng + '&z=14&output=embed' }
+  function brFiltered() {
+    const q = _brSearch.trim().toLowerCase()
+    return BRANCHES.filter((b) => {
+      if (_brTypeFilter !== 'all' && b.type !== _brTypeFilter) return false
+      if (_brState !== 'All States' && b.state !== _brState) return false
+      if (q) {
+        const hay = (b.name + ' ' + b.state + ' ' + b.address + ' ' + b.services.join(' ')).toLowerCase()
+        if (hay.indexOf(q) < 0) return false
+      }
+      return true
+    })
   }
-  function renderBranches() {
-    const grid = document.getElementById('branch-grid')
-    if (!grid) return
-    const list = BRANCHES.filter((b) => _branchFilter === 'all' || b.type === _branchFilter)
-    grid.innerHTML = list.map(branchCardHtml).join('')
-    // Stat strip
-    const openCount = BRANCHES.filter(isBranchOpen).length
-    const states = {}; BRANCHES.forEach((b) => { states[b.stateCode] = 1 })
+
+  function renderBranchStats() {
     setText('bstat-total', String(BRANCHES.length))
-    setText('bstat-open', String(openCount))
+    const states = {}; BRANCHES.forEach((b) => { states[b.state] = 1 })
     setText('bstat-states', String(Object.keys(states).length))
+    setText('bstat-di', String(BRANCHES.filter((b) => b.type === 'DI').length))
+    setText('bstat-tc', String(BRANCHES.filter((b) => b.type === 'TC').length))
+    setText('bstat-dfo', String(BRANCHES.filter((b) => b.type === 'DFO').length))
   }
-  function loadBranches() { renderBranches() }
+
+  function renderStateDropdown() {
+    const sel = document.getElementById('branch-state-select'); if (!sel || sel.dataset.filled) return
+    const states = {}; BRANCHES.forEach((b) => { states[b.state] = 1 })
+    const opts = ['All States'].concat(Object.keys(states).sort())
+    sel.innerHTML = opts.map((s) => '<option value="' + esc(s) + '">' + esc(s) + '</option>').join('')
+    sel.dataset.filled = '1'
+  }
+
+  function renderBranchMapAndDetail() {
+    const b = BRANCHES.find((x) => x.id === _brSelected) || BRANCHES[0]
+    if (!b) return
+    // Map
+    const frame = document.getElementById('branch-map-frame')
+    if (frame && frame.getAttribute('data-bid') !== String(b.id)) {
+      frame.src = brEmbedUrl(b)
+      frame.setAttribute('data-bid', String(b.id))
+    }
+    setText('branch-map-active', b.name + ' \u00b7 ' + b.state)
+    const openBtn = document.getElementById('branch-open-maps'); if (openBtn) openBtn.href = brMapsUrl(b)
+    // Detail card
+    const tm = TYPE_META[b.type]
+    const detail = document.getElementById('branch-detail'); if (!detail) return
+    const isOpen = b.status === 'open'
+    detail.innerHTML =
+      '<div class="branch-detail-band">' +
+        '<div class="branch-detail-icon" style="background:' + tm.iconBg + '">' + tm.icon + '</div>' +
+        '<div style="flex:1;min-width:0">' +
+          '<div class="branch-detail-name">' + esc(b.name) + '</div>' +
+          '<div class="branch-detail-meta"><span class="branch-type-badge" style="background:' + tm.badgeBg + ';color:' + tm.badgeText + '">' + tm.code + '</span> ' + esc(tm.full) + ' \u00b7 ' + esc(b.state) + '</div>' +
+        '</div>' +
+        '<div class="branch-detail-rating"><div class="stars">' + brStars(b.rating) + '</div><div class="rnum">' + b.rating.toFixed(1) + '</div><div class="rrev">' + b.reviews + ' reviews</div></div>' +
+      '</div>' +
+      '<div class="branch-detail-grid">' +
+        '<div class="bd-field"><div class="bd-label"><i class="fas fa-map-marker-alt"></i> Address</div><div class="bd-value">' + esc(b.address) + '</div></div>' +
+        '<div class="bd-field"><div class="bd-label"><i class="fas fa-phone"></i> Phone</div><div class="bd-value"><a href="tel:' + esc(b.phone.replace(/[^+0-9]/g, '')) + '">' + esc(b.phone) + '</a></div></div>' +
+        '<div class="bd-field"><div class="bd-label"><i class="fas fa-clock"></i> Hours</div><div class="bd-value">' + esc(b.hours) + '</div></div>' +
+        '<div class="bd-field"><div class="bd-label"><i class="fas fa-circle-check"></i> Status</div><div class="bd-value">' + (isOpen ? '<span style="color:var(--emerald);font-weight:700">Open Now</span>' : '<span style="color:var(--red);font-weight:700">Closed</span>') + '</div></div>' +
+      '</div>' +
+      '<div class="branch-detail-services"><div class="bd-label">Services Available</div><div class="branch-services">' + b.services.map((s) => '<span class="branch-service-tag">' + esc(s) + '</span>').join('') + '</div></div>' +
+      '<div class="branch-detail-actions">' +
+        '<button class="btn btn-orange" onclick="branchDirections(' + b.id + ')"><i class="fas fa-compass"></i> Get Directions</button>' +
+        '<button class="btn btn-navy" onclick="branchAppointment(' + b.id + ')"><i class="fas fa-calendar-check"></i> Book Appointment</button>' +
+        '<button class="btn btn-outline-navy" onclick="branchCall(' + b.id + ')"><i class="fas fa-phone"></i> Call Branch</button>' +
+      '</div>'
+  }
+
+  function renderBranchList() {
+    const list = brFiltered()
+    const cont = document.getElementById('branch-list'); if (!cont) return
+    setText('branch-list-count', String(list.length))
+    setText('branch-result-count', list.length + ' of ' + BRANCHES.length + ' branches')
+    // Clear button visibility
+    const clearBtn = document.getElementById('branch-clear-btn')
+    const active = _brSearch !== '' || _brState !== 'All States' || _brTypeFilter !== 'all'
+    if (clearBtn) clearBtn.style.display = active ? '' : 'none'
+    if (!list.length) {
+      cont.innerHTML = '<div class="branch-empty"><div class="be-emoji">\uD83D\uDD0D</div><div class="be-title">No branches found</div><div class="be-sub">Try adjusting your search or filters</div></div>'
+      return
+    }
+    cont.innerHTML = list.map((b) => {
+      const tm = TYPE_META[b.type]
+      const isActive = b.id === _brSelected
+      const isOpen = b.status === 'open'
+      const statusPill = isOpen
+        ? '<span class="bl-status open">Open</span>'
+        : '<span class="bl-status closed">Closed</span>'
+      const servicesExp = isActive
+        ? '<div class="branch-services" style="margin-top:9px">' + b.services.map((s) => '<span class="branch-service-tag sm">' + esc(s) + '</span>').join('') + '</div>'
+        : ''
+      return '<div class="branch-list-card' + (isActive ? ' active' : '') + '" onclick="selectBranch(' + b.id + ')">' +
+        '<div class="blc-head">' +
+          '<div class="blc-icon" style="background:' + tm.iconBg + '">' + tm.icon + '</div>' +
+          '<div style="flex:1;min-width:0">' +
+            '<div class="blc-name">' + esc(b.name) + '</div>' +
+            '<div class="blc-sub"><span class="branch-type-badge sm" style="background:' + tm.badgeBg + ';color:' + tm.badgeText + '">' + tm.code + '</span> ' + esc(b.state) + '</div>' +
+          '</div>' +
+          statusPill +
+        '</div>' +
+        '<div class="blc-rows">' +
+          '<div class="blc-row clamp2"><i class="fas fa-map-marker-alt"></i> ' + esc(b.address) + '</div>' +
+          '<div class="blc-row"><i class="fas fa-phone"></i> ' + esc(b.phone) + '</div>' +
+          '<div class="blc-row"><i class="fas fa-clock"></i> ' + esc(b.hours) + '</div>' +
+          '<div class="blc-row"><span class="stars sm">' + brStars(b.rating) + '</span> ' + b.rating.toFixed(1) + ' \u00b7 ' + b.reviews + ' reviews</div>' +
+        '</div>' +
+        servicesExp +
+        '<div class="blc-actions">' +
+          '<button class="btn-sm ' + (isActive ? 'gold' : 'navy') + '" onclick="event.stopPropagation();branchDirections(' + b.id + ')"><i class="fas fa-compass"></i> Directions</button>' +
+          '<button class="btn-sm outline" onclick="event.stopPropagation();branchAppointment(' + b.id + ')"><i class="fas fa-calendar-check"></i> Appointment</button>' +
+        '</div>' +
+        '</div>'
+    }).join('')
+  }
+
+  function renderBranchAll() {
+    renderBranchStats()
+    renderStateDropdown()
+    renderBranchMapAndDetail()
+    renderBranchList()
+  }
+  function loadBranches() {
+    if (!_brInit) { _brInit = true }
+    renderBranchAll()
+  }
   window._loadBranches = loadBranches
 
-  window.filterBranches = function (type, btn) {
-    _branchFilter = type
-    document.querySelectorAll('#branch-filters .branch-filter-btn').forEach((b) => b.classList.remove('active'))
+  window.selectBranch = function (id) {
+    _brSelected = id
+    renderBranchMapAndDetail()
+    renderBranchList()
+    // scroll detail into view on small screens
+    const d = document.getElementById('branch-map-panel')
+    if (d && window.innerWidth <= 1100) d.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
+  window.filterBranchesType = function (type, btn) {
+    _brTypeFilter = type
+    document.querySelectorAll('#branch-type-pills .branch-filter-btn').forEach((b) => b.classList.remove('active'))
     if (btn) btn.classList.add('active')
-    renderBranches()
+    renderBranchList()
+  }
+  window.filterBranchesState = function (v) { _brState = v || 'All States'; renderBranchList() }
+  window.searchBranches = function (v) {
+    _brSearch = v || ''
+    const clr = document.getElementById('branch-search-clear'); if (clr) clr.style.display = _brSearch ? '' : 'none'
+    renderBranchList()
+  }
+  window.clearBranchSearch = function () {
+    _brSearch = ''
+    const inp = document.getElementById('branch-search-input'); if (inp) inp.value = ''
+    const clr = document.getElementById('branch-search-clear'); if (clr) clr.style.display = 'none'
+    renderBranchList()
+  }
+  window.clearBranchFilters = function () {
+    _brTypeFilter = 'all'; _brState = 'All States'; _brSearch = ''
+    const inp = document.getElementById('branch-search-input'); if (inp) inp.value = ''
+    const sel = document.getElementById('branch-state-select'); if (sel) sel.value = 'All States'
+    const clr = document.getElementById('branch-search-clear'); if (clr) clr.style.display = 'none'
+    document.querySelectorAll('#branch-type-pills .branch-filter-btn').forEach((b) => b.classList.remove('active'))
+    const allBtn = document.querySelector('#branch-type-pills .branch-filter-btn[data-filter="all"]'); if (allBtn) allBtn.classList.add('active')
+    renderBranchList()
   }
   window.branchDirections = function (id) {
     const b = BRANCHES.find((x) => x.id === id); if (!b) return
-    const url = 'https://www.google.com/maps/dir/?api=1&destination=' + encodeURIComponent(b.mapQuery + ', ' + b.address)
-    window.open(url, '_blank', 'noopener')
+    window.open('https://www.google.com/maps/dir/?api=1&destination=' + b.lat + ',' + b.lng, '_blank', 'noopener')
   }
   window.branchAppointment = function (id) {
     const b = BRANCHES.find((x) => x.id === id); if (!b) return
-    toast('Appointment request sent to ' + b.name + '. They will call you on your registered number.')
+    toast('Appointment request sent to ' + b.name + '. They will contact your registered number.')
+  }
+  window.branchCall = function (id) {
+    const b = BRANCHES.find((x) => x.id === id); if (!b) return
+    window.location.href = 'tel:' + b.phone.replace(/[^+0-9]/g, '')
+  }
+  window.exportBranches = function () {
+    const rows = [['Name', 'Type', 'State', 'Address', 'Phone', 'Hours', 'Rating', 'Reviews', 'Status']]
+    BRANCHES.forEach((b) => rows.push([b.name, TYPE_META[b.type].full, b.state, b.address.replace(/"/g, "'"), b.phone, b.hours, b.rating, b.reviews, b.status]))
+    const csv = rows.map((r) => r.map((c) => '"' + String(c) + '"').join(',')).join('\n')
+    const blob = new Blob([csv], { type: 'text/csv' })
+    const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'msme-branches.csv'; a.click(); URL.revokeObjectURL(a.href)
+    toast('Branch list exported')
   }
 
   // ---------- ELIGIBILITY ENGINE ----------

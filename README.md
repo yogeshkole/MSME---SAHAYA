@@ -158,12 +158,17 @@ Base path: `/api`
 7. **Profile** → view your live business profile. Click **"Edit Profile"** (or any card's "Edit") to
    open a form and update name, contact, business details, financials, Udyam/GST/PAN, and address —
    saved via `PUT /api/profile` and reflected immediately across the profile and sidebar.
-8. **Find a Branch** → locate MSME support offices. Shows a stat strip (Total Branches, Open Now,
-   Schemes Supported, States Covered), a live Google Maps embed of all locations, and branch cards
-   with address, phone, hours, star rating, services, and live Open/Closed badges. Filter by
-   **All / MSME-DI / MSME-DFO**, and use **Get Directions** (opens Google Maps) or **Book Appointment**
-   per branch. Includes 4 real offices: MSME-DI Hyderabad (TG) ⭐4.3, MSME-DI Kalaburagi (KA) ⭐4.8,
-   MSME-DFO Mumbai (MH) ⭐4.0, MSME-DFO New Delhi (DL) ⭐4.1.
+8. **Branch Locator** → find MSME support offices across India. A **6-column stat strip** shows
+   Total Branches (28), States Covered (18), Dev. Institutes (17), Tech Centres (7), Facilitation
+   Offices (4), and Schemes Supported (50+). Use the **topbar search** (name/state/address/service),
+   **type pills** (All Types / Development Institute / Facilitation Office / Technology Centre), and a
+   **State dropdown** to filter; a live result count and **Clear** button appear when filters are active.
+   A **two-column layout** shows a live Google Maps panel + selected-branch detail card on the left
+   (with Get Directions / Book Appointment / Call Branch actions) and a scrollable branch list on the
+   right. Click any card to select it — the map remounts to that location and the detail card updates;
+   the selected card gets a gold accent and expanded service chips. **Export List** downloads all 28
+   branches as CSV. Covers 28 real offices including MSME-DI Hyderabad ⭐4.3, MSME-DI Kalaburagi ⭐4.8,
+   MSME-DFO Mumbai ⭐4.0, MSME-DFO Coimbatore ⭐4.9, MSME-TC Bengaluru ⭐4.3, and more across 18 states.
 9. **Notifications** → live feed; click to mark read.
 10. **AI Assistant** (chat widget) → ask about schemes, documents, or finances — it answers using your real data.
 
@@ -216,4 +221,4 @@ The SPA uses a Van Gogh-inspired visual system applied via CSS custom-property r
 ## Deployment
 - **Platform**: Cloudflare Pages (Workers runtime)
 - **Status**: ✅ Running locally via PM2 (sandbox). Not yet deployed to production.
-- **Last Updated**: 2026-06-09
+- **Last Updated**: 2026-06-13
