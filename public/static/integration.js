@@ -369,9 +369,9 @@
   // ---------- BRANCH LOCATOR ----------
   // 28 real MSME offices (DI / TC / DFO) from the official MSME directory.
   var TYPE_META = {
-    DI:  { code: 'DI',  full: 'Development Institute',  badgeBg: '#fff5e6', badgeText: '#c47d0a', iconBg: '#fff5e6', icon: '\uD83C\uDFDB\uFE0F', dot: 'var(--gold)' },
-    DFO: { code: 'DFO', full: 'Facilitation Office',     badgeBg: '#eaf2ff', badgeText: '#2859a8', iconBg: '#eaf2ff', icon: '\uD83C\uDFE2', dot: '#3b7de9' },
-    TC:  { code: 'TC',  full: 'Technology Centre',       badgeBg: '#e6f7ef', badgeText: '#1f7a50', iconBg: '#e6f7ef', icon: '\u2699\uFE0F', dot: 'var(--emerald)' }
+    DI:  { code: 'DI',  full: 'Development Institute',  badgeBg: '#fdedcf', badgeText: '#a8650a', iconBg: 'linear-gradient(135deg,#ffe39e,#ffb347)', icon: '\uD83C\uDFDB\uFE0F', dot: 'var(--gold)' },
+    DFO: { code: 'DFO', full: 'Facilitation Office',     badgeBg: '#dbe8ff', badgeText: '#1f4a99', iconBg: 'linear-gradient(135deg,#bcd4ff,#7fa9f0)', icon: '\uD83C\uDFE2', dot: '#3b7de9' },
+    TC:  { code: 'TC',  full: 'Technology Centre',       badgeBg: '#d6f2e3', badgeText: '#16633f', iconBg: 'linear-gradient(135deg,#bff0d6,#6fd1a4)', icon: '\u2699\uFE0F', dot: 'var(--emerald)' }
   }
   function svc() { return Array.prototype.slice.call(arguments) }
   var BRANCHES = [
@@ -511,7 +511,7 @@
       const servicesExp = isActive
         ? '<div class="branch-services" style="margin-top:9px">' + b.services.map((s) => '<span class="branch-service-tag sm">' + esc(s) + '</span>').join('') + '</div>'
         : ''
-      return '<div class="branch-list-card' + (isActive ? ' active' : '') + '" onclick="selectBranch(' + b.id + ')">' +
+      return '<div class="branch-list-card blc-' + b.type.toLowerCase() + (isActive ? ' active' : '') + '" onclick="selectBranch(' + b.id + ')">' +
         '<div class="blc-head">' +
           '<div class="blc-icon" style="background:' + tm.iconBg + '">' + tm.icon + '</div>' +
           '<div style="flex:1;min-width:0">' +
