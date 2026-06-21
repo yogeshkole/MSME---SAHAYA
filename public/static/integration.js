@@ -33,18 +33,41 @@
     await loadNotifications()
   }
 
+  function setBtnLoading(btn, loading, label) {
+    if (!btn) return
+    if (loading) {
+      btn._html = btn.innerHTML
+      btn.disabled = true
+      btn.innerHTML = '<i class="fas fa-spinner"></i> ' + (label || 'Please wait\u2026')
+    } else {
+      btn.disabled = false
+      if (btn._html) btn.innerHTML = btn._html
+    }
+  }
+
   window.doLogin = async function () {
-    const email = document.getElementById('login-email').value.trim()
-    const pw = document.getElementById('pw-field').value
+    const emailEl = document.getElementById('login-email')
+    const pwEl = document.getElementById('pw-field')
+    const email = (emailEl?.value || '').trim()
+    const pw = pwEl?.value || ''
     const err = document.getElementById('login-error')
-    err.style.display = 'none'
+    const btn = document.getElementById('login-submit')
+    if (err) err.style.display = 'none'
+    if (!email || !pw) {
+      if (err) { err.textContent = 'Please enter your email and password.'; err.style.display = 'flex' }
+      return
+    }
+    setBtnLoading(btn, true, 'Signing in\u2026')
     try {
       const d = await API.login(email, pw)
+      const remember = document.getElementById('remember-me')
+      try { localStorage.setItem('msme_remember', remember && remember.checked ? '1' : '0') } catch (_) {}
       await enterApp(d)
       toast('Welcome back, ' + (d.user.full_name || 'user') + '!')
     } catch (e) {
-      err.textContent = e.data?.error || 'Login failed'
-      err.style.display = 'block'
+      if (err) { err.textContent = e.data?.error || 'Invalid email or password. Please try again.'; err.style.display = 'flex' }
+    } finally {
+      setBtnLoading(btn, false)
     }
   }
 
@@ -65,24 +88,31 @@
   }
 
   window.doOtp = async function () {
-    const id = document.getElementById('otp-mobile').value.trim()
+    const id = (document.getElementById('otp-mobile')?.value || '').trim()
     const codeGroup = document.getElementById('otp-code-group')
     const btn = document.getElementById('otp-btn')
+    if (!id) { toast('Enter your mobile number or email', true); return }
     if (codeGroup.style.display === 'none') {
+      setBtnLoading(btn, true, 'Sending\u2026')
       try {
         const d = await API.otpRequest(id)
         codeGroup.style.display = 'block'
         if (d.dev_otp) document.getElementById('otp-code').value = d.dev_otp
+        btn._html = null
+        btn.disabled = false
         btn.innerHTML = 'Verify OTP <i class="fas fa-check" style="margin-left:8px"></i>'
+        document.getElementById('otp-code')?.focus()
         toast('OTP sent' + (d.dev_otp ? ' (demo: ' + d.dev_otp + ')' : ''))
-      } catch (e) { toast(e.data?.error || 'Failed to send OTP', true) }
+      } catch (e) { setBtnLoading(btn, false); toast(e.data?.error || 'Failed to send OTP', true) }
     } else {
-      const code = document.getElementById('otp-code').value.trim()
+      const code = (document.getElementById('otp-code')?.value || '').trim()
+      if (!code) { toast('Enter the 6-digit OTP', true); return }
+      setBtnLoading(btn, true, 'Verifying\u2026')
       try {
         const d = await API.otpVerify(id, code)
         await enterApp(d)
         toast('Logged in via OTP')
-      } catch (e) { toast(e.data?.error || 'Invalid OTP', true) }
+      } catch (e) { setBtnLoading(btn, false); toast(e.data?.error || 'Invalid OTP', true) }
     }
   }
 
