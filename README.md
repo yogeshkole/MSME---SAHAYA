@@ -218,7 +218,20 @@ The SPA uses a Van Gogh-inspired visual system applied via CSS custom-property r
   brush-stroke wizard connectors, impasto card depth, and Van-Gogh-tinted Chart.js graphs.
 - Dashboard greeting: "let your business shine like the stars ✨".
 
+### 🌌 Night Mode (Starry Night cosmic theme)
+A premium dark theme toggled from the **moon/sun button in the top navbar** (top-right) and
+**persisted** in `localStorage` (`msme_theme`), applied pre-paint to avoid any flash:
+- **Cosmic navy-indigo sky** background inspired by Van Gogh's *Starry Night* — layered radial/conic
+  gradients (glowing moon + twilight glow + swirl), a twinkling **starfield overlay**, and a slow
+  **drifting swirl layer** for cinematic depth.
+- **Glassmorphic surfaces** — frosted `backdrop-filter` blur on the topbar, cards, KPI tiles, branch
+  panels, modals and the login card, with **electric-blue glowing borders on hover**.
+- Design tokens re-mapped on `body.night-mode` (cool luminous text, electric-blue `#5b8cff` accents,
+  warm gold that glows against the dark sky) — fully cohesive with the existing blue glassmorphism.
+- **Chart.js graphs auto-retint** (axes/legend/grid) when the theme switches; smooth 0.45s cross-fade
+  transitions; respects `prefers-reduced-motion`.
+
 ## Deployment
 - **Platform**: Cloudflare Pages (Workers runtime)
 - **Status**: ✅ Running locally via PM2 (sandbox). Not yet deployed to production.
-- **Last Updated**: 2026-06-13
+- **Last Updated**: 2026-06-16

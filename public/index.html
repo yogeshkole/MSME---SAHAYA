@@ -9,6 +9,20 @@
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+  /* Apply saved theme ASAP to avoid a flash of the wrong theme. */
+  (function () {
+    try {
+      if (localStorage.getItem('msme_theme') === 'night') {
+        document.documentElement.classList.add('night-pending');
+      }
+    } catch (e) {}
+  })();
+</script>
+<style>
+  /* honour the pre-paint flag before <body> exists */
+  html.night-pending body { background-color: #070d22; }
+</style>
 <style>
   :root {
     /* ===== Van Gogh palette ===== */
@@ -1468,6 +1482,205 @@
     .branch-detail-actions .btn { min-width: 100%; }
     .branch-result-count { margin-left: 0; }
   }
+
+  /* ============================================================
+     🌌 NIGHT MODE — Starry Night cosmic theme
+     Activated via body.night-mode (toggled in topbar / persisted).
+     Strategy: re-map the design tokens, then layer a cosmic sky
+     background, glassmorphic surfaces, and glowing electric-blue
+     accents — fully cohesive with the existing blue glassmorphism.
+  ============================================================ */
+  body.night-mode {
+    /* deep cosmic blues / indigos */
+    --navy: #cfe0ff;            /* now used as light heading text on dark */
+    --royal-blue: #5b8cff;      /* electric ultramarine accent */
+    --electric-blue: #6ea8ff;
+    --sky-blue: #8fb6ff;
+    /* keep gold warm + luminous against the night sky */
+    --gold: #ffd84d;
+    --sunflower: #ffce3a;
+    --glow-orange: #ffb347;
+    --orange: #ffa033;
+    --emerald: #34d399;
+    --success: #34d399;
+    --red: #ff6b81;
+    --purple: #a78bfa;
+    /* neutrals remapped to cool, luminous on-dark text */
+    --gray-50:  #1a2747;        /* darkened input/field surface */
+    --gray-100: #0a1430;        /* app background base */
+    --gray-200: rgba(120,160,255,0.18);  /* glass borders */
+    --gray-300: rgba(120,160,255,0.28);
+    --gray-400: #8295c4;        /* hint text */
+    --gray-500: #aebbdd;        /* secondary text */
+    --gray-600: #c4d0ee;        /* body emphasis */
+    --gray-700: #dde6ff;        /* strong text */
+    --gray-800: #eaf1ff;        /* primary text */
+    --gray-900: #f5f9ff;
+    --cream-card: rgba(22,34,66,0.62);   /* frosted glass card */
+    --moonlit: rgba(120,160,255,0.12);
+    color: var(--gray-800);
+  }
+
+  /* --- Cosmic Starry Night background --- */
+  body.night-mode {
+    background-color: #070d22;
+    background-image:
+      radial-gradient(circle at 78% 18%, rgba(255,216,77,0.16) 0%, transparent 16%),  /* glowing moon */
+      radial-gradient(circle at 22% 72%, rgba(110,168,255,0.16) 0%, transparent 24%), /* twilight glow */
+      conic-gradient(from 210deg at 72% 28%, rgba(91,140,255,0.22), rgba(10,20,48,0.05) 38%, rgba(91,140,255,0.22) 78%), /* swirl */
+      radial-gradient(circle at 50% 120%, rgba(60,95,165,0.30) 0%, transparent 60%),
+      linear-gradient(160deg, #060b1f 0%, #0b1736 42%, #0e1f47 100%);
+    background-attachment: fixed;
+  }
+  /* twinkling starfield overlay (whole app) */
+  body.night-mode::before {
+    content: '';
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      radial-gradient(1.6px 1.6px at 12% 20%, rgba(255,255,255,0.9), transparent),
+      radial-gradient(1.4px 1.4px at 28% 8%,  rgba(255,216,77,0.9), transparent),
+      radial-gradient(1.2px 1.2px at 47% 32%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1.8px 1.8px at 68% 14%, rgba(255,216,77,0.85), transparent),
+      radial-gradient(1.3px 1.3px at 82% 40%, rgba(255,255,255,0.75), transparent),
+      radial-gradient(1.5px 1.5px at 38% 62%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1.6px 1.6px at 60% 78%, rgba(143,182,255,0.85), transparent),
+      radial-gradient(1.2px 1.2px at 88% 70%, rgba(255,255,255,0.7), transparent),
+      radial-gradient(1.4px 1.4px at 18% 88%, rgba(255,216,77,0.7), transparent);
+    background-repeat: no-repeat;
+    opacity: 0.9;
+    animation: vg-stars 7s ease-in-out infinite;
+  }
+  /* second drifting swirl layer for cinematic depth */
+  body.night-mode::after {
+    content: '';
+    position: fixed; inset: -20%; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 40% 22% at 30% 30%, rgba(91,140,255,0.10), transparent 70%),
+      radial-gradient(ellipse 34% 20% at 72% 64%, rgba(167,139,250,0.08), transparent 70%);
+    filter: blur(8px);
+    animation: vg-drift 22s ease-in-out infinite alternate;
+  }
+  @keyframes vg-stars { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
+  @keyframes vg-drift { from { transform: translate3d(-2%, -1%, 0) rotate(0deg); } to { transform: translate3d(2%, 1%, 0) rotate(3deg); } }
+  /* keep real content above the cosmic layers */
+  body.night-mode .app-shell,
+  body.night-mode #page-login,
+  body.night-mode #msme-toast,
+  body.night-mode .vg-modal-overlay { position: relative; z-index: 1; }
+
+  /* --- Glassmorphic surfaces --- */
+  body.night-mode .topbar {
+    background: rgba(12,22,50,0.72);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+    border-bottom: 1px solid rgba(120,160,255,0.22);
+    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  }
+  body.night-mode .card,
+  body.night-mode .kpi-card,
+  body.night-mode .branch-stat,
+  body.night-mode .branch-map-panel,
+  body.night-mode .branch-detail-card,
+  body.night-mode .branch-list-card,
+  body.night-mode .branch-searchbar,
+  body.night-mode .login-card,
+  body.night-mode .hero-stat,
+  body.night-mode .vg-modal {
+    background: var(--cream-card);
+    backdrop-filter: blur(16px) saturate(130%);
+    -webkit-backdrop-filter: blur(16px) saturate(130%);
+    border: 1px solid rgba(120,160,255,0.20);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.06);
+  }
+  /* glowing electric-blue border on hover for cards */
+  body.night-mode .card:hover,
+  body.night-mode .kpi-card:hover,
+  body.night-mode .branch-list-card:hover,
+  body.night-mode .branch-stat:hover {
+    border-color: rgba(110,168,255,0.55);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.45), 0 0 22px rgba(91,140,255,0.32), inset 0 1px 0 rgba(255,255,255,0.08);
+  }
+  body.night-mode .card { border-left: 4px solid rgba(110,168,255,0.6); }
+
+  /* inputs / search / selects on dark glass */
+  body.night-mode .form-input,
+  body.night-mode .topbar-search input,
+  body.night-mode .branch-state-select,
+  body.night-mode .branch-searchbar input {
+    background: rgba(10,18,40,0.6);
+    border-color: rgba(120,160,255,0.22);
+    color: var(--gray-800);
+  }
+  body.night-mode .form-input:focus,
+  body.night-mode .topbar-search input:focus {
+    background: rgba(10,18,40,0.85);
+    border-color: var(--electric-blue);
+    box-shadow: 0 0 0 3px rgba(91,140,255,0.22), 0 0 16px rgba(91,140,255,0.25);
+  }
+  body.night-mode .topbar-btn {
+    background: rgba(120,160,255,0.08);
+    border-color: rgba(120,160,255,0.20);
+    color: var(--gray-500);
+  }
+  body.night-mode .topbar-btn:hover {
+    background: rgba(120,160,255,0.18);
+    border-color: rgba(110,168,255,0.5);
+    color: #fff;
+    box-shadow: 0 0 16px rgba(91,140,255,0.35);
+  }
+  body.night-mode .notif-dot { border-color: #0b1736; }
+
+  /* tabs / pills / chips */
+  body.night-mode .tab-btn { background: rgba(120,160,255,0.06); color: var(--gray-500); border-color: rgba(120,160,255,0.18); }
+  body.night-mode .tab-btn.active { background: var(--royal-blue); color: #0a1430; border-color: var(--royal-blue); box-shadow: 0 0 16px rgba(91,140,255,0.45); }
+  body.night-mode .branch-filter-btn { background: rgba(120,160,255,0.06); color: var(--gray-700); border-color: rgba(120,160,255,0.18); }
+  body.night-mode .branch-service-tag { background: rgba(120,160,255,0.12); color: var(--gray-700); border-color: rgba(120,160,255,0.2); }
+  body.night-mode .btn-social { background: rgba(120,160,255,0.08); color: var(--gray-700); border-color: rgba(120,160,255,0.2); }
+  body.night-mode .btn-social:hover { background: rgba(120,160,255,0.16); border-color: rgba(110,168,255,0.45); }
+
+  /* divider line on dark */
+  body.night-mode .divider::before { background: rgba(120,160,255,0.22); }
+  body.night-mode .divider span { background: transparent; color: var(--gray-400); }
+
+  /* night-mode stat tiles: subtle glass tints (override light gradients) */
+  body.night-mode .branch-stat.bstat-green,
+  body.night-mode .branch-stat.bstat-blue,
+  body.night-mode .branch-stat.bstat-gold,
+  body.night-mode .branch-stat.bstat-purple,
+  body.night-mode .branch-stat.bstat-cyan,
+  body.night-mode .branch-stat.bstat-red { background: var(--cream-card); }
+
+  /* keep the detail band rich navy in night mode */
+  body.night-mode .branch-detail-band {
+    background: linear-gradient(135deg, #10204a 0%, #1a3a7a 60%, #2a52a8 100%);
+  }
+
+  /* selected list card keeps gold accent but on glass */
+  body.night-mode .branch-list-card.active { background: rgba(40,40,20,0.45); border-color: var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 22px rgba(255,216,77,0.25); }
+
+  /* login error banner on dark */
+  body.night-mode .login-error { background: rgba(255,107,129,0.12); border-color: rgba(255,107,129,0.35); color: #ff9aa8; }
+  body.night-mode .btn-demo-fill { background: rgba(91,140,255,0.10); border-color: rgba(91,140,255,0.4); color: var(--electric-blue); }
+
+  /* the gold "Sign In" / primary CTA glows more in the dark */
+  body.night-mode .btn-primary { box-shadow: 0 6px 22px rgba(255,176,71,0.4), 0 0 24px rgba(255,216,77,0.25); }
+
+  /* status pills readable on dark */
+  body.night-mode .bl-status.open { background: rgba(52,211,153,0.18); color: #5ee9b5; }
+  body.night-mode .bl-status.closed { background: rgba(255,107,129,0.18); color: #ff9aa8; }
+
+  /* theme toggle icon glow */
+  .theme-toggle i { transition: transform .4s cubic-bezier(.34,1.56,.64,1); }
+  body.night-mode .theme-toggle i { color: var(--gold); text-shadow: 0 0 12px rgba(255,216,77,0.6); transform: rotate(-18deg); }
+
+  /* smooth global transition between themes */
+  body, .topbar, .card, .kpi-card, .branch-list-card, .branch-stat,
+  .form-input, .topbar-btn, .login-card, .branch-detail-card {
+    transition: background-color .45s ease, color .35s ease, border-color .35s ease, box-shadow .35s ease;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    body.night-mode::before, body.night-mode::after { animation: none; }
+  }
 </style>
 </head>
 <body>
@@ -1660,6 +1873,9 @@
         <input type="text" placeholder="Search schemes, documents, applications…">
       </div>
       <div class="topbar-actions">
+        <button class="topbar-btn theme-toggle" id="theme-toggle" onclick="toggleTheme()" title="Toggle night mode" aria-label="Toggle night mode">
+          <i class="fas fa-moon"></i>
+        </button>
         <button class="topbar-btn" onclick="navigate('notifications')">
           <i class="fas fa-bell"></i>
           <div class="notif-dot"></div>
@@ -2775,6 +2991,37 @@ function fillDemo() {
   if (typeof doLogin === 'function') doLogin();
 }
 
+// ================================================================
+// 🌌 NIGHT MODE THEME
+// ================================================================
+function applyTheme(theme) {
+  const night = theme === 'night';
+  document.body.classList.toggle('night-mode', night);
+  document.documentElement.classList.remove('night-pending');
+  const btn = document.getElementById('theme-toggle');
+  if (btn) {
+    const icon = btn.querySelector('i');
+    if (icon) { icon.classList.toggle('fa-moon', !night); icon.classList.toggle('fa-sun', night); }
+    btn.title = night ? 'Switch to day mode' : 'Switch to night mode';
+  }
+  try { localStorage.setItem('msme_theme', night ? 'night' : 'day'); } catch (e) {}
+  // re-render charts so their colours match the new theme
+  if (typeof refreshChartsForTheme === 'function') refreshChartsForTheme(night);
+}
+function toggleTheme() {
+  const isNight = document.body.classList.contains('night-mode');
+  applyTheme(isNight ? 'day' : 'night');
+}
+(function initTheme() {
+  function go() {
+    let saved = 'day';
+    try { saved = localStorage.getItem('msme_theme') || 'day'; } catch (e) {}
+    applyTheme(saved);
+  }
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', go);
+  else go();
+})();
+
 function forgotPassword() {
   const email = (document.getElementById('login-email') || {}).value || '';
   if (typeof toast === 'function') {
@@ -2951,6 +3198,30 @@ function initCharts() {
       }
     });
   }
+}
+
+// Re-tint chart axes/legend/grid for the active theme and re-render.
+function refreshChartsForTheme(night) {
+  VG_CHART.text = night ? '#c4d0ee' : '#3A3326';
+  VG_CHART.grid = night ? 'rgba(120,160,255,0.14)' : 'rgba(11,44,94,0.08)';
+  const donutBorder = night ? 'rgba(10,18,40,0.7)' : '#FFFBF0';
+  ['revenueChartInstance', 'expenseChartInstance'].forEach(key => {
+    const ch = window[key];
+    if (!ch) return;
+    try {
+      if (ch.options.scales) {
+        if (ch.options.scales.y) { ch.options.scales.y.ticks.color = VG_CHART.text; ch.options.scales.y.grid.color = VG_CHART.grid; }
+        if (ch.options.scales.x) { ch.options.scales.x.ticks.color = VG_CHART.text; }
+      }
+      if (ch.options.plugins && ch.options.plugins.legend && ch.options.plugins.legend.labels) {
+        ch.options.plugins.legend.labels.color = VG_CHART.text;
+      }
+      if (key === 'expenseChartInstance' && ch.data.datasets[0]) {
+        ch.data.datasets[0].borderColor = donutBorder;
+      }
+      ch.update('none');
+    } catch (e) {}
+  });
 }
 
 // ================================================================
