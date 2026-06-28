@@ -230,8 +230,12 @@ A premium dark theme toggled from the **moon/sun button in the top navbar** (top
   warm gold that glows against the dark sky) — fully cohesive with the existing blue glassmorphism.
 - **Chart.js graphs auto-retint** (axes/legend/grid) when the theme switches; smooth 0.45s cross-fade
   transitions; respects `prefers-reduced-motion`.
+- **v2 — full-surface coverage:** every previously bright-white surface (chart cards, data tables,
+  chat widget, eligibility/scheme/doc/wizard/profile/info cards, notif items) now uses dark frosted
+  glass with `!important` overrides, so nothing breaks the dark immersion. Denser twinkling starfield,
+  nebula drift, a custom cosmic webkit scrollbar, glowing gold CTAs, and a 360° toggle-button rotation.
 
 ## Deployment
 - **Platform**: Cloudflare Pages (Workers runtime)
 - **Status**: ✅ Running locally via PM2 (sandbox). Not yet deployed to production.
-- **Last Updated**: 2026-06-16
+- **Last Updated**: 2026-06-28

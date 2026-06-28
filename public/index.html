@@ -1483,99 +1483,109 @@
     .branch-result-count { margin-left: 0; }
   }
 
+
   /* ============================================================
-     🌌 NIGHT MODE — Starry Night cosmic theme
-     Activated via body.night-mode (toggled in topbar / persisted).
-     Strategy: re-map the design tokens, then layer a cosmic sky
-     background, glassmorphic surfaces, and glowing electric-blue
-     accents — fully cohesive with the existing blue glassmorphism.
+     🌌 NIGHT MODE — "Starry Night" cosmic theme (v2)
+     Toggled via body.night-mode (topbar moon button, persisted).
+     Token remap + full-surface coverage + glassmorphism +
+     animated nebula/starfield for an ultra-premium fintech feel.
   ============================================================ */
   body.night-mode {
-    /* deep cosmic blues / indigos */
-    --navy: #cfe0ff;            /* now used as light heading text on dark */
+    /* cosmic blues / indigos */
+    --navy: #d6e4ff;            /* light heading text on dark */
     --royal-blue: #5b8cff;      /* electric ultramarine accent */
-    --electric-blue: #6ea8ff;
-    --sky-blue: #8fb6ff;
-    /* keep gold warm + luminous against the night sky */
+    --electric-blue: #74a9ff;
+    --sky-blue: #9cc0ff;
+    /* luminous gold against the night sky */
     --gold: #ffd84d;
     --sunflower: #ffce3a;
     --glow-orange: #ffb347;
-    --orange: #ffa033;
+    --orange: #ff9f3a;
     --emerald: #34d399;
     --success: #34d399;
     --red: #ff6b81;
-    --purple: #a78bfa;
-    /* neutrals remapped to cool, luminous on-dark text */
-    --gray-50:  #1a2747;        /* darkened input/field surface */
-    --gray-100: #0a1430;        /* app background base */
-    --gray-200: rgba(120,160,255,0.18);  /* glass borders */
-    --gray-300: rgba(120,160,255,0.28);
-    --gray-400: #8295c4;        /* hint text */
-    --gray-500: #aebbdd;        /* secondary text */
-    --gray-600: #c4d0ee;        /* body emphasis */
-    --gray-700: #dde6ff;        /* strong text */
-    --gray-800: #eaf1ff;        /* primary text */
-    --gray-900: #f5f9ff;
-    --cream-card: rgba(22,34,66,0.62);   /* frosted glass card */
-    --moonlit: rgba(120,160,255,0.12);
+    --purple: #b39bff;
+    --pink: #ff6b81;
+    /* neutrals → cool luminous on-dark */
+    --gray-50:  #16213f;
+    --gray-100: #0a1430;
+    --gray-200: rgba(124,164,255,0.20);
+    --gray-300: rgba(124,164,255,0.30);
+    --gray-400: #8ea2cf;
+    --gray-500: #b3c0e2;
+    --gray-600: #cdd8f3;
+    --gray-700: #e2eaff;
+    --gray-800: #eef3ff;
+    --gray-900: #f7faff;
+    --cream-card: rgba(20,32,64,0.66);
+    --moonlit: rgba(124,164,255,0.14);
     color: var(--gray-800);
   }
 
   /* --- Cosmic Starry Night background --- */
   body.night-mode {
-    background-color: #070d22;
+    background-color: #060b1f;
     background-image:
-      radial-gradient(circle at 78% 18%, rgba(255,216,77,0.16) 0%, transparent 16%),  /* glowing moon */
-      radial-gradient(circle at 22% 72%, rgba(110,168,255,0.16) 0%, transparent 24%), /* twilight glow */
-      conic-gradient(from 210deg at 72% 28%, rgba(91,140,255,0.22), rgba(10,20,48,0.05) 38%, rgba(91,140,255,0.22) 78%), /* swirl */
-      radial-gradient(circle at 50% 120%, rgba(60,95,165,0.30) 0%, transparent 60%),
-      linear-gradient(160deg, #060b1f 0%, #0b1736 42%, #0e1f47 100%);
+      radial-gradient(circle at 80% 16%, rgba(255,216,77,0.18) 0%, transparent 15%),   /* glowing moon */
+      radial-gradient(circle at 18% 26%, rgba(124,169,255,0.14) 0%, transparent 22%),  /* upper twilight glow */
+      radial-gradient(circle at 24% 76%, rgba(110,168,255,0.16) 0%, transparent 26%),  /* lower twilight glow */
+      conic-gradient(from 210deg at 74% 24%, rgba(91,140,255,0.20), rgba(10,20,48,0.04) 38%, rgba(91,140,255,0.20) 78%), /* swirl */
+      radial-gradient(circle at 50% 122%, rgba(60,95,165,0.32) 0%, transparent 60%),
+      linear-gradient(160deg, #050a1c 0%, #0a1530 44%, #0e2049 100%);
     background-attachment: fixed;
   }
-  /* twinkling starfield overlay (whole app) */
+  /* twinkling starfield overlay — two tiled layers = dense + parallax */
   body.night-mode::before {
     content: '';
     position: fixed; inset: 0; z-index: 0; pointer-events: none;
     background-image:
-      radial-gradient(1.6px 1.6px at 12% 20%, rgba(255,255,255,0.9), transparent),
-      radial-gradient(1.4px 1.4px at 28% 8%,  rgba(255,216,77,0.9), transparent),
-      radial-gradient(1.2px 1.2px at 47% 32%, rgba(255,255,255,0.7), transparent),
-      radial-gradient(1.8px 1.8px at 68% 14%, rgba(255,216,77,0.85), transparent),
-      radial-gradient(1.3px 1.3px at 82% 40%, rgba(255,255,255,0.75), transparent),
-      radial-gradient(1.5px 1.5px at 38% 62%, rgba(255,255,255,0.7), transparent),
-      radial-gradient(1.6px 1.6px at 60% 78%, rgba(143,182,255,0.85), transparent),
-      radial-gradient(1.2px 1.2px at 88% 70%, rgba(255,255,255,0.7), transparent),
-      radial-gradient(1.4px 1.4px at 18% 88%, rgba(255,216,77,0.7), transparent);
+      radial-gradient(1.7px 1.7px at 12% 20%, rgba(255,255,255,0.95), transparent),
+      radial-gradient(1.5px 1.5px at 28% 8%,  rgba(255,216,77,0.95), transparent),
+      radial-gradient(1.2px 1.2px at 47% 32%, rgba(255,255,255,0.75), transparent),
+      radial-gradient(1.9px 1.9px at 68% 14%, rgba(255,216,77,0.9), transparent),
+      radial-gradient(1.3px 1.3px at 82% 40%, rgba(255,255,255,0.8), transparent),
+      radial-gradient(1.5px 1.5px at 38% 62%, rgba(255,255,255,0.75), transparent),
+      radial-gradient(1.7px 1.7px at 60% 78%, rgba(143,182,255,0.9), transparent),
+      radial-gradient(1.2px 1.2px at 88% 70%, rgba(255,255,255,0.75), transparent),
+      radial-gradient(1.5px 1.5px at 18% 88%, rgba(255,216,77,0.75), transparent),
+      radial-gradient(1.1px 1.1px at 5% 52%,  rgba(255,255,255,0.6), transparent),
+      radial-gradient(1.1px 1.1px at 92% 24%, rgba(255,255,255,0.6), transparent),
+      radial-gradient(1.3px 1.3px at 52% 6%,  rgba(255,255,255,0.7), transparent),
+      radial-gradient(1.2px 1.2px at 74% 90%, rgba(255,216,77,0.65), transparent);
     background-repeat: no-repeat;
-    opacity: 0.9;
-    animation: vg-stars 7s ease-in-out infinite;
+    opacity: 0.95;
+    animation: vg-stars 6s ease-in-out infinite;
   }
-  /* second drifting swirl layer for cinematic depth */
+  /* drifting nebula swirls for cinematic depth */
   body.night-mode::after {
     content: '';
-    position: fixed; inset: -20%; z-index: 0; pointer-events: none;
+    position: fixed; inset: -25%; z-index: 0; pointer-events: none;
     background:
-      radial-gradient(ellipse 40% 22% at 30% 30%, rgba(91,140,255,0.10), transparent 70%),
-      radial-gradient(ellipse 34% 20% at 72% 64%, rgba(167,139,250,0.08), transparent 70%);
-    filter: blur(8px);
-    animation: vg-drift 22s ease-in-out infinite alternate;
+      radial-gradient(ellipse 42% 24% at 28% 30%, rgba(91,140,255,0.12), transparent 70%),
+      radial-gradient(ellipse 36% 22% at 74% 62%, rgba(179,155,255,0.10), transparent 70%),
+      radial-gradient(ellipse 30% 18% at 60% 18%, rgba(255,216,77,0.06), transparent 72%);
+    filter: blur(10px);
+    animation: vg-drift 26s ease-in-out infinite alternate;
   }
-  @keyframes vg-stars { 0%,100% { opacity: 0.55; } 50% { opacity: 1; } }
-  @keyframes vg-drift { from { transform: translate3d(-2%, -1%, 0) rotate(0deg); } to { transform: translate3d(2%, 1%, 0) rotate(3deg); } }
+  @keyframes vg-stars { 0%,100% { opacity: 0.5; } 50% { opacity: 1; } }
+  @keyframes vg-drift { from { transform: translate3d(-2%, -1.2%, 0) rotate(0deg); } to { transform: translate3d(2%, 1.2%, 0) rotate(3deg); } }
   /* keep real content above the cosmic layers */
   body.night-mode .app-shell,
   body.night-mode #page-login,
   body.night-mode #msme-toast,
   body.night-mode .vg-modal-overlay { position: relative; z-index: 1; }
 
-  /* --- Glassmorphic surfaces --- */
+  /* glass helper used by many surfaces */
   body.night-mode .topbar {
-    background: rgba(12,22,50,0.72);
-    backdrop-filter: blur(18px) saturate(140%);
-    -webkit-backdrop-filter: blur(18px) saturate(140%);
-    border-bottom: 1px solid rgba(120,160,255,0.22);
-    box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+    background: linear-gradient(180deg, rgba(16,26,58,0.82), rgba(10,18,42,0.72));
+    backdrop-filter: blur(20px) saturate(150%);
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    border-bottom: 1px solid rgba(124,164,255,0.22);
+    box-shadow: 0 4px 28px rgba(0,0,0,0.45);
   }
+  body.night-mode .topbar-page-title { color: var(--gray-800); }
+
+  /* --- Glassmorphic surfaces (broad coverage) --- */
   body.night-mode .card,
   body.night-mode .kpi-card,
   body.night-mode .branch-stat,
@@ -1585,101 +1595,189 @@
   body.night-mode .branch-searchbar,
   body.night-mode .login-card,
   body.night-mode .hero-stat,
-  body.night-mode .vg-modal {
-    background: var(--cream-card);
-    backdrop-filter: blur(16px) saturate(130%);
-    -webkit-backdrop-filter: blur(16px) saturate(130%);
-    border: 1px solid rgba(120,160,255,0.20);
-    box-shadow: 0 8px 32px rgba(0,0,0,0.38), inset 0 1px 0 rgba(255,255,255,0.06);
+  body.night-mode .vg-modal,
+  body.night-mode .chart-card,
+  body.night-mode .es-card,
+  body.night-mode .data-table,
+  body.night-mode .table-card,
+  body.night-mode .chat-widget,
+  body.night-mode .chat-header,
+  body.night-mode .activity-card,
+  body.night-mode .quick-action,
+  body.night-mode .doc-card,
+  body.night-mode .notif-item,
+  body.night-mode .wizard-card,
+  body.night-mode .profile-card,
+  body.night-mode .info-card,
+  body.night-mode .scheme-card {
+    background: linear-gradient(160deg, rgba(26,40,76,0.70) 0%, rgba(16,26,54,0.58) 100%) !important;
+    backdrop-filter: blur(16px) saturate(135%);
+    -webkit-backdrop-filter: blur(16px) saturate(135%);
+    border: 1px solid rgba(124,164,255,0.20);
+    box-shadow: 0 10px 34px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.06);
+    color: var(--gray-700);
   }
-  /* glowing electric-blue border on hover for cards */
+  /* glowing electric-blue border on hover */
   body.night-mode .card:hover,
   body.night-mode .kpi-card:hover,
   body.night-mode .branch-list-card:hover,
-  body.night-mode .branch-stat:hover {
-    border-color: rgba(110,168,255,0.55);
-    box-shadow: 0 12px 40px rgba(0,0,0,0.45), 0 0 22px rgba(91,140,255,0.32), inset 0 1px 0 rgba(255,255,255,0.08);
+  body.night-mode .branch-stat:hover,
+  body.night-mode .quick-action:hover,
+  body.night-mode .doc-card:hover,
+  body.night-mode .scheme-card:hover {
+    border-color: rgba(124,169,255,0.6);
+    box-shadow: 0 14px 44px rgba(0,0,0,0.5), 0 0 26px rgba(91,140,255,0.34), inset 0 1px 0 rgba(255,255,255,0.08);
   }
-  body.night-mode .card { border-left: 4px solid rgba(110,168,255,0.6); }
+  body.night-mode .card { border-left: 4px solid rgba(124,169,255,0.65); }
 
-  /* inputs / search / selects on dark glass */
+  /* headings / text that used literal dark navy now read light */
+  body.night-mode .page-header h1,
+  body.night-mode .card-title,
+  body.night-mode .kpi-value,
+  body.night-mode h1, body.night-mode h2, body.night-mode h3,
+  body.night-mode .chat-title,
+  body.night-mode .es-card h4,
+  body.night-mode .stat-value,
+  body.night-mode .section-title { color: var(--gray-800); }
+  body.night-mode .page-header p,
+  body.night-mode .card-subtitle,
+  body.night-mode .breadcrumb span,
+  body.night-mode .kpi-label,
+  body.night-mode .muted { color: var(--gray-500); }
+
+  /* inputs / search / selects / textareas on dark glass */
   body.night-mode .form-input,
   body.night-mode .topbar-search input,
   body.night-mode .branch-state-select,
-  body.night-mode .branch-searchbar input {
-    background: rgba(10,18,40,0.6);
-    border-color: rgba(120,160,255,0.22);
+  body.night-mode .branch-searchbar input,
+  body.night-mode .chat-input,
+  body.night-mode textarea,
+  body.night-mode select,
+  body.night-mode input[type="text"],
+  body.night-mode input[type="email"],
+  body.night-mode input[type="password"],
+  body.night-mode input[type="tel"],
+  body.night-mode input[type="number"] {
+    background: rgba(8,16,38,0.6) !important;
+    border-color: rgba(124,164,255,0.24);
     color: var(--gray-800);
   }
+  body.night-mode .form-input::placeholder,
+  body.night-mode input::placeholder,
+  body.night-mode textarea::placeholder { color: #7f92bf; }
   body.night-mode .form-input:focus,
-  body.night-mode .topbar-search input:focus {
-    background: rgba(10,18,40,0.85);
+  body.night-mode .topbar-search input:focus,
+  body.night-mode input:focus,
+  body.night-mode textarea:focus {
+    background: rgba(8,16,38,0.9) !important;
     border-color: var(--electric-blue);
-    box-shadow: 0 0 0 3px rgba(91,140,255,0.22), 0 0 16px rgba(91,140,255,0.25);
+    box-shadow: 0 0 0 3px rgba(91,140,255,0.22), 0 0 18px rgba(91,140,255,0.28);
   }
+  body.night-mode select option { background: #0e1f47; color: #eef3ff; }
+
+  /* topbar buttons */
   body.night-mode .topbar-btn {
-    background: rgba(120,160,255,0.08);
-    border-color: rgba(120,160,255,0.20);
+    background: rgba(124,164,255,0.08);
+    border-color: rgba(124,164,255,0.20);
     color: var(--gray-500);
   }
   body.night-mode .topbar-btn:hover {
-    background: rgba(120,160,255,0.18);
-    border-color: rgba(110,168,255,0.5);
+    background: rgba(124,164,255,0.18);
+    border-color: rgba(124,169,255,0.55);
     color: #fff;
-    box-shadow: 0 0 16px rgba(91,140,255,0.35);
+    box-shadow: 0 0 18px rgba(91,140,255,0.4);
   }
   body.night-mode .notif-dot { border-color: #0b1736; }
 
-  /* tabs / pills / chips */
-  body.night-mode .tab-btn { background: rgba(120,160,255,0.06); color: var(--gray-500); border-color: rgba(120,160,255,0.18); }
-  body.night-mode .tab-btn.active { background: var(--royal-blue); color: #0a1430; border-color: var(--royal-blue); box-shadow: 0 0 16px rgba(91,140,255,0.45); }
-  body.night-mode .branch-filter-btn { background: rgba(120,160,255,0.06); color: var(--gray-700); border-color: rgba(120,160,255,0.18); }
-  body.night-mode .branch-service-tag { background: rgba(120,160,255,0.12); color: var(--gray-700); border-color: rgba(120,160,255,0.2); }
-  body.night-mode .btn-social { background: rgba(120,160,255,0.08); color: var(--gray-700); border-color: rgba(120,160,255,0.2); }
-  body.night-mode .btn-social:hover { background: rgba(120,160,255,0.16); border-color: rgba(110,168,255,0.45); }
+  /* tabs / pills / chips / secondary buttons */
+  body.night-mode .tab-btn { background: rgba(124,164,255,0.06); color: var(--gray-500); border-color: rgba(124,164,255,0.18); }
+  body.night-mode .tab-btn.active { background: var(--royal-blue); color: #0a1430; border-color: var(--royal-blue); box-shadow: 0 0 18px rgba(91,140,255,0.5); }
+  body.night-mode .branch-filter-btn { background: rgba(124,164,255,0.06); color: var(--gray-700); border-color: rgba(124,164,255,0.18); }
+  body.night-mode .branch-service-tag { background: rgba(124,164,255,0.12); color: var(--gray-700); border-color: rgba(124,164,255,0.22); }
+  body.night-mode .btn-social { background: rgba(124,164,255,0.08); color: var(--gray-700); border-color: rgba(124,164,255,0.22); }
+  body.night-mode .btn-social:hover { background: rgba(124,164,255,0.16); border-color: rgba(124,169,255,0.5); }
+  body.night-mode .btn-outline-navy { color: var(--electric-blue); border-color: rgba(124,169,255,0.5); }
+  body.night-mode .btn-outline-navy:hover { background: var(--royal-blue); color: #06122e; }
+  body.night-mode .btn-sm.outline { color: var(--gray-700); border-color: rgba(124,164,255,0.3); }
 
-  /* divider line on dark */
-  body.night-mode .divider::before { background: rgba(120,160,255,0.22); }
+  /* dividers / borders */
+  body.night-mode .divider::before { background: rgba(124,164,255,0.22); }
   body.night-mode .divider span { background: transparent; color: var(--gray-400); }
+  body.night-mode hr,
+  body.night-mode .card-header,
+  body.night-mode .chat-input-area,
+  body.night-mode .table-card th,
+  body.night-mode .data-table th { border-color: rgba(124,164,255,0.16) !important; }
 
-  /* night-mode stat tiles: subtle glass tints (override light gradients) */
+  /* tables */
+  body.night-mode table { color: var(--gray-700); }
+  body.night-mode th { color: var(--gray-500) !important; background: rgba(124,164,255,0.06) !important; }
+  body.night-mode td { border-color: rgba(124,164,255,0.12) !important; }
+  body.night-mode tr:hover td { background: rgba(124,164,255,0.06) !important; }
+
+  /* chat widget */
+  body.night-mode .msg.ai .msg-bubble { background: rgba(26,40,76,0.8) !important; color: var(--gray-700); border: 1px solid rgba(124,164,255,0.2); }
+  body.night-mode .chat-body { background: transparent; }
+
+  /* branch stat tiles: keep coloured accent bar, glass body */
   body.night-mode .branch-stat.bstat-green,
   body.night-mode .branch-stat.bstat-blue,
   body.night-mode .branch-stat.bstat-gold,
   body.night-mode .branch-stat.bstat-purple,
   body.night-mode .branch-stat.bstat-cyan,
-  body.night-mode .branch-stat.bstat-red { background: var(--cream-card); }
+  body.night-mode .branch-stat.bstat-red {
+    background: linear-gradient(160deg, rgba(26,40,76,0.70), rgba(16,26,54,0.58)) !important;
+  }
+  body.night-mode .branch-stat .bs-label,
+  body.night-mode .branch-list-head,
+  body.night-mode .branch-result-count { color: var(--gray-500); }
 
-  /* keep the detail band rich navy in night mode */
-  body.night-mode .branch-detail-band {
-    background: linear-gradient(135deg, #10204a 0%, #1a3a7a 60%, #2a52a8 100%);
+  /* keep detail band rich navy */
+  body.night-mode .branch-detail-band { background: linear-gradient(135deg, #10204a 0%, #1a3a7a 60%, #2a52a8 100%) !important; }
+  body.night-mode .branch-list-card.active {
+    background: linear-gradient(160deg, rgba(48,42,18,0.55), rgba(30,28,16,0.5)) !important;
+    border-color: var(--gold);
+    box-shadow: 0 12px 34px rgba(0,0,0,0.55), 0 0 26px rgba(255,216,77,0.3);
   }
 
-  /* selected list card keeps gold accent but on glass */
-  body.night-mode .branch-list-card.active { background: rgba(40,40,20,0.45); border-color: var(--gold); box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 22px rgba(255,216,77,0.25); }
+  /* eligibility "what's new" cards keep gradient header text white */
+  body.night-mode .es-card h4 { color: #fff; }
 
-  /* login error banner on dark */
+  /* login error / demo button */
   body.night-mode .login-error { background: rgba(255,107,129,0.12); border-color: rgba(255,107,129,0.35); color: #ff9aa8; }
   body.night-mode .btn-demo-fill { background: rgba(91,140,255,0.10); border-color: rgba(91,140,255,0.4); color: var(--electric-blue); }
 
-  /* the gold "Sign In" / primary CTA glows more in the dark */
-  body.night-mode .btn-primary { box-shadow: 0 6px 22px rgba(255,176,71,0.4), 0 0 24px rgba(255,216,77,0.25); }
+  /* gold CTAs glow in the dark */
+  body.night-mode .btn-primary { box-shadow: 0 6px 24px rgba(255,176,71,0.42), 0 0 26px rgba(255,216,77,0.28); }
 
-  /* status pills readable on dark */
+  /* status pills */
   body.night-mode .bl-status.open { background: rgba(52,211,153,0.18); color: #5ee9b5; }
   body.night-mode .bl-status.closed { background: rgba(255,107,129,0.18); color: #ff9aa8; }
 
-  /* theme toggle icon glow */
-  .theme-toggle i { transition: transform .4s cubic-bezier(.34,1.56,.64,1); }
-  body.night-mode .theme-toggle i { color: var(--gold); text-shadow: 0 0 12px rgba(255,216,77,0.6); transform: rotate(-18deg); }
-
-  /* smooth global transition between themes */
-  body, .topbar, .card, .kpi-card, .branch-list-card, .branch-stat,
-  .form-input, .topbar-btn, .login-card, .branch-detail-card {
-    transition: background-color .45s ease, color .35s ease, border-color .35s ease, box-shadow .35s ease;
+  /* custom cosmic scrollbar */
+  body.night-mode ::-webkit-scrollbar { width: 11px; height: 11px; }
+  body.night-mode ::-webkit-scrollbar-track { background: rgba(8,16,38,0.5); }
+  body.night-mode ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, rgba(91,140,255,0.55), rgba(124,169,255,0.4));
+    border-radius: 8px; border: 2px solid rgba(8,16,38,0.5);
   }
+  body.night-mode ::-webkit-scrollbar-thumb:hover { background: rgba(124,169,255,0.7); }
+  body.night-mode { scrollbar-color: rgba(124,169,255,0.5) rgba(8,16,38,0.5); }
+
+  /* toast */
+  body.night-mode #msme-toast { box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 18px rgba(91,140,255,0.25); }
+
+  /* theme toggle icon glow + rotation */
+  .theme-toggle i { transition: transform .45s cubic-bezier(.34,1.56,.64,1), color .3s; }
+  body.night-mode .theme-toggle i { color: var(--gold); text-shadow: 0 0 14px rgba(255,216,77,0.7); transform: rotate(360deg); }
+
+  /* smooth global theme cross-fade */
+  body, .topbar, .card, .kpi-card, .branch-list-card, .branch-stat, .chart-card,
+  .es-card, .form-input, .topbar-btn, .login-card, .branch-detail-card,
+  .chat-widget, .data-table, .table-card { transition: background-color .45s ease, color .35s ease, border-color .35s ease, box-shadow .35s ease; }
   @media (prefers-reduced-motion: reduce) {
     body.night-mode::before, body.night-mode::after { animation: none; }
+    .theme-toggle i { transition: none; }
   }
 </style>
 </head>
