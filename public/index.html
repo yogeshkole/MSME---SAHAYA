@@ -1601,7 +1601,6 @@
   body.night-mode .data-table,
   body.night-mode .table-card,
   body.night-mode .chat-widget,
-  body.night-mode .chat-header,
   body.night-mode .activity-card,
   body.night-mode .quick-action,
   body.night-mode .doc-card,
@@ -1609,6 +1608,11 @@
   body.night-mode .wizard-card,
   body.night-mode .profile-card,
   body.night-mode .info-card,
+  body.night-mode .ai-card,
+  body.night-mode .finance-stat,
+  body.night-mode .help-card,
+  body.night-mode .chat-container,
+  body.night-mode .btn-back,
   body.night-mode .scheme-card {
     background: linear-gradient(160deg, rgba(26,40,76,0.70) 0%, rgba(16,26,54,0.58) 100%) !important;
     backdrop-filter: blur(16px) saturate(135%);
@@ -1668,10 +1672,14 @@
   body.night-mode .form-input:focus,
   body.night-mode .topbar-search input:focus,
   body.night-mode input:focus,
-  body.night-mode textarea:focus {
+  body.night-mode textarea:focus,
+  body.night-mode .field-select:focus,
+  body.night-mode .field-input:focus,
+  body.night-mode select:focus {
     background: rgba(8,16,38,0.9) !important;
     border-color: var(--electric-blue);
     box-shadow: 0 0 0 3px rgba(91,140,255,0.22), 0 0 18px rgba(91,140,255,0.28);
+    color: var(--gray-800);
   }
   body.night-mode select option { background: #0e1f47; color: #eef3ff; }
 
@@ -1708,6 +1716,7 @@
   body.night-mode .chat-input-area,
   body.night-mode .table-card th,
   body.night-mode .data-table th { border-color: rgba(124,164,255,0.16) !important; }
+  body.night-mode .chat-input-area { background: linear-gradient(160deg, rgba(26,40,76,0.70) 0%, rgba(16,26,54,0.58) 100%) !important; }
 
   /* tables */
   body.night-mode table { color: var(--gray-700); }
@@ -1734,6 +1743,21 @@
 
   /* keep detail band rich navy */
   body.night-mode .branch-detail-band { background: linear-gradient(135deg, #10204a 0%, #1a3a7a 60%, #2a52a8 100%) !important; }
+
+  /* surfaces that use --navy as a solid BG fill (white text on top):
+     pin to a fixed dark navy so they don't go white-on-white after remap */
+  body.night-mode .chat-header,
+  body.night-mode .profile-header,
+  body.night-mode .btn-navy,
+  body.night-mode .btn-sm.navy {
+    background: linear-gradient(135deg, #10204a 0%, #1a3a7a 100%) !important;
+    color: #fff !important;
+    border-color: rgba(124,164,255,0.28) !important;
+  }
+  body.night-mode .btn-navy:hover,
+  body.night-mode .btn-sm.navy:hover {
+    background: linear-gradient(135deg, #17306a 0%, #244aa0 100%) !important;
+  }
   body.night-mode .branch-list-card.active {
     background: linear-gradient(160deg, rgba(48,42,18,0.55), rgba(30,28,16,0.5)) !important;
     border-color: var(--gold);
