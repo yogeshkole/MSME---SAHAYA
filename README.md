@@ -234,6 +234,11 @@ A premium dark theme toggled from the **moon/sun button in the top navbar** (top
   chat widget, eligibility/scheme/doc/wizard/profile/info cards, notif items) now uses dark frosted
   glass with `!important` overrides, so nothing breaks the dark immersion. Denser twinkling starfield,
   nebula drift, a custom cosmic webkit scrollbar, glowing gold CTAs, and a 360° toggle-button rotation.
+- **v3 — "What's New in MSME Schemes" cards:** these update cards were built with hardcoded inline
+  styles (white bg + `--navy` title) so they turned washed-out light-on-white in night mode. Refactored
+  to semantic classes (`.wn-card/.wn-head/.wn-badge/.wn-date/.wn-title/.wn-desc/.wn-source`) so night
+  mode gives them the frosted navy glass background and bright high-contrast text (title 14.6:1,
+  body 10.3:1 — all WCAG AA). Light mode reproduces the original look exactly.
 
 ## Deployment
 - **Platform**: Cloudflare Pages (Workers runtime)

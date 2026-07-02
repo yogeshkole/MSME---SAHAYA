@@ -821,13 +821,13 @@
       const tagColors = { new: ['NEW', '16,185,129'], updated: ['UPDATED', '37,99,235'], budget: ['BUDGET', '139,92,246'], deadline: ['DEADLINE', '239,68,68'] }
       list.innerHTML = updates.map((u) => {
         const t = tagColors[u.tag] || ['INFO', '107,114,128']
-        return '<div style="border:1px solid var(--gray-200);border-radius:10px;padding:14px;background:#fff">' +
-          '<div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">' +
-          '<span style="font-size:9px;font-weight:800;letter-spacing:.04em;color:rgb(' + t[1] + ');background:rgba(' + t[1] + ',.1);padding:2px 8px;border-radius:999px">' + t[0] + '</span>' +
-          (u.effective_date ? '<span class="text-xs text-gray">' + esc(u.effective_date) + '</span>' : '') + '</div>' +
-          '<h4 style="font-size:13px;font-weight:700;color:var(--navy);margin:0 0 4px">' + esc(u.title) + '</h4>' +
-          '<p style="font-size:11px;color:var(--gray-500);line-height:1.5;margin:0">' + esc(u.summary || '') + '</p>' +
-          (u.source ? '<div class="text-xs text-gray" style="margin-top:6px"><i class="fas fa-link" style="font-size:9px"></i> ' + esc(u.source) + '</div>' : '') +
+        return '<div class="wn-card">' +
+          '<div class="wn-head">' +
+          '<span class="wn-badge" style="color:rgb(' + t[1] + ');background:rgba(' + t[1] + ',.12);border:1px solid rgba(' + t[1] + ',.28)">' + t[0] + '</span>' +
+          (u.effective_date ? '<span class="wn-date">' + esc(u.effective_date) + '</span>' : '') + '</div>' +
+          '<h4 class="wn-title">' + esc(u.title) + '</h4>' +
+          '<p class="wn-desc">' + esc(u.summary || '') + '</p>' +
+          (u.source ? '<div class="wn-source"><i class="fas fa-link"></i> ' + esc(u.source) + '</div>' : '') +
           '</div>'
       }).join('')
       _whatsNewLoaded = true

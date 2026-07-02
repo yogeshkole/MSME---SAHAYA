@@ -924,6 +924,16 @@
   .es-apply { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 11px; font-weight: 700; color: #fff; background: linear-gradient(135deg,var(--royal-blue),#1e40af); padding: 7px 14px; border-radius: 8px; text-decoration: none; }
   .es-chip { display: inline-block; font-size: 10px; background: rgba(255,255,255,.1); color: rgba(255,255,255,.8); padding: 2px 8px; border-radius: 999px; margin: 2px 4px 2px 0; }
 
+  /* "What's New in MSME Schemes" update cards (rendered by JS) */
+  .wn-card { border: 1px solid var(--gray-200); border-radius: 10px; padding: 14px; background: #fff; }
+  .wn-head { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+  .wn-badge { font-size: 9px; font-weight: 800; letter-spacing: .04em; padding: 2px 8px; border-radius: 999px; }
+  .wn-date { font-size: 11px; color: var(--gray-400); font-weight: 600; }
+  .wn-title { font-size: 13px; font-weight: 700; color: var(--navy); margin: 0 0 4px; }
+  .wn-desc { font-size: 11px; color: var(--gray-500); line-height: 1.5; margin: 0; }
+  .wn-source { font-size: 11px; color: var(--gray-400); margin-top: 6px; }
+  .wn-source i { font-size: 9px; }
+
   /* ============================================================
      DOCUMENTS / KYC
   ============================================================ */
@@ -1598,6 +1608,7 @@
   body.night-mode .vg-modal,
   body.night-mode .chart-card,
   body.night-mode .es-card,
+  body.night-mode .wn-card,
   body.night-mode .data-table,
   body.night-mode .table-card,
   body.night-mode .chat-widget,
@@ -1762,6 +1773,18 @@
     background: linear-gradient(160deg, rgba(48,42,18,0.55), rgba(30,28,16,0.5)) !important;
     border-color: var(--gold);
     box-shadow: 0 12px 34px rgba(0,0,0,0.55), 0 0 26px rgba(255,216,77,0.3);
+  }
+
+  /* "What's New" update cards: bright, high-contrast text on the dark glass */
+  body.night-mode .wn-card { border-color: rgba(124,164,255,0.22) !important; }
+  body.night-mode .wn-title { color: #f2f6ff !important; }
+  body.night-mode .wn-desc { color: #c4d0ee !important; }
+  body.night-mode .wn-date { color: #9fb2e0 !important; }
+  body.night-mode .wn-source { color: #8ea3d6 !important; }
+  body.night-mode .wn-source i { color: var(--electric-blue) !important; }
+  body.night-mode .wn-card:hover {
+    border-color: rgba(124,169,255,0.5) !important;
+    box-shadow: 0 12px 34px rgba(0,0,0,0.45), 0 0 22px rgba(91,140,255,0.25) !important;
   }
 
   /* eligibility "what's new" cards keep gradient header text white */
