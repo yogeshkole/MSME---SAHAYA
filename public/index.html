@@ -1324,8 +1324,19 @@
   }
   /* per-type active colour to match the branch type */
   .branch-filter-btn[data-filter="DI"].active {
-    background: linear-gradient(135deg, var(--gold), var(--glow-orange)); border-color: var(--glow-orange); color: var(--navy);
-    box-shadow: 0 4px 14px rgba(255,159,28,0.4);
+    /* dark-on-gold text (matches .btn-next) — readable in light AND night mode */
+    color: #3a2200;
+    /* premium glassmorphism: frosted gold glass + blur + glowing indigo border + inner shine */
+    background:
+      linear-gradient(135deg, rgba(255,204,0,0.92), rgba(255,159,28,0.92)),
+      linear-gradient(135deg, var(--gold), var(--glow-orange));
+    backdrop-filter: blur(10px) saturate(140%);
+    -webkit-backdrop-filter: blur(10px) saturate(140%);
+    border: 1px solid rgba(90,111,165,0.55);
+    box-shadow:
+      0 4px 14px rgba(255,159,28,0.4),
+      0 0 14px rgba(90,120,220,0.35),
+      inset 0 1px 0 rgba(255,255,255,0.55);
   }
   .branch-filter-btn[data-filter="DFO"].active {
     background: linear-gradient(135deg, var(--electric-blue), var(--royal-blue)); border-color: var(--royal-blue); color: #fff;
@@ -1430,7 +1441,7 @@
   }
   .btn-sm.navy { background: var(--navy); color: #fff; border-color: var(--navy); }
   .btn-sm.navy:hover { background: var(--royal-blue); }
-  .btn-sm.gold { background: linear-gradient(135deg, var(--gold), var(--glow-orange)); color: var(--navy); }
+  .btn-sm.gold { background: linear-gradient(135deg, var(--gold), var(--glow-orange)); color: #3a2200; }
   .btn-sm.outline { background: transparent; color: var(--navy); border-color: var(--moonlit); }
   .btn-sm.outline:hover { border-color: var(--navy); }
 
