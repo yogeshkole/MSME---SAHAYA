@@ -240,7 +240,18 @@ A premium dark theme toggled from the **moon/sun button in the top navbar** (top
   mode gives them the frosted navy glass background and bright high-contrast text (title 14.6:1,
   body 10.3:1 — all WCAG AA). Light mode reproduces the original look exactly.
 
+### ✒ Typography enhancement (premium fintech type)
+A dedicated, colour-agnostic "Typography Enhancement" CSS layer elevates the type system in **both**
+light and night mode without touching the palette, glassmorphism or layout:
+- **Ultra-sharp rendering** — antialiased font-smoothing, `optimizeLegibility`, kerning + ligatures on `body`.
+- **Refined tracking** — global `-0.025em` letter-spacing on headings (tighter `-0.03em` on the page H1).
+- **Stronger hierarchy** — bolder, slightly larger primary headings (H1 24px / weight 900), confident
+  card titles (800), cleaner subheadings, and comfortable body line-height (1.6–1.62).
+- **Sharp numerals** — KPI / stat / amount figures use **tabular-nums** + tight tracking for a crisp fintech feel.
+- **Polished pills & buttons** — filter pills and CTAs get consistent weight and a smooth `translateY(-1px)`
+  spring hover; uppercase badges are tracked out (`+0.045em`) for legible micro-type.
+
 ## Deployment
 - **Platform**: Cloudflare Pages (Workers runtime)
 - **Status**: ✅ Running locally via PM2 (sandbox). Not yet deployed to production.
-- **Last Updated**: 2026-06-28
+- **Last Updated**: 2026-07-04

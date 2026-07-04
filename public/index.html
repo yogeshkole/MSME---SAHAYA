@@ -65,6 +65,13 @@
     color: var(--gray-800);
     min-height: 100vh;
     overflow-x: hidden;
+    /* ultra-sharp typography rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    font-feature-settings: 'kern' 1, 'liga' 1, 'calt' 1;
+    letter-spacing: -0.011em;
+    line-height: 1.6;
     /* Warm luminous cream with a very subtle swirling brush-stroke texture */
     background-color: var(--gray-100);
     background-image:
@@ -77,8 +84,125 @@
   /* Expressive Van Gogh headings */
   h1, h2, h3, .login-card h2, .page-header h1 {
     font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    letter-spacing: -0.025em;
+  }
+
+  /* ============================================================
+     ✒ TYPOGRAPHY ENHANCEMENT — refined premium fintech type
+     Elevates hierarchy, weight, letter-spacing (-0.025em) and
+     line-height across the app. Colour-agnostic (uses existing
+     variables) so it works in BOTH light and night mode.
+  ============================================================ */
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Plus Jakarta Sans', 'Inter', sans-serif;
+    letter-spacing: -0.025em;
+    line-height: 1.18;
+    text-wrap: balance;
+  }
+  h4, h5, h6 { letter-spacing: -0.02em; }
+
+  /* --- Primary page heading: bolder + slightly larger --- */
+  .page-header h1 {
+    font-size: 24px;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+    line-height: 1.14;
+  }
+  .page-header p {
+    font-size: 14.5px;
+    line-height: 1.55;
+    letter-spacing: -0.012em;
+    font-weight: 450;
+  }
+
+  /* --- Card titles / subheadings: clean, tight, confident --- */
+  .card-title {
+    font-size: 15.5px;
+    font-weight: 800;
+    letter-spacing: -0.024em;
+    line-height: 1.25;
+  }
+  .card-subtitle {
+    font-size: 12px;
+    letter-spacing: -0.008em;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  /* --- KPI / stat numerals: strong, sharp, monofeel --- */
+  .kpi-value, .stat-value, .finance-stat .value {
+    font-weight: 900;
+    letter-spacing: -0.035em;
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1, 'kern' 1;
+  }
+  .kpi-value { font-size: 29px; line-height: 1.02; }
+  .kpi-label, .finance-stat .label {
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-transform: none;
+  }
+
+  /* --- Section / wizard headings --- */
+  .wizard-card h3, .vg-modal-head h3 {
+    font-weight: 800;
+    letter-spacing: -0.028em;
+    line-height: 1.2;
+  }
+  .wizard-card p {
+    font-size: 13.5px;
+    line-height: 1.6;
     letter-spacing: -0.01em;
   }
+
+  /* --- Professional body / paragraph text --- */
+  p, .es-desc, .wn-desc, .help-card p, .ai-card p {
+    line-height: 1.62;
+    letter-spacing: -0.011em;
+  }
+
+  /* --- Help / feature card headings --- */
+  .help-card h4, .ai-card h4, .es-card h4, .wn-title {
+    font-weight: 800;
+    letter-spacing: -0.022em;
+    line-height: 1.28;
+  }
+
+  /* --- Sidebar / nav labels: crisp, slightly wide for legibility --- */
+  .nav-item, .sidebar-brand-text h3 {
+    letter-spacing: -0.015em;
+  }
+
+  /* --- Filter pills & buttons: refined weight + smooth hover --- */
+  .branch-filter-btn, .btn-next, .btn-navy, .btn-outline-navy,
+  .btn-sm, .es-toggle, .es-apply, .topbar-btn, .wn-badge {
+    letter-spacing: -0.015em;
+    font-feature-settings: 'kern' 1;
+    transition: transform .22s cubic-bezier(.34,1.4,.64,1),
+                box-shadow .22s ease, background-color .22s ease,
+                border-color .22s ease, color .22s ease, letter-spacing .22s ease;
+  }
+  .branch-filter-btn { font-weight: 700; }
+  .branch-filter-btn:hover { transform: translateY(-1px); }
+  .btn-next:hover, .btn-navy:hover, .btn-sm:hover { transform: translateY(-1px); }
+  .btn-navy, .btn-next, .btn-sm { font-weight: 700; }
+
+  /* --- Badges / chips / pills: uppercase micro-type, tracked out --- */
+  .wn-badge, .es-tag-new, .badge, .pill, .status-pill {
+    letter-spacing: 0.045em;
+    font-weight: 800;
+  }
+
+  /* --- Table typography: tabular numerals, tidy heads --- */
+  th { letter-spacing: 0.02em; font-weight: 700; }
+  td { letter-spacing: -0.008em; }
+  table td .amount, td.amount, .txn-amount {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: 'tnum' 1;
+    letter-spacing: -0.02em;
+  }
+  /* ============================================================ */
   /* Swirling brush-stroke divider + starry particle keyframes (reusable) */
   @keyframes vg-glow { 0%,100% { box-shadow: 0 0 0 rgba(255,204,0,0); } 50% { box-shadow: 0 0 18px rgba(255,204,0,0.55); } }
   @keyframes vg-twinkle { 0%,100% { opacity: .25; transform: scale(.8); } 50% { opacity: 1; transform: scale(1.15); } }
